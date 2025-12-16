@@ -1,6 +1,7 @@
 const vscode = require('vscode');
 const fs = require('fs');
 const path = require('path');
+const cp = require('child_process');
 
 /**
  * @param {vscode.ExtensionContext} context
@@ -39,37 +40,27 @@ function activate(context) {
     });
 
     // 4. LOOP: Auto-Authorize (The "Always On" Clicker)
-    // Runs constantly to accept agent actions (regardless of typing status)
+    // Runs constantly to accept agent actions
     setInterval(async () => {
-        try {
-            await vscode.commands.executeCommand('antigravity.agent.acceptAgentStep');
-        } catch (e) { }
+        try { await vscode.commands.executeCommand('antigravity.agent.acceptAgentStep'); } catch (e) { }
     }, 1000);
 
-    // 4.1 LOOP: Auto-Click "Always Allow" Button
-    // Clicks "Always Allow" button when it appears
+    // 4.1 LOOP: Auto-Click "Always Allow" Button (Internal Command)
     setInterval(async () => {
-        try {
-            await vscode.commands.executeCommand('antigravity.agent.alwaysAllow');
-        } catch (e) { }
+        try { await vscode.commands.executeCommand('antigravity.agent.alwaysAllow'); } catch (e) { }
     }, 500);
 
     // 4.2 LOOP: Auto-Click "Accept All" Button
-    // Clicks "Accept all" button when it appears
     setInterval(async () => {
-        try {
-            await vscode.commands.executeCommand('antigravity.agent.acceptAll');
-        } catch (e) { }
+        try { await vscode.commands.executeCommand('antigravity.agent.acceptAll'); } catch (e) { }
     }, 500);
 
-    // 5. Logic: Smart Submit (The "Conditional" Sender)
+    // 5. Logic: Smart Submit
     const watcher = fs.watch(cmdPath, async (eventType, filename) => {
         if (eventType === 'change') {
             try {
                 const cmd = fs.readFileSync(cmdPath, 'utf8').trim();
-
                 if (cmd === 'SUBMIT') {
-                    // Only Submit if NOT typing (The "Pause" Logic)
                     if (!isTyping) {
                         vscode.window.showInformationMessage('👻 GHOST: SUBMITTING CHAT');
                         await vscode.commands.executeCommand('workbench.action.chat.submit');
@@ -77,8 +68,6 @@ function activate(context) {
                     } else {
                         console.log('[Ghost] SUBMIT blocked (User Typing)');
                     }
-
-                    // Reset
                     fs.writeFileSync(cmdPath, 'IDLE');
                 }
             } catch (err) { }
@@ -87,13 +76,33 @@ function activate(context) {
 
     context.subscriptions.push({ dispose: () => watcher.close() });
 
-    // 6. Discovery Phase (Background)
+    // 6. Discovery Phase
     setTimeout(async () => {
         try {
             const commands = await vscode.commands.getCommands(true);
             fs.writeFileSync('C:\\AntiGravityExt\\AntiGravity_Hook_Discovery.log', commands.join('\n'));
         } catch (e) { }
     }, 5000);
+
+    // 7. 👻 GHOST CLICKER: Auto-Launch Background Bot
+    try {
+        const scriptPath = path.join(__dirname, 'ghost_bot', 'ghost_clicker.py');
+        if (fs.existsSync(scriptPath)) {
+            console.log(`[Ghost Hook] Launching external clicker: ${scriptPath}`);
+            // Spawn detached process so it survives extension reloads if needed, 
+            // but usually we want it coupled. Detached = True allows it to run independent of VS Code's process tree constraints.
+            const child = cp.spawn('python', [scriptPath], {
+                detached: true,
+                stdio: 'ignore'
+            });
+            child.unref(); // Allow parent to exit independently
+            vscode.window.showInformationMessage('👻 Ghost Clicker: Background Process Started');
+        } else {
+            console.error('[Ghost Hook] Script not found:', scriptPath);
+        }
+    } catch (e) {
+        console.error('[Ghost Hook] Failed to launch clicker:', e);
+    }
 }
 
 function deactivate() {

@@ -1,0 +1,6 @@
+{
+    "vscode_custom_css.imports": [
+        "file:///C:/AntiGravityExt/AntiGravity_Ghost_Agent/ghost.js"
+    ],
+    "vscode_custom_css.policy": true
+}
