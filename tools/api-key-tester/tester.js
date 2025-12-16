@@ -131,27 +131,58 @@ class APIKeyTester {
      * Test Google Gemini API with all keys and models
      * Note: Model names without :free suffix for direct Google API
      */
+    /**
+     * Fetch available models from Google API dynamically
+     */
+    async fetchGoogleModels(apiKey) {
+        try {
+            const response = await axios.get(
+                `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`,
+                { timeout: 10000 }
+            );
+
+            if (response.data && response.data.models) {
+                // Filter models that support generateContent
+                return response.data.models
+                    .filter(m => m.supportedGenerationMethods && m.supportedGenerationMethods.includes('generateContent'))
+                    .map(m => m.name.replace('models/', ''));
+            }
+            return [];
+        } catch (error) {
+            console.log(`    ⚠️ Failed to fetch models list: ${error.message}`);
+            return [];
+        }
+    }
+
+    /**
+     * Test Google Gemini API with all keys and models
+     * Uses dynamic model discovery
+     */
     async testGoogleKeys() {
         console.log('\n📊 Testing Google Gemini API...\n');
 
-        const models = [
-            'gemini-2.0-flash-exp',
-            'gemini-exp-1206',
-            'gemini-1.5-pro-latest',
-            'gemini-1.5-flash-latest',
-            'gemini-1.5-flash-8b-latest'
-        ];
-
         const apiKeys = this.config.providers.google.api_keys;
+        const fallbackModels = ['gemini-1.5-flash', 'gemini-1.5-pro'];
 
         for (let i = 0; i < apiKeys.length; i++) {
             const apiKey = apiKeys[i];
+
+            console.log(`  🔑 Key #${i + 1}: Discovering models...`);
+            let models = await this.fetchGoogleModels(apiKey);
+
+            if (models.length === 0) {
+                console.log(`    ⚠️ Using fallback models due to discovery failure.`);
+                models = fallbackModels;
+            } else {
+                console.log(`    ✅ Discovered ${models.length} compatible models.`);
+            }
 
             for (const model of models) {
                 await this.testSingleAPI({
                     provider: 'google',
                     apiKey: apiKey,
                     keyIndex: i + 1,
+                    displayKey: apiKey, // Pass full key for report
                     model: model,
                     endpoint: `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
                     testPrompt: 'Say "OK" if you can read this.',
@@ -169,6 +200,7 @@ class APIKeyTester {
             provider,
             apiKey,
             keyIndex,
+            displayKey,
             model,
             endpoint,
             testPrompt,
@@ -252,6 +284,7 @@ class APIKeyTester {
             this.results.tests.push({
                 provider,
                 keyIndex: keyIndex || 1,
+                displayKey: displayKey || apiKey.substring(0, 10) + '...',
                 model,
                 status: 'success',
                 responseTime,
@@ -273,6 +306,7 @@ class APIKeyTester {
             this.results.tests.push({
                 provider,
                 keyIndex: keyIndex || 1,
+                displayKey: displayKey || apiKey.substring(0, 10) + '...',
                 model,
                 status: 'failed',
                 error: errorMsg,
@@ -596,6 +630,15 @@ class APIKeyTester {
             font-size: 0.9em;
             font-weight: 600;
         }
+        .key-display {
+            font-family: 'Consolas', monospace;
+            background: #edf2f7;
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: #4a5568;
+            font-size: 0.85em;
+            word-break: break-all;
+        }
         
         .model-name { font-weight: 600; color: #4a5568; }
         .error-message { color: #e53e3e; font-size: 0.9em; margin-top: 5px; }
@@ -680,7 +723,10 @@ class APIKeyTester {
                                     ${test.status === 'success' ? 'ACTIVE' : 'FAIL'}
                                 </span>
                             </td>
-                            <td><span class="key-badge">Key #${test.keyIndex}</span></td>
+                            <td>
+                                <div class="key-display">${test.displayKey}</div>
+                                <div style="font-size:0.8em; color:#a0aec0">Idx: ${test.keyIndex}</div>
+                            </td>
                             <td><div class="model-name">${test.model}</div></td>
                             <td><span class="response-time">${test.responseTime}ms</span></td>
                             <td>

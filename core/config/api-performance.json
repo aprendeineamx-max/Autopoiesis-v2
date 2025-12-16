@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-12-16T16:28:23.910Z",
+  "lastUpdated": "2025-12-16T16:46:41.941Z",
   "providers": {
     "groq_key1": {
       "provider": "groq",
@@ -9,10 +9,10 @@
           "status": "failing",
           "avgResponseTime": 0,
           "successCount": 0,
-          "failCount": 2,
+          "failCount": 3,
           "lastSuccess": null,
           "lastError": {
-            "timestamp": "2025-12-16T16:27:43.613Z",
+            "timestamp": "2025-12-16T16:44:03.807Z",
             "error": "Access denied. Please check your network settings.",
             "statusCode": 403
           }
@@ -21,10 +21,10 @@
           "status": "failing",
           "avgResponseTime": 0,
           "successCount": 0,
-          "failCount": 2,
+          "failCount": 3,
           "lastSuccess": null,
           "lastError": {
-            "timestamp": "2025-12-16T16:27:44.119Z",
+            "timestamp": "2025-12-16T16:44:04.313Z",
             "error": "Access denied. Please check your network settings.",
             "statusCode": 403
           }
@@ -33,10 +33,10 @@
           "status": "failing",
           "avgResponseTime": 0,
           "successCount": 0,
-          "failCount": 2,
+          "failCount": 3,
           "lastSuccess": null,
           "lastError": {
-            "timestamp": "2025-12-16T16:27:44.626Z",
+            "timestamp": "2025-12-16T16:44:04.827Z",
             "error": "Access denied. Please check your network settings.",
             "statusCode": 403
           }
@@ -45,10 +45,10 @@
           "status": "failing",
           "avgResponseTime": 0,
           "successCount": 0,
-          "failCount": 2,
+          "failCount": 3,
           "lastSuccess": null,
           "lastError": {
-            "timestamp": "2025-12-16T16:27:45.132Z",
+            "timestamp": "2025-12-16T16:44:05.334Z",
             "error": "Access denied. Please check your network settings.",
             "statusCode": 403
           }
@@ -57,10 +57,10 @@
           "status": "failing",
           "avgResponseTime": 0,
           "successCount": 0,
-          "failCount": 2,
+          "failCount": 3,
           "lastSuccess": null,
           "lastError": {
-            "timestamp": "2025-12-16T16:27:45.639Z",
+            "timestamp": "2025-12-16T16:44:06.106Z",
             "error": "Access denied. Please check your network settings.",
             "statusCode": 403
           }
@@ -69,10 +69,10 @@
           "status": "failing",
           "avgResponseTime": 0,
           "successCount": 0,
-          "failCount": 2,
+          "failCount": 3,
           "lastSuccess": null,
           "lastError": {
-            "timestamp": "2025-12-16T16:27:46.172Z",
+            "timestamp": "2025-12-16T16:44:06.612Z",
             "error": "Access denied. Please check your network settings.",
             "statusCode": 403
           }
@@ -88,10 +88,10 @@
           "status": "failing",
           "avgResponseTime": 0,
           "successCount": 0,
-          "failCount": 2,
+          "failCount": 3,
           "lastSuccess": null,
           "lastError": {
-            "timestamp": "2025-12-16T16:27:46.819Z",
+            "timestamp": "2025-12-16T16:44:07.243Z",
             "error": "google/gemma-3-12b:free is not a valid model ID",
             "statusCode": 400
           }
@@ -100,10 +100,10 @@
           "status": "failing",
           "avgResponseTime": 0,
           "successCount": 0,
-          "failCount": 2,
+          "failCount": 3,
           "lastSuccess": null,
           "lastError": {
-            "timestamp": "2025-12-16T16:27:47.636Z",
+            "timestamp": "2025-12-16T16:44:07.764Z",
             "error": "google/gemma-3-27b:free is not a valid model ID",
             "statusCode": 400
           }
@@ -112,26 +112,30 @@
           "status": "working",
           "avgResponseTime": 1852,
           "successCount": 2,
-          "failCount": 0,
+          "failCount": 1,
           "lastSuccess": "2025-12-16T16:27:51.048Z",
-          "lastError": null
+          "lastError": {
+            "timestamp": "2025-12-16T16:44:09.164Z",
+            "error": "Provider returned error",
+            "statusCode": 429
+          }
         },
         "meta-llama/llama-3.3-70b-instruct:free": {
           "status": "working",
-          "avgResponseTime": 1602.5,
-          "successCount": 2,
+          "avgResponseTime": 1536.3333333333333,
+          "successCount": 3,
           "failCount": 0,
-          "lastSuccess": "2025-12-16T16:27:53.610Z",
+          "lastSuccess": "2025-12-16T16:44:11.069Z",
           "lastError": null
         },
         "meta-llama/llama-3.2-3b-instruct:free": {
           "status": "failing",
           "avgResponseTime": 0,
           "successCount": 0,
-          "failCount": 2,
+          "failCount": 3,
           "lastSuccess": null,
           "lastError": {
-            "timestamp": "2025-12-16T16:27:54.634Z",
+            "timestamp": "2025-12-16T16:44:11.995Z",
             "error": "Provider returned error",
             "statusCode": 429
           }
@@ -140,46 +144,46 @@
           "status": "failing",
           "avgResponseTime": 0,
           "successCount": 0,
-          "failCount": 2,
+          "failCount": 3,
           "lastSuccess": null,
           "lastError": {
-            "timestamp": "2025-12-16T16:27:55.398Z",
+            "timestamp": "2025-12-16T16:44:12.795Z",
             "error": "Provider returned error",
             "statusCode": 429
           }
         },
         "mistralai/mistral-7b-instruct:free": {
           "status": "working",
-          "avgResponseTime": 1061,
-          "successCount": 2,
+          "avgResponseTime": 939.3333333333334,
+          "successCount": 3,
           "failCount": 0,
-          "lastSuccess": "2025-12-16T16:27:56.929Z",
+          "lastSuccess": "2025-12-16T16:44:13.994Z",
           "lastError": null
         },
         "anthropic/claude-3.5-sonnet": {
           "status": "working",
-          "avgResponseTime": 1076,
-          "successCount": 2,
+          "avgResponseTime": 1376.6666666666667,
+          "successCount": 3,
           "failCount": 0,
-          "lastSuccess": "2025-12-16T16:27:58.433Z",
+          "lastSuccess": "2025-12-16T16:44:16.473Z",
           "lastError": null
         },
         "anthropic/claude-3-haiku": {
           "status": "working",
-          "avgResponseTime": 936,
-          "successCount": 2,
+          "avgResponseTime": 806.3333333333334,
+          "successCount": 3,
           "failCount": 0,
-          "lastSuccess": "2025-12-16T16:27:59.909Z",
+          "lastSuccess": "2025-12-16T16:44:17.522Z",
           "lastError": null
         },
         "google/gemini-pro-1.5": {
           "status": "failing",
           "avgResponseTime": 0,
           "successCount": 0,
-          "failCount": 2,
+          "failCount": 3,
           "lastSuccess": null,
           "lastError": {
-            "timestamp": "2025-12-16T16:28:00.530Z",
+            "timestamp": "2025-12-16T16:44:18.049Z",
             "error": "No endpoints found for google/gemini-pro-1.5.",
             "statusCode": 404
           }
@@ -188,36 +192,36 @@
           "status": "failing",
           "avgResponseTime": 0,
           "successCount": 0,
-          "failCount": 2,
+          "failCount": 3,
           "lastSuccess": null,
           "lastError": {
-            "timestamp": "2025-12-16T16:28:01.060Z",
+            "timestamp": "2025-12-16T16:44:18.587Z",
             "error": "No endpoints found for google/gemini-flash-1.5.",
             "statusCode": 404
           }
         },
         "meta-llama/llama-3.1-70b-instruct": {
           "status": "working",
-          "avgResponseTime": 864,
-          "successCount": 2,
+          "avgResponseTime": 787.6666666666666,
+          "successCount": 3,
           "failCount": 0,
-          "lastSuccess": "2025-12-16T16:28:02.446Z",
+          "lastSuccess": "2025-12-16T16:44:19.723Z",
           "lastError": null
         },
         "openai/gpt-4-turbo": {
           "status": "working",
-          "avgResponseTime": 552,
-          "successCount": 2,
+          "avgResponseTime": 629,
+          "successCount": 3,
           "failCount": 0,
-          "lastSuccess": "2025-12-16T16:28:03.474Z",
+          "lastSuccess": "2025-12-16T16:44:21.008Z",
           "lastError": null
         },
         "openai/gpt-3.5-turbo": {
           "status": "working",
-          "avgResponseTime": 510.5,
-          "successCount": 2,
+          "avgResponseTime": 576.6666666666666,
+          "successCount": 3,
           "failCount": 0,
-          "lastSuccess": "2025-12-16T16:28:04.343Z",
+          "lastSuccess": "2025-12-16T16:44:22.218Z",
           "lastError": null
         }
       },
@@ -229,20 +233,20 @@
       "models": {
         "Meta-Llama-3.1-8B-Instruct": {
           "status": "working",
-          "avgResponseTime": 880,
-          "successCount": 2,
+          "avgResponseTime": 2147.3333333333335,
+          "successCount": 3,
           "failCount": 0,
-          "lastSuccess": "2025-12-16T16:28:05.948Z",
+          "lastSuccess": "2025-12-16T16:44:27.402Z",
           "lastError": null
         },
         "Meta-Llama-3.1-70B-Instruct": {
           "status": "failing",
           "avgResponseTime": 0,
           "successCount": 0,
-          "failCount": 2,
+          "failCount": 3,
           "lastSuccess": null,
           "lastError": {
-            "timestamp": "2025-12-16T16:28:06.603Z",
+            "timestamp": "2025-12-16T16:44:28.105Z",
             "error": "Request failed with status code 410",
             "statusCode": 410
           }
@@ -251,10 +255,10 @@
           "status": "failing",
           "avgResponseTime": 0,
           "successCount": 0,
-          "failCount": 2,
+          "failCount": 3,
           "lastSuccess": null,
           "lastError": {
-            "timestamp": "2025-12-16T16:28:07.260Z",
+            "timestamp": "2025-12-16T16:44:28.759Z",
             "error": "Request failed with status code 410",
             "statusCode": 410
           }
@@ -263,10 +267,10 @@
           "status": "failing",
           "avgResponseTime": 0,
           "successCount": 0,
-          "failCount": 2,
+          "failCount": 3,
           "lastSuccess": null,
           "lastError": {
-            "timestamp": "2025-12-16T16:28:07.912Z",
+            "timestamp": "2025-12-16T16:44:29.410Z",
             "error": "Request failed with status code 404",
             "statusCode": 404
           }
@@ -275,10 +279,10 @@
           "status": "failing",
           "avgResponseTime": 0,
           "successCount": 0,
-          "failCount": 2,
+          "failCount": 3,
           "lastSuccess": null,
           "lastError": {
-            "timestamp": "2025-12-16T16:28:08.564Z",
+            "timestamp": "2025-12-16T16:44:30.263Z",
             "error": "Request failed with status code 404",
             "statusCode": 404
           }
@@ -287,20 +291,20 @@
           "status": "failing",
           "avgResponseTime": 0,
           "successCount": 0,
-          "failCount": 2,
+          "failCount": 3,
           "lastSuccess": null,
           "lastError": {
-            "timestamp": "2025-12-16T16:28:09.218Z",
+            "timestamp": "2025-12-16T16:44:30.915Z",
             "error": "Request failed with status code 410",
             "statusCode": 410
           }
         },
         "DeepSeek-R1": {
           "status": "working",
-          "avgResponseTime": 1221,
-          "successCount": 1,
+          "avgResponseTime": 1198,
+          "successCount": 2,
           "failCount": 1,
-          "lastSuccess": "2025-12-16T16:28:10.940Z",
+          "lastSuccess": "2025-12-16T16:44:32.786Z",
           "lastError": {
             "timestamp": "2025-12-16T16:18:25.362Z",
             "error": "timeout of 15000ms exceeded"
@@ -308,20 +312,20 @@
         },
         "DeepSeek-R1-Distill-Llama-70B": {
           "status": "working",
-          "avgResponseTime": 1156,
-          "successCount": 2,
+          "avgResponseTime": 1046,
+          "successCount": 3,
           "failCount": 0,
-          "lastSuccess": "2025-12-16T16:28:12.283Z",
+          "lastSuccess": "2025-12-16T16:44:34.118Z",
           "lastError": null
         },
         "Llama-3.3-70B-Instruct": {
           "status": "failing",
           "avgResponseTime": 0,
           "successCount": 0,
-          "failCount": 2,
+          "failCount": 3,
           "lastSuccess": null,
           "lastError": {
-            "timestamp": "2025-12-16T16:28:12.937Z",
+            "timestamp": "2025-12-16T16:44:34.778Z",
             "error": "Request failed with status code 404",
             "statusCode": 404
           }
@@ -330,10 +334,10 @@
           "status": "failing",
           "avgResponseTime": 0,
           "successCount": 0,
-          "failCount": 2,
+          "failCount": 3,
           "lastSuccess": null,
           "lastError": {
-            "timestamp": "2025-12-16T16:28:13.592Z",
+            "timestamp": "2025-12-16T16:44:35.431Z",
             "error": "Request failed with status code 410",
             "statusCode": 410
           }
@@ -342,10 +346,10 @@
           "status": "failing",
           "avgResponseTime": 0,
           "successCount": 0,
-          "failCount": 2,
+          "failCount": 3,
           "lastSuccess": null,
           "lastError": {
-            "timestamp": "2025-12-16T16:28:14.247Z",
+            "timestamp": "2025-12-16T16:44:36.084Z",
             "error": "Request failed with status code 410",
             "statusCode": 410
           }
@@ -361,11 +365,11 @@
           "status": "failing",
           "avgResponseTime": 0,
           "successCount": 0,
-          "failCount": 2,
+          "failCount": 3,
           "lastSuccess": null,
           "lastError": {
-            "timestamp": "2025-12-16T16:28:15.011Z",
-            "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-exp\nPlease retry in 45.038680632s.",
+            "timestamp": "2025-12-16T16:44:38.929Z",
+            "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-exp\nPlease retry in 21.118684687s.",
             "statusCode": 429
           }
         },
@@ -373,12 +377,12 @@
           "status": "failing",
           "avgResponseTime": 0,
           "successCount": 0,
-          "failCount": 2,
+          "failCount": 3,
           "lastSuccess": null,
           "lastError": {
-            "timestamp": "2025-12-16T16:28:15.616Z",
-            "error": "Your API key was reported as leaked. Please use another API key.",
-            "statusCode": 403
+            "timestamp": "2025-12-16T16:44:44.007Z",
+            "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-pro-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-pro-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-pro-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-pro-exp\nPlease retry in 16.035712935s.",
+            "statusCode": 429
           }
         },
         "gemini-1.5-pro-latest": {
@@ -416,6 +420,329 @@
             "error": "models/gemini-1.5-flash-8b-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
             "statusCode": 404
           }
+        },
+        "gemini-2.5-flash": {
+          "status": "working",
+          "avgResponseTime": 943,
+          "successCount": 1,
+          "failCount": 0,
+          "lastSuccess": "2025-12-16T16:44:37.732Z",
+          "lastError": null
+        },
+        "gemini-2.5-pro": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:44:38.335Z",
+            "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro\nPlease retry in 21.710272437s.",
+            "statusCode": 429
+          }
+        },
+        "gemini-2.0-flash": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:44:39.725Z",
+            "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\nPlease retry in 20.516907861s.",
+            "statusCode": 429
+          }
+        },
+        "gemini-2.0-flash-001": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:44:40.331Z",
+            "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\nPlease retry in 19.716712145s.",
+            "statusCode": 429
+          }
+        },
+        "gemini-2.0-flash-exp-image-generation": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:44:40.915Z",
+            "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash-exp\nPlease retry in 19.129820266s.",
+            "statusCode": 429
+          }
+        },
+        "gemini-2.0-flash-lite-001": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:44:41.512Z",
+            "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-lite\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-lite\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash-lite\nPlease retry in 18.532926021s.",
+            "statusCode": 429
+          }
+        },
+        "gemini-2.0-flash-lite": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:44:42.210Z",
+            "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-lite\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-lite\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash-lite\nPlease retry in 17.927578335s.",
+            "statusCode": 429
+          }
+        },
+        "gemini-2.0-flash-lite-preview-02-05": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:44:42.827Z",
+            "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash-lite\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-lite\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-lite\nPlease retry in 17.236197483s.",
+            "statusCode": 429
+          }
+        },
+        "gemini-2.0-flash-lite-preview": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:44:43.417Z",
+            "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash-lite\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-lite\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-lite\nPlease retry in 16.62746716s.",
+            "statusCode": 429
+          }
+        },
+        "gemini-2.5-flash-preview-tts": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:44:44.890Z",
+            "error": "The requested combination of response modalities (TEXT) is not supported by the model. models/gemini-2.5-flash-preview-tts accepts the following combination of response modalities:\n* AUDIO\n",
+            "statusCode": 400
+          }
+        },
+        "gemini-2.5-pro-preview-tts": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:44:45.505Z",
+            "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro-tts\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro-tts\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro-tts\nPlease retry in 14.564573289s.",
+            "statusCode": 429
+          }
+        },
+        "gemma-3-1b-it": {
+          "status": "working",
+          "avgResponseTime": 653,
+          "successCount": 1,
+          "failCount": 0,
+          "lastSuccess": "2025-12-16T16:44:46.975Z",
+          "lastError": null
+        },
+        "gemma-3-4b-it": {
+          "status": "working",
+          "avgResponseTime": 935,
+          "successCount": 1,
+          "failCount": 0,
+          "lastSuccess": "2025-12-16T16:44:48.473Z",
+          "lastError": null
+        },
+        "gemma-3-12b-it": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:45:03.979Z",
+            "error": "timeout of 15000ms exceeded"
+          }
+        },
+        "gemma-3-27b-it": {
+          "status": "working",
+          "avgResponseTime": 7357,
+          "successCount": 1,
+          "failCount": 0,
+          "lastSuccess": "2025-12-16T16:45:11.836Z",
+          "lastError": null
+        },
+        "gemma-3n-e4b-it": {
+          "status": "working",
+          "avgResponseTime": 539,
+          "successCount": 1,
+          "failCount": 0,
+          "lastSuccess": "2025-12-16T16:45:12.877Z",
+          "lastError": null
+        },
+        "gemma-3n-e2b-it": {
+          "status": "working",
+          "avgResponseTime": 513,
+          "successCount": 1,
+          "failCount": 0,
+          "lastSuccess": "2025-12-16T16:45:13.892Z",
+          "lastError": null
+        },
+        "gemini-flash-latest": {
+          "status": "working",
+          "avgResponseTime": 511,
+          "successCount": 1,
+          "failCount": 0,
+          "lastSuccess": "2025-12-16T16:45:14.903Z",
+          "lastError": null
+        },
+        "gemini-flash-lite-latest": {
+          "status": "working",
+          "avgResponseTime": 513,
+          "successCount": 1,
+          "failCount": 0,
+          "lastSuccess": "2025-12-16T16:45:15.938Z",
+          "lastError": null
+        },
+        "gemini-pro-latest": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:45:16.534Z",
+            "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro\nPlease retry in 43.513078807s.",
+            "statusCode": 429
+          }
+        },
+        "gemini-2.5-flash-lite": {
+          "status": "working",
+          "avgResponseTime": 620,
+          "successCount": 1,
+          "failCount": 0,
+          "lastSuccess": "2025-12-16T16:45:17.655Z",
+          "lastError": null
+        },
+        "gemini-2.5-flash-image-preview": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:45:18.251Z",
+            "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-flash-preview-image\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-flash-preview-image\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-flash-preview-image\nPlease retry in 41.796214597s.",
+            "statusCode": 429
+          }
+        },
+        "gemini-2.5-flash-image": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:45:18.843Z",
+            "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-flash-preview-image\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-flash-preview-image\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-flash-preview-image\nPlease retry in 41.203388603s.",
+            "statusCode": 429
+          }
+        },
+        "gemini-2.5-flash-preview-09-2025": {
+          "status": "working",
+          "avgResponseTime": 481,
+          "successCount": 1,
+          "failCount": 0,
+          "lastSuccess": "2025-12-16T16:45:19.825Z",
+          "lastError": null
+        },
+        "gemini-2.5-flash-lite-preview-09-2025": {
+          "status": "working",
+          "avgResponseTime": 509,
+          "successCount": 1,
+          "failCount": 0,
+          "lastSuccess": "2025-12-16T16:45:20.836Z",
+          "lastError": null
+        },
+        "gemini-3-pro-preview": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:45:21.432Z",
+            "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3-pro\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3-pro\nPlease retry in 38.617769958s.",
+            "statusCode": 429
+          }
+        },
+        "gemini-3-pro-image-preview": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:45:22.030Z",
+            "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3-pro-image\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3-pro-image\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3-pro-image\nPlease retry in 38.019193049s.",
+            "statusCode": 429
+          }
+        },
+        "nano-banana-pro-preview": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:45:22.625Z",
+            "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3-pro-image\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3-pro-image\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3-pro-image\nPlease retry in 37.421301617s.",
+            "statusCode": 429
+          }
+        },
+        "gemini-robotics-er-1.5-preview": {
+          "status": "working",
+          "avgResponseTime": 2185,
+          "successCount": 1,
+          "failCount": 0,
+          "lastSuccess": "2025-12-16T16:45:25.312Z",
+          "lastError": null
+        },
+        "gemini-2.5-computer-use-preview-10-2025": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:45:26.011Z",
+            "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: computer-use-preview\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: computer-use-preview\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: computer-use-preview\nPlease retry in 34.141934582s.",
+            "statusCode": 429
+          }
+        },
+        "deep-research-pro-preview-12-2025": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:45:26.603Z",
+            "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: deep-research-pro-preview\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: deep-research-pro-preview\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: deep-research-pro-preview\nPlease retry in 33.442765191s.",
+            "statusCode": 429
+          }
         }
       },
       "lastTested": "2025-12-16T16:18:30.155Z"
@@ -428,11 +755,11 @@
           "status": "failing",
           "avgResponseTime": 0,
           "successCount": 0,
-          "failCount": 2,
+          "failCount": 3,
           "lastSuccess": null,
           "lastError": {
-            "timestamp": "2025-12-16T16:28:17.942Z",
-            "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-exp\nPlease retry in 42.103537049s.",
+            "timestamp": "2025-12-16T16:45:28.635Z",
+            "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash-exp\nPlease retry in 31.450349167s.",
             "statusCode": 429
           }
         },
@@ -440,10 +767,10 @@
           "status": "failing",
           "avgResponseTime": 0,
           "successCount": 0,
-          "failCount": 2,
+          "failCount": 3,
           "lastSuccess": null,
           "lastError": {
-            "timestamp": "2025-12-16T16:28:18.540Z",
+            "timestamp": "2025-12-16T16:45:33.766Z",
             "error": "Your API key was reported as leaked. Please use another API key.",
             "statusCode": 403
           }
@@ -483,6 +810,361 @@
             "error": "models/gemini-1.5-flash-8b-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
             "statusCode": 404
           }
+        },
+        "gemini-2.5-flash": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:45:27.412Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-2.5-pro": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:45:28.008Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-2.0-flash": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:45:29.236Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-2.0-flash-001": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:45:29.841Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-2.0-flash-exp-image-generation": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:45:30.641Z",
+            "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-exp\nPlease retry in 29.61921834s.",
+            "statusCode": 429
+          }
+        },
+        "gemini-2.0-flash-lite-001": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:45:31.255Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-2.0-flash-lite": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:45:31.850Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-2.0-flash-lite-preview-02-05": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:45:32.502Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-2.0-flash-lite-preview": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:45:33.173Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-2.5-flash-preview-tts": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:45:34.363Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-2.5-pro-preview-tts": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:45:34.951Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemma-3-1b-it": {
+          "status": "working",
+          "avgResponseTime": 628,
+          "successCount": 1,
+          "failCount": 0,
+          "lastSuccess": "2025-12-16T16:45:36.093Z",
+          "lastError": null
+        },
+        "gemma-3-4b-it": {
+          "status": "working",
+          "avgResponseTime": 926,
+          "successCount": 1,
+          "failCount": 0,
+          "lastSuccess": "2025-12-16T16:45:37.520Z",
+          "lastError": null
+        },
+        "gemma-3-12b-it": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:45:53.027Z",
+            "error": "timeout of 15000ms exceeded"
+          }
+        },
+        "gemma-3-27b-it": {
+          "status": "working",
+          "avgResponseTime": 5747,
+          "successCount": 1,
+          "failCount": 0,
+          "lastSuccess": "2025-12-16T16:45:59.378Z",
+          "lastError": null
+        },
+        "gemma-3n-e4b-it": {
+          "status": "working",
+          "avgResponseTime": 422,
+          "successCount": 1,
+          "failCount": 0,
+          "lastSuccess": "2025-12-16T16:46:00.302Z",
+          "lastError": null
+        },
+        "gemma-3n-e2b-it": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:00.938Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-flash-latest": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:01.573Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-flash-lite-latest": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:02.219Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-pro-latest": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:02.852Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-2.5-flash-lite": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:03.824Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-2.5-flash-image-preview": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:04.481Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-2.5-flash-image": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:05.125Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-2.5-flash-preview-09-2025": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:05.760Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-2.5-flash-lite-preview-09-2025": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:06.399Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-3-pro-preview": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:07.027Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-3-pro-image-preview": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:07.663Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "nano-banana-pro-preview": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:08.295Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-robotics-er-1.5-preview": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:08.931Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-2.5-computer-use-preview-10-2025": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:09.560Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "deep-research-pro-preview-12-2025": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:10.245Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
         }
       },
       "lastTested": "2025-12-16T16:18:33.127Z"
@@ -495,11 +1177,11 @@
           "status": "failing",
           "avgResponseTime": 0,
           "successCount": 0,
-          "failCount": 2,
+          "failCount": 3,
           "lastSuccess": null,
           "lastError": {
-            "timestamp": "2025-12-16T16:28:20.954Z",
-            "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash-exp\nPlease retry in 39.092769019s.",
+            "timestamp": "2025-12-16T16:46:12.752Z",
+            "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash-exp\nPlease retry in 47.294078383s.",
             "statusCode": 429
           }
         },
@@ -507,10 +1189,10 @@
           "status": "failing",
           "avgResponseTime": 0,
           "successCount": 0,
-          "failCount": 2,
+          "failCount": 3,
           "lastSuccess": null,
           "lastError": {
-            "timestamp": "2025-12-16T16:28:21.552Z",
+            "timestamp": "2025-12-16T16:46:18.517Z",
             "error": "Your API key was reported as leaked. Please use another API key.",
             "statusCode": 403
           }
@@ -549,6 +1231,362 @@
             "timestamp": "2025-12-16T16:28:23.369Z",
             "error": "models/gemini-1.5-flash-8b-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
             "statusCode": 404
+          }
+        },
+        "gemini-2.5-flash": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:11.485Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-2.5-pro": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:12.130Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-2.0-flash": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:13.630Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-2.0-flash-001": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:14.278Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-2.0-flash-exp-image-generation": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:14.908Z",
+            "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash-exp\nPlease retry in 45.138952559s.",
+            "statusCode": 429
+          }
+        },
+        "gemini-2.0-flash-lite-001": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:15.664Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-2.0-flash-lite": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:16.301Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-2.0-flash-lite-preview-02-05": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:17.242Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-2.0-flash-lite-preview": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:17.885Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-2.5-flash-preview-tts": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:19.148Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-2.5-pro-preview-tts": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:19.785Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemma-3-1b-it": {
+          "status": "working",
+          "avgResponseTime": 692,
+          "successCount": 1,
+          "failCount": 0,
+          "lastSuccess": "2025-12-16T16:46:20.978Z",
+          "lastError": null
+        },
+        "gemma-3-4b-it": {
+          "status": "working",
+          "avgResponseTime": 1013,
+          "successCount": 1,
+          "failCount": 0,
+          "lastSuccess": "2025-12-16T16:46:22.627Z",
+          "lastError": null
+        },
+        "gemma-3-12b-it": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:24.088Z",
+            "error": "The model is overloaded. Please try again later.",
+            "statusCode": 503
+          }
+        },
+        "gemma-3-27b-it": {
+          "status": "working",
+          "avgResponseTime": 5627,
+          "successCount": 1,
+          "failCount": 0,
+          "lastSuccess": "2025-12-16T16:46:30.250Z",
+          "lastError": null
+        },
+        "gemma-3n-e4b-it": {
+          "status": "working",
+          "avgResponseTime": 437,
+          "successCount": 1,
+          "failCount": 0,
+          "lastSuccess": "2025-12-16T16:46:31.188Z",
+          "lastError": null
+        },
+        "gemma-3n-e2b-it": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:31.829Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-flash-latest": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:32.459Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-flash-lite-latest": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:33.092Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-pro-latest": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:33.726Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-2.5-flash-lite": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:34.379Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-2.5-flash-image-preview": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:35.023Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-2.5-flash-image": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:35.657Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-2.5-flash-preview-09-2025": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:36.289Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-2.5-flash-lite-preview-09-2025": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:36.927Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-3-pro-preview": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:37.563Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-3-pro-image-preview": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:38.195Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "nano-banana-pro-preview": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:38.830Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-robotics-er-1.5-preview": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:39.582Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "gemini-2.5-computer-use-preview-10-2025": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:40.216Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
+          }
+        },
+        "deep-research-pro-preview-12-2025": {
+          "status": "failing",
+          "avgResponseTime": 0,
+          "successCount": 0,
+          "failCount": 1,
+          "lastSuccess": null,
+          "lastError": {
+            "timestamp": "2025-12-16T16:46:40.848Z",
+            "error": "Your API key was reported as leaked. Please use another API key.",
+            "statusCode": 403
           }
         }
       },
