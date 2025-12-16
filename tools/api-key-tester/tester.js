@@ -128,10 +128,6 @@ class APIKeyTester {
     }
 
     /**
-     * Test Google Gemini API with all keys and models
-     * Note: Model names without :free suffix for direct Google API
-     */
-    /**
      * Fetch available models from Google API dynamically
      */
     async fetchGoogleModels(apiKey) {
@@ -519,242 +515,261 @@ class APIKeyTester {
     }
 
     /**
-     * Generate beautiful HTML report
-     */
-    /**
-     * Generate beautiful HTML report with detailed key metrics
+     * Generate beautiful HTML report with advanced grouping and interactivity
      */
     async generateHTMLReport() {
-        console.log('\n📄 Generating HTML report...');
-
-        // Group tests by provider
-        const testsByProvider = {};
-        const summary = { total: 0, passed: 0, failed: 0 };
-
-        this.results.tests.forEach(test => {
-            if (!testsByProvider[test.provider]) {
-                testsByProvider[test.provider] = [];
-            }
-            testsByProvider[test.provider].push(test);
-
-            summary.total++;
-            if (test.status === 'success') summary.passed++;
-            else summary.failed++;
-        });
+        console.log('\n📄 Generating Detailed Dashboard v3...');
 
         const html = `<!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Key Test Report - ${new Date(this.results.timestamp).toLocaleDateString()}</title>
+    <title>API Intelligence Dashboard</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Inter', 'Segoe UI', sans-serif;
-            background: #f4f7f6;
-            color: #333;
-            padding: 30px;
-            min-height: 100vh;
+        :root {
+            --bg-app: #f3f4f6;
+            --bg-panel: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
+            --primary: #2563eb;
+            --success: #059669;
+            --danger: #dc2626;
+            --warning: #d97706;
+            --key-bg: #f3f4f6;
+            --hover: #f9fafb;
+            --shadow: rgba(0,0,0,0.05);
         }
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
+
+        [data-theme="dark"] {
+            --bg-app: #111827;
+            --bg-panel: #1f2937;
+            --text-main: #f9fafb;
+            --text-muted: #9ca3af;
+            --border: #374151;
+            --primary: #60a5fa;
+            --success: #34d399;
+            --danger: #f87171;
+            --warning: #fbbf24;
+            --key-bg: #374151;
+            --hover: #374151;
+            --shadow: rgba(0,0,0,0.3);
         }
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            background: white;
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-        }
-        .header h1 { color: #2d3748; margin-bottom: 10px; font-weight: 800; }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-        .stat-card {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-        }
-        .stat-value { font-size: 2.5em; font-weight: 800; margin: 10px 0; }
-        .stat-label { color: #718096; text-transform: uppercase; font-size: 0.85em; letter-spacing: 1px; }
-        .passed { color: #38a169; }
-        .failed { color: #e53e3e; }
-        
-        .provider-section {
-            background: white;
-            border-radius: 16px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-        .provider-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #edf2f7;
-        }
-        .provider-title { font-size: 1.4em; font-weight: 700; color: #2d3436; text-transform: uppercase; }
-        
-        table { width: 100%; border-collapse: separate; border-spacing: 0; }
-        th { text-align: left; color: #718096; padding: 15px; font-weight: 600; border-bottom: 2px solid #edf2f7; }
-        td { padding: 15px; border-bottom: 1px solid #edf2f7; vertical-align: top; }
-        tr:last-child td { border-bottom: none; }
-        
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 0.9em;
-            font-weight: 600;
-        }
-        .status-success { background: #c6f6d5; color: #22543d; }
-        .status-failed { background: #fed7d7; color: #822727; }
-        
-        .key-badge {
-            background: #ebf8ff;
-            color: #2c5282;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-family: monospace;
-            font-size: 0.9em;
-            font-weight: 600;
-        }
-        .key-display {
-            font-family: 'Consolas', monospace;
-            background: #edf2f7;
-            padding: 4px 8px;
-            border-radius: 4px;
-            color: #4a5568;
-            font-size: 0.85em;
-            word-break: break-all;
+
+        [data-theme="midnight"] {
+            --bg-app: #0f172a;
+            --bg-panel: #1e293b;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --primary: #818cf8;
+            --success: #4ade80;
+            --danger: #f87171;
+            --warning: #facc15;
+            --key-bg: #334155;
+            --hover: #334155;
+            --shadow: rgba(0,0,0,0.5);
         }
         
-        .model-name { font-weight: 600; color: #4a5568; }
-        .error-message { color: #e53e3e; font-size: 0.9em; margin-top: 5px; }
-        .response-time { color: #718096; font-family: monospace; }
-        
-        /* Tooltip container */
-        .tooltip { position: relative; display: inline-block; cursor: pointer; }
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 300px;
-            background-color: #2d3748;
-            color: #fff;
-            text-align: left;
-            border-radius: 6px;
-            padding: 10px;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            margin-left: -150px;
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-size: 0.85em;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+         [data-theme="cyberpunk"] {
+            --bg-app: #000000;
+            --bg-panel: #121212;
+            --text-main: #00ff00;
+            --text-muted: #008f11;
+            --border: #333333;
+            --primary: #d600ff;
+            --success: #00ff00;
+            --danger: #ff0055;
+            --warning: #ffff00;
+            --key-bg: #1a1a1a;
+            --hover: #222222;
+            --shadow: rgba(0,255,0,0.1);
         }
-        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg-app); margin: 0; padding: 40px; color: var(--text-main); transition: background 0.3s, color 0.3s; }
+        .container { max-width: 1400px; margin: 0 auto; background: var(--bg-panel); border-radius: 16px; box-shadow: 0 10px 30px var(--shadow); overflow: hidden; border: 1px solid var(--border); }
+        .header { background: var(--bg-panel); padding: 40px; text-align: center; border-bottom: 1px solid var(--border); position: relative; }
+        .header h1 { margin: 0; font-size: 2rem; color: var(--text-main); letter-spacing: -0.5px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); background: var(--bg-app); border-bottom: 1px solid var(--border); }
+        .stat-item { padding: 30px; text-align: center; border-right: 1px solid var(--border); }
+        .stat-val { font-size: 2.5rem; font-weight: 800; line-height: 1; margin-bottom: 5px; color: var(--text-main); }
+        .stat-label { text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; color: var(--text-muted); font-weight: 600; }
+        .content { padding: 40px; background: var(--bg-panel); }
+        .provider-title { font-size: 1.25rem; font-weight: 700; color: var(--text-muted); margin-bottom: 20px; text-transform: uppercase; border-left: 5px solid var(--primary); padding-left: 15px; }
+        .key-group { border: 1px solid var(--border); border-radius: 12px; margin-bottom: 15px; overflow: hidden; background: var(--bg-panel); transition: box-shadow 0.2s; }
+        .key-group:hover { box-shadow: 0 4px 12px var(--shadow); }
+        .key-header { padding: 20px 25px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: var(--bg-panel); }
+        .key-header:hover { background: var(--hover); }
+        .key-status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 10px; }
+        .key-value { font-family: 'Consolas', monospace; font-size: 0.95rem; font-weight: 600; color: var(--text-muted); background: var(--key-bg); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border); }
+        .mini-progress { width: 100px; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-left: 20px; }
+        .mini-bar { height: 100%; border-radius: 3px; }
+        .results-body { display: none; border-top: 1px solid var(--border); background: var(--bg-app); }
+        .key-group.expanded .results-body { display: block; }
+        table { width: 100%; border-collapse: collapse; }
+        td { padding: 12px 25px; border-bottom: 1px solid var(--border); color: var(--text-main); }
+        .status-badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+        .badge-success { background: rgba(5, 150, 105, 0.2); color: var(--success); border: 1px solid var(--success); }
+        .error-group-row { background: rgba(220, 38, 38, 0.1); cursor: pointer; border-left: 4px solid var(--danger); }
+        .error-list { display: none; padding: 10px 20px; font-size: 0.9em; line-height: 1.6; color: var(--text-muted); }
+        .error-group-row.active .error-list { display: block; }
+        .toggle-icon { transition: transform 0.3s; color: var(--text-muted); }
+        .key-group.expanded .toggle-icon { transform: rotate(180deg); }
+        
+        /* Theme Switcher */
+        .theme-switch { position: absolute; top: 30px; right: 30px; }
+        .theme-select { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-app); color: var(--text-main); font-family: inherit; cursor: pointer; }
     </style>
+    <script>
+        function toggleGroup(id) { document.getElementById(id).classList.toggle('expanded'); }
+        function toggleError(btn) { btn.closest('tr').classList.toggle('active'); }
+        function toggleAll(expand) {
+            document.querySelectorAll('.key-group').forEach(el => {
+                if(expand) el.classList.add('expanded');
+                else el.classList.remove('expanded');
+            });
+        }
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('api-tester-theme', theme);
+        }
+        
+        // Load theme on start
+        (function() {
+            const saved = localStorage.getItem('api-tester-theme') || 'light';
+            document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>📊 API Key Detailed Intelligence Report</h1>
-            <p>Generated: ${new Date(this.results.timestamp).toLocaleString()}</p>
+            <div class="theme-switch">
+                <select class="theme-select" onchange="setTheme(this.value)">
+                    <option value="light">☀️ Light</option>
+                    <option value="dark">🌑 Dark</option>
+                    <option value="midnight">🌃 Midnight</option>
+                    <option value="cyberpunk">🤖 Cyberpunk</option>
+                </select>
+            </div>
+            <h1>🚀 API Intelligence Dashboard v3</h1>
+            <p style="color:var(--text-muted)">Generated: ${new Date().toLocaleString()}</p>
         </div>
-
         <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-label">Total Tests</div>
-                <div class="stat-value">${summary.total}</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Passed</div>
-                <div class="stat-value passed">${summary.passed}</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Failed</div>
-                <div class="stat-value failed">${summary.failed}</div>
-            </div>
+            <div class="stat-item"><div class="stat-val">${this.results.summary.total}</div><div class="stat-label">Total Tests</div></div>
+            <div class="stat-item"><div class="stat-val" style="color:var(--success)">${this.results.summary.passed}</div><div class="stat-label">Passed</div></div>
+            <div class="stat-item"><div class="stat-val" style="color:var(--danger)">${this.results.summary.failed}</div><div class="stat-label">Failed</div></div>
         </div>
-
-        ${Object.keys(testsByProvider).map(provider => {
-            const tests = testsByProvider[provider];
-            const passedCount = tests.filter(t => t.status === 'success').length;
-            const successRate = ((passedCount / tests.length) * 100).toFixed(1);
-
-            return `
-            <div class="provider-section">
-                <div class="provider-header">
-                    <div class="provider-title">${provider}</div>
-                    <div class="status-badge ${passedCount === tests.length ? 'status-success' : (passedCount > 0 ? 'status-warning' : 'status-failed')}" 
-                         style="background: ${passedCount === tests.length ? '#c6f6d5' : (passedCount > 0 ? '#feebc8' : '#fed7d7')}; 
-                                color: ${passedCount === tests.length ? '#22543d' : (passedCount > 0 ? '#744210' : '#822727')}">
-                        ${passedCount}/${tests.length} Operational (${successRate}%)
-                    </div>
-                </div>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th width="10%">Status</th>
-                            <th width="15%">Key Index</th>
-                            <th width="25%">Model</th>
-                            <th width="15%">Latency</th>
-                            <th>Diagnostics / Details</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${tests.map(test => `
-                        <tr>
-                            <td>
-                                <span class="status-badge ${test.status === 'success' ? 'status-success' : 'status-failed'}">
-                                    ${test.status === 'success' ? 'ACTIVE' : 'FAIL'}
-                                </span>
-                            </td>
-                            <td>
-                                <div class="key-display">${test.displayKey}</div>
-                                <div style="font-size:0.8em; color:#a0aec0">Idx: ${test.keyIndex}</div>
-                            </td>
-                            <td><div class="model-name">${test.model}</div></td>
-                            <td><span class="response-time">${test.responseTime}ms</span></td>
-                            <td>
-                                ${test.status === 'success'
-                    ? `<div style="color:#38a169">✅ Operational</div>`
-                    : `<div class="error-message">❌ ${test.statusCode || 'Err'} - ${test.error}</div>`
-                }
-                                ${test.rateLimitInfo ? `<div style="font-size:0.8em; color:#718096; margin-top:4px;">Calc: ${test.rateLimitInfo.remainingRequests} RPM remaining</div>` : ''}
-                            </td>
-                        </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
+        <div class="content">
+            <div style="text-align:right; margin-bottom:15px;">
+                <button onclick="toggleAll(true)" style="cursor:pointer; border:none; background:none; color:var(--primary); font-weight:600;">Expand All</button> | 
+                <button onclick="toggleAll(false)" style="cursor:pointer; border:none; background:none; color:var(--primary); font-weight:600;">Collapse All</button>
             </div>
-            `;
-        }).join('')}
-        
-        <div style="text-align: center; color: #a0aec0; margin-top: 50px; font-size: 0.9em;">
-            Generated by Autopoiesis System | AntiGravity Ghost Agent
+            ${this.renderProviders()}
         </div>
     </div>
+    <script>
+        // Set dropdown value to match current theme
+        const currentTheme = localStorage.getItem('api-tester-theme') || 'light';
+        document.querySelector('.theme-select').value = currentTheme;
+    </script>
 </body>
 </html>`;
 
         const reportPath = path.join(__dirname, 'reports', 'API-TEST-REPORT.html');
         fs.mkdirSync(path.dirname(reportPath), { recursive: true });
         fs.writeFileSync(reportPath, html);
-        console.log(`  ✅ Detailed HTML report saved: ${reportPath}`);
+        console.log(`  ✅ Dashboard generated: ${reportPath}`);
+    }
+
+    renderProviders() {
+        const testsByProvider = {};
+        this.results.tests.forEach(test => {
+            if (!testsByProvider[test.provider]) testsByProvider[test.provider] = {};
+            const keyId = `${test.keyIndex || '1'}-${test.displayKey}`;
+            if (!testsByProvider[test.provider][keyId]) testsByProvider[test.provider][keyId] = [];
+            testsByProvider[test.provider][keyId].push(test);
+        });
+
+        return Object.keys(testsByProvider).map(provider => `
+                <div class="provider-section">
+                    <div class="provider-title">${provider}</div>
+                ${Object.keys(testsByProvider[provider]).map(keyId =>
+            this.renderKeyGroup(keyId, testsByProvider[provider][keyId])
+        ).join('')
+            }
+            </div>
+                `).join('');
+    }
+
+    renderKeyGroup(keyId, tests) {
+        const passedData = tests.filter(t => t.status === 'success');
+        const failedData = tests.filter(t => t.status !== 'success');
+
+        passedData.sort((a, b) => a.responseTime - b.responseTime);
+
+        const failuresByError = {};
+        failedData.forEach(f => {
+            const msg = f.error || 'Unknown Error';
+            if (!failuresByError[msg]) failuresByError[msg] = [];
+            failuresByError[msg].push(f);
+        });
+
+        const successRate = ((passedData.length / tests.length) * 100).toFixed(1);
+        const color = passedData.length === tests.length ? '#059669' : (passedData.length > 0 ? '#d97706' : '#dc2626');
+        const displayKey = tests[0].displayKey || 'Unknown Key';
+        const keyIdx = tests[0].keyIndex || '?';
+        const groupId = `group-${Math.random().toString(36).substr(2, 9)}`;
+
+        return `
+                <div class="key-group ${passedData.length > 0 ? 'expanded' : ''}" id="${groupId}">
+            <div class="key-header" onclick="toggleGroup('${groupId}')">
+                <div style="display:flex; align-items:center;">
+                    <span class="key-status-dot" style="background:${color}"></span>
+                    <span class="key-value">${displayKey}</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:20px;">
+                    <div style="text-align:right">
+                        <div style="font-weight:700; color:${color}">${passedData.length}/${tests.length} Operational</div>
+                        <div style="font-size:0.8rem; color:#9ca3af">Index #${keyIdx}</div>
+                    </div>
+                    <div class="mini-progress">
+                        <div class="mini-bar" style="width:${successRate}%; background:${color}"></div>
+                    </div>
+                    <svg class="toggle-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </div>
+            </div>
+            
+            <div class="results-body">
+                <table>
+                    ${passedData.map(test => `
+                    <tr>
+                        <td width="5%"><span class="status-badge badge-success">ACTIVE</span></td>
+                        <td width="40%"><b>${test.model}</b></td>
+                        <td width="15%"><span style="font-family:monospace; color:#6b7280">${test.responseTime}ms</span></td>
+                        <td><span style="color:#059669">✅ Operational</span></td>
+                    </tr>
+                    `).join('')}
+
+                    ${Object.entries(failuresByError).map(([error, files]) => `
+                    <tr class="error-group-row" onclick="toggleError(this)">
+                        <td colspan="4">
+                            <div style="display:flex; align-items:center; gap:10px; font-weight:600; color:#991b1b;">
+                                <span>❌ ${files.length} Models Failed</span>
+                                <span style="font-weight:400; color:#333;">${error.substring(0, 100)}...</span>
+                                <span style="margin-left:auto; font-size:0.8rem;">▼ Details</span>
+                            </div>
+                            <div class="error-list">
+                                <div style="margin-bottom:5px; font-weight:bold;">Affected Models:</div>
+                                ${files.map(f => `<span style="display:inline-block; background:white; border:1px solid #fecaca; padding:2px 6px; margin:2px; border-radius:4px;">${f.model}</span>`).join('')}
+                            </div>
+                        </td>
+                    </tr>
+                    `).join('')}
+                </table>
+            </div>
+        </div >
+                `;
     }
 
     /**
@@ -795,12 +810,12 @@ class APIKeyTester {
         });
 
         let md = `# 🎯 API Key Test Report\n\n`;
-        md += `**Generated**: ${new Date(this.results.timestamp).toLocaleString()}  \n`;
-        md += `**Total Tests**: ${this.results.summary.total}  \n\n`;
+        md += `** Generated **: ${new Date(this.results.timestamp).toLocaleString()} \n`;
+        md += `** Total Tests **: ${this.results.summary.total} \n\n`;
 
         md += `## 📊 Summary\n\n`;
         md += `| Status | Count | Percentage |\n`;
-        md += `|--------|-------|------------|\n`;
+        md += `| --------| -------| ------------|\n`;
         md += `| ✅ Passed | ${this.results.summary.passed} | ${((this.results.summary.passed / this.results.summary.total) * 100).toFixed(1)}% |\n`;
         md += `| ❌ Failed | ${this.results.summary.failed} | ${((this.results.summary.failed / this.results.summary.total) * 100).toFixed(1)}% |\n\n`;
 
@@ -810,16 +825,16 @@ class APIKeyTester {
             const successRate = ((stats.passed / stats.total) * 100).toFixed(1);
             const status = stats.passed === stats.total ? '✅' : stats.passed > 0 ? '⚠️' : '❌';
 
-            md += `### ${status} ${provider.toUpperCase()}\n\n`;
+            md += `### ${status} ${provider.toUpperCase()} \n\n`;
             md += `| Metric | Value |\n`;
-            md += `|--------|-------|\n`;
+            md += `| --------| -------|\n`;
             md += `| Total Tests | ${stats.total} |\n`;
             md += `| Passed | ${stats.passed} |\n`;
             md += `| Failed | ${stats.failed} |\n`;
             md += `| Success Rate | ${successRate}% |\n`;
-            md += `| Avg Response Time | ${stats.avgResponseTime}ms |\n\n`;
+            md += `| Avg Response Time | ${stats.avgResponseTime} ms |\n\n`;
 
-            md += `**Models**:\n\n`;
+            md += `** Models **: \n\n`;
             for (const [model, status] of Object.entries(stats.models)) {
                 const icon = status === 'success' ? '✅' : '❌';
                 md += `- ${icon} \`${model}\`\n`;
