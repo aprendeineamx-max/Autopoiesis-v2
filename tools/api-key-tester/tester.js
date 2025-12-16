@@ -10,7 +10,8 @@ const path = require('path');
 
 class APIKeyTester {
     constructor(configPath = '../../core/config/api-keys.json') {
-        this.config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+        const keyPath = path.resolve(__dirname, configPath);
+        this.config = JSON.parse(fs.readFileSync(keyPath, 'utf-8'));
         this.results = {
             timestamp: new Date().toISOString(),
             tests: [],
@@ -69,7 +70,7 @@ class APIKeyTester {
             'gemma-7b-it'
         ];
 
-        const apiKey = this.config.groq.api_key;
+        const apiKey = this.config.providers.groq.api_key;
 
         for (const model of models) {
             await this.testSingleAPI({
@@ -109,7 +110,7 @@ class APIKeyTester {
             'openai/gpt-3.5-turbo'
         ];
 
-        const apiKey = this.config.openrouter.api_key;
+        const apiKey = this.config.providers.openrouter.api_key;
 
         for (const model of models) {
             await this.testSingleAPI({
@@ -141,7 +142,7 @@ class APIKeyTester {
             'gemini-1.5-flash-8b-latest'
         ];
 
-        const apiKeys = this.config.google.api_keys;
+        const apiKeys = this.config.providers.google.api_keys;
 
         for (let i = 0; i < apiKeys.length; i++) {
             const apiKey = apiKeys[i];
@@ -352,7 +353,8 @@ class APIKeyTester {
      * Update apiStats.json with test results
      */
     updateAPIStats() {
-        const statsPath = path.join(__dirname, 'config', 'apiStats.json');
+        // Save stats to core config for centralization
+        const statsPath = path.resolve(__dirname, '../../core/config/api-performance.json');
 
         let stats = {
             lastUpdated: new Date().toISOString(),
@@ -429,11 +431,11 @@ class APIKeyTester {
     async testSambanovaKeys() {
         console.log('\n📊 Testing SambaNova API...\n');
 
-        const productionModels = this.config.sambanova.models.production;
-        const previewModels = this.config.sambanova.models.preview;
+        const productionModels = this.config.providers.sambanova.production_models;
+        const previewModels = this.config.providers.sambanova.preview_models;
         const allModels = [...productionModels, ...previewModels];
 
-        const apiKey = this.config.sambanova.api_key;
+        const apiKey = this.config.providers.sambanova.api_key;
 
         for (const model of allModels) {
             const isProduction = productionModels.includes(model);
@@ -442,7 +444,7 @@ class APIKeyTester {
                 provider: 'sambanova',
                 apiKey: apiKey,
                 model: model,
-                endpoint: this.config.sambanova.endpoint,
+                endpoint: this.config.providers.sambanova.endpoint,
                 testPrompt: 'Say "OK" if you can read this.',
                 isSambanova: true,
                 isProduction: isProduction
@@ -485,38 +487,25 @@ class APIKeyTester {
     /**
      * Generate beautiful HTML report
      */
+    /**
+     * Generate beautiful HTML report with detailed key metrics
+     */
     async generateHTMLReport() {
         console.log('\n📄 Generating HTML report...');
 
-        // Calculate provider stats
-        const providerStats = {};
+        // Group tests by provider
+        const testsByProvider = {};
+        const summary = { total: 0, passed: 0, failed: 0 };
+
         this.results.tests.forEach(test => {
-            if (!providerStats[test.provider]) {
-                providerStats[test.provider] = {
-                    total: 0,
-                    passed: 0,
-                    failed: 0,
-                    avgResponseTime: 0,
-                    totalResponseTime: 0,
-                    models: {}
-                };
+            if (!testsByProvider[test.provider]) {
+                testsByProvider[test.provider] = [];
             }
+            testsByProvider[test.provider].push(test);
 
-            providerStats[test.provider].total++;
-            if (test.status === 'success') {
-                providerStats[test.provider].passed++;
-                providerStats[test.provider].totalResponseTime += test.responseTime || 0;
-            } else {
-                providerStats[test.provider].failed++;
-            }
-            providerStats[test.provider].models[test.model] = test.status;
-        });
-
-        // Calculate averages
-        Object.values(providerStats).forEach(stats => {
-            if (stats.passed > 0) {
-                stats.avgResponseTime = Math.round(stats.totalResponseTime / stats.passed);
-            }
+            summary.total++;
+            if (test.status === 'success') summary.passed++;
+            else summary.failed++;
         });
 
         const html = `<!DOCTYPE html>
@@ -528,169 +517,198 @@ class APIKeyTester {
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background: #f4f7f6;
+            color: #333;
+            padding: 30px;
             min-height: 100vh;
         }
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
         }
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px;
             text-align: center;
+            margin-bottom: 40px;
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
         }
-        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
-        .header p { opacity: 0.9; font-size: 1.1em; }
-        .summary {
+        .header h1 { color: #2d3748; margin-bottom: 10px; font-weight: 800; }
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 20px;
-            padding: 40px;
-            background: #f8f9fa;
+            margin-bottom: 40px;
         }
         .stat-card {
             background: white;
-            padding: 24px;
+            padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             text-align: center;
-            transition: transform 0.2s;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
         }
-        .stat-card:hover { transform: translateY(-5px); }
-        .stat-number { font-size: 2.5em; font-weight: bold; margin: 10px 0; }
-        .stat-label { color: #6c757d; font-size: 0.9em; text-transform: uppercase; letter-spacing: 1px; }
-        .passed { color: #28a745; }
-        .failed { color: #dc3545; }
-        .total { color: #667eea; }
-        .providers { padding: 40px; }
-        .provider-card {
+        .stat-value { font-size: 2.5em; font-weight: 800; margin: 10px 0; }
+        .stat-label { color: #718096; text-transform: uppercase; font-size: 0.85em; letter-spacing: 1px; }
+        .passed { color: #38a169; }
+        .failed { color: #e53e3e; }
+        
+        .provider-section {
             background: white;
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
         .provider-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 16px;
-            border-bottom: 2px solid #e9ecef;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #edf2f7;
         }
-        .provider-name { font-size: 1.5em; font-weight: bold; text-transform: uppercase; }
-        .success-badge { background: #28a745; color: white; padding: 6px 16px; border-radius: 20px; font-size: 0.9em; }
-        .warning-badge { background: #ffc107; color: #000; padding: 6px 16px; border-radius: 20px; font-size: 0.9em; }
-        .danger-badge { background: #dc3545; color: white; padding: 6px 16px; border-radius: 20px; font-size: 0.9em; }
-        .models-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 12px;
-            margin-top: 16px;
-        }
-        .model-item {
-            padding: 12px 16px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
+        .provider-title { font-size: 1.4em; font-weight: 700; color: #2d3436; text-transform: uppercase; }
+        
+        table { width: 100%; border-collapse: separate; border-spacing: 0; }
+        th { text-align: left; color: #718096; padding: 15px; font-weight: 600; border-bottom: 2px solid #edf2f7; }
+        td { padding: 15px; border-bottom: 1px solid #edf2f7; vertical-align: top; }
+        tr:last-child td { border-bottom: none; }
+        
+        .status-badge {
+            display: inline-flex;
             align-items: center;
+            padding: 6px 12px;
+            border-radius: 6px;
             font-size: 0.9em;
+            font-weight: 600;
         }
-        .model-success { background: #d4edda; border-left: 4px solid #28a745; }
-        .model-failed { background: #f8d7da; border-left: 4px solid #dc3545; }
-        .model-name { font-family: 'Courier New', monospace; }
-        table { width: 100%; border-collapse: collapse; margin: 16px 0; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #dee2e6; }
-        th { background: #f8f9fa; font-weight: 600; text-transform: uppercase; font-size: 0.85em; color: #495057; }
-        .metric-value { font-weight: 600; color: #667eea; }
-        .footer { background: #343a40; color: white; padding: 20px; text-align: center; font-size: 0.9em; }
+        .status-success { background: #c6f6d5; color: #22543d; }
+        .status-failed { background: #fed7d7; color: #822727; }
+        
+        .key-badge {
+            background: #ebf8ff;
+            color: #2c5282;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+        
+        .model-name { font-weight: 600; color: #4a5568; }
+        .error-message { color: #e53e3e; font-size: 0.9em; margin-top: 5px; }
+        .response-time { color: #718096; font-family: monospace; }
+        
+        /* Tooltip container */
+        .tooltip { position: relative; display: inline-block; cursor: pointer; }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 300px;
+            background-color: #2d3748;
+            color: #fff;
+            text-align: left;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -150px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.85em;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎯 API Key Test Report</h1>
+            <h1>📊 API Key Detailed Intelligence Report</h1>
             <p>Generated: ${new Date(this.results.timestamp).toLocaleString()}</p>
-            <p>Duration: ${((Date.now() - new Date(this.results.timestamp).getTime()) / 1000).toFixed(2)}s</p>
         </div>
-        
-        <div class="summary">
+
+        <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-label">Total Tests</div>
-                <div class="stat-number total">${this.results.summary.total}</div>
+                <div class="stat-value">${summary.total}</div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">Passed</div>
-                <div class="stat-number passed">${this.results.summary.passed}</div>
-                <div>${((this.results.summary.passed / this.results.summary.total) * 100).toFixed(1)}%</div>
+                <div class="stat-value passed">${summary.passed}</div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">Failed</div>
-                <div class="stat-number failed">${this.results.summary.failed}</div>
-                <div>${((this.results.summary.failed / this.results.summary.total) * 100).toFixed(1)}%</div>
+                <div class="stat-value failed">${summary.failed}</div>
             </div>
         </div>
-        
-        <div class="providers">
-            ${Object.entries(providerStats).map(([provider, stats]) => {
-            const successRate = ((stats.passed / stats.total) * 100).toFixed(1);
-            let badgeClass = stats.passed === stats.total ? 'success-badge' : stats.passed > 0 ? 'warning-badge' : 'danger-badge';
-            let badgeText = stats.passed === stats.total ? `✅ ${successRate}% Success` : stats.passed > 0 ? `⚠️ ${successRate}% Success` : '❌ All Failed';
+
+        ${Object.keys(testsByProvider).map(provider => {
+            const tests = testsByProvider[provider];
+            const passedCount = tests.filter(t => t.status === 'success').length;
+            const successRate = ((passedCount / tests.length) * 100).toFixed(1);
 
             return `
-                <div class="provider-card">
-                    <div class="provider-header">
-                        <div class="provider-name">${provider}</div>
-                        <div class="${badgeClass}">${badgeText}</div>
-                    </div>
-                    
-                    <table>
-                        <tr>
-                            <th>Total Tests</th>
-                            <th>Passed</th>
-                            <th>Failed</th>
-                            <th>Avg Response Time</th>
-                        </tr>
-                        <tr>
-                            <td class="metric-value">${stats.total}</td>
-                            <td class="metric-value passed">${stats.passed}</td>
-                            <td class="metric-value failed">${stats.failed}</td>
-                            <td class="metric-value">${stats.avgResponseTime}ms</td>
-                        </tr>
-                    </table>
-                    
-                    <div class="models-grid">
-                        ${Object.entries(stats.models).map(([model, status]) => `
-                            <div class="model-item ${status === 'success' ? 'model-success' : 'model-failed'}">
-                                <span class="model-name">${model}</span>
-                                <span>${status === 'success' ? '✅' : '❌'}</span>
-                            </div>
-                        `).join('')}
+            <div class="provider-section">
+                <div class="provider-header">
+                    <div class="provider-title">${provider}</div>
+                    <div class="status-badge ${passedCount === tests.length ? 'status-success' : (passedCount > 0 ? 'status-warning' : 'status-failed')}" 
+                         style="background: ${passedCount === tests.length ? '#c6f6d5' : (passedCount > 0 ? '#feebc8' : '#fed7d7')}; 
+                                color: ${passedCount === tests.length ? '#22543d' : (passedCount > 0 ? '#744210' : '#822727')}">
+                        ${passedCount}/${tests.length} Operational (${successRate}%)
                     </div>
                 </div>
-                `;
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="10%">Status</th>
+                            <th width="15%">Key Index</th>
+                            <th width="25%">Model</th>
+                            <th width="15%">Latency</th>
+                            <th>Diagnostics / Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${tests.map(test => `
+                        <tr>
+                            <td>
+                                <span class="status-badge ${test.status === 'success' ? 'status-success' : 'status-failed'}">
+                                    ${test.status === 'success' ? 'ACTIVE' : 'FAIL'}
+                                </span>
+                            </td>
+                            <td><span class="key-badge">Key #${test.keyIndex}</span></td>
+                            <td><div class="model-name">${test.model}</div></td>
+                            <td><span class="response-time">${test.responseTime}ms</span></td>
+                            <td>
+                                ${test.status === 'success'
+                    ? `<div style="color:#38a169">✅ Operational</div>`
+                    : `<div class="error-message">❌ ${test.statusCode || 'Err'} - ${test.error}</div>`
+                }
+                                ${test.rateLimitInfo ? `<div style="font-size:0.8em; color:#718096; margin-top:4px;">Calc: ${test.rateLimitInfo.remainingRequests} RPM remaining</div>` : ''}
+                            </td>
+                        </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+            `;
         }).join('')}
-        </div>
         
-        <div class="footer">
-            <p>Professional API Key Tester | Generated by Autopoiesis Phase 7</p>
+        <div style="text-align: center; color: #a0aec0; margin-top: 50px; font-size: 0.9em;">
+            Generated by Autopoiesis System | AntiGravity Ghost Agent
         </div>
     </div>
 </body>
 </html>`;
 
-        const reportPath = path.join(__dirname, 'reports', 'api-test-report.html');
+        const reportPath = path.join(__dirname, 'reports', 'API-TEST-REPORT.html');
         fs.mkdirSync(path.dirname(reportPath), { recursive: true });
         fs.writeFileSync(reportPath, html);
-        console.log(`  ✅ HTML report saved: ${reportPath}`);
+        console.log(`  ✅ Detailed HTML report saved: ${reportPath}`);
     }
 
     /**
