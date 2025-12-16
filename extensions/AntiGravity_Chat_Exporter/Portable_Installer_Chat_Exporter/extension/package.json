@@ -1,0 +1,30 @@
+{
+    "name": "antigravity-chat-exporter",
+    "displayName": "AntiGravity Chat Exporter",
+    "description": "Exports chat history to JSON/Markdown in real-time.",
+    "version": "1.0.0",
+    "publisher": "antigravity-agent",
+    "engines": {
+        "vscode": "^1.50.0"
+    },
+    "activationEvents": [
+        "*"
+    ],
+    "main": "./extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "antigravity.exporter.configure",
+                "title": "AntiGravity: Configure Chat Exporter"
+            },
+            {
+                "command": "antigravity.exportChatNow",
+                "title": "AntiGravity: Force Chat Export"
+            },
+            {
+                "command": "antigravity.importFromClipboard",
+                "title": "AntiGravity: Import Chat from Clipboard"
+            }
+        ]
+    }
+}

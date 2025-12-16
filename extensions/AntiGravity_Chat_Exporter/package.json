@@ -1,0 +1,67 @@
+{
+    "name": "antigravity-chat-exporter",
+    "displayName": "AntiGravity Chat Exporter",
+    "description": "Exports chat history to JSON/Markdown in real-time.",
+    "version": "1.0.0",
+    "publisher": "antigravity-agent",
+    "engines": {
+        "vscode": "^1.50.0"
+    },
+    "activationEvents": [
+        "*"
+    ],
+    "main": "./extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "antigravity.exporter.configure",
+                "title": "AntiGravity: Configure Chat Exporter"
+            },
+            {
+                "command": "antigravity.exportChatNow",
+                "title": "AntiGravity: Force Chat Export"
+            },
+            {
+                "command": "antigravity.importFromClipboard",
+                "title": "AntiGravity: Import Chat from Clipboard"
+            },
+            {
+                "command": "antigravity.exporter.autoCopyChat",
+                "title": "AntiGravity: Auto-Copy Chat Now"
+            },
+            {
+                "command": "antigravity.exporter.exportJSON",
+                "title": "AntiGravity: Export Chat as JSON"
+            },
+            {
+                "command": "antigravity.exporter.exportMarkdown",
+                "title": "AntiGravity: Export Chat as Markdown"
+            },
+            {
+                "command": "antigravity.exporter.validateExport",
+                "title": "AntiGravity: Validate Last Export"
+            },
+            {
+                "command": "antigravity.exporter.openFolder",
+                "title": "AntiGravity: Open Export Folder"
+            }
+        ],
+        "keybindings": [
+            {
+                "command": "antigravity.exporter.autoCopyChat",
+                "key": "ctrl+alt+c",
+                "when": "editorTextFocus"
+            },
+            {
+                "command": "antigravity.exporter.exportJSON",
+                "key": "ctrl+alt+j",
+                "when": "editorTextFocus"
+            },
+            {
+                "command": "antigravity.exporter.exportMarkdown",
+                "key": "ctrl+alt+m",
+                "when": "editorTextFocus"
+            }
+        ]
+    }
+}

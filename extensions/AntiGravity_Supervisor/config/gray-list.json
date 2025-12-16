@@ -1,0 +1,514 @@
+{
+  "lastUpdated": "2025-12-12T23:39:55.269Z",
+  "failedModels": {
+    "groq/llama-3.3-70b-versatile": {
+      "provider": "groq",
+      "model": "llama-3.3-70b-versatile",
+      "failures": [
+        {
+          "keyIndex": 1,
+          "error": "Access denied. Please check your network settings.",
+          "statusCode": 403,
+          "timestamp": "2025-12-12T23:01:47.649Z"
+        },
+        {
+          "keyIndex": 1,
+          "error": "Access denied. Please check your network settings.",
+          "statusCode": 403,
+          "timestamp": "2025-12-12T23:39:55.253Z"
+        }
+      ],
+      "firstFailure": "2025-12-12T23:01:47.649Z",
+      "failureCount": 2,
+      "lastFailure": "2025-12-12T23:39:55.254Z"
+    },
+    "groq/llama-3.3-70b-specdec": {
+      "provider": "groq",
+      "model": "llama-3.3-70b-specdec",
+      "failures": [
+        {
+          "keyIndex": 1,
+          "error": "Access denied. Please check your network settings.",
+          "statusCode": 403,
+          "timestamp": "2025-12-12T23:01:47.650Z"
+        },
+        {
+          "keyIndex": 1,
+          "error": "Access denied. Please check your network settings.",
+          "statusCode": 403,
+          "timestamp": "2025-12-12T23:39:55.255Z"
+        }
+      ],
+      "firstFailure": "2025-12-12T23:01:47.650Z",
+      "failureCount": 2,
+      "lastFailure": "2025-12-12T23:39:55.255Z"
+    },
+    "groq/llama-3.1-70b-versatile": {
+      "provider": "groq",
+      "model": "llama-3.1-70b-versatile",
+      "failures": [
+        {
+          "keyIndex": 1,
+          "error": "Access denied. Please check your network settings.",
+          "statusCode": 403,
+          "timestamp": "2025-12-12T23:01:47.651Z"
+        },
+        {
+          "keyIndex": 1,
+          "error": "Access denied. Please check your network settings.",
+          "statusCode": 403,
+          "timestamp": "2025-12-12T23:39:55.255Z"
+        }
+      ],
+      "firstFailure": "2025-12-12T23:01:47.651Z",
+      "failureCount": 2,
+      "lastFailure": "2025-12-12T23:39:55.255Z"
+    },
+    "groq/llama-3.1-8b-instant": {
+      "provider": "groq",
+      "model": "llama-3.1-8b-instant",
+      "failures": [
+        {
+          "keyIndex": 1,
+          "error": "Access denied. Please check your network settings.",
+          "statusCode": 403,
+          "timestamp": "2025-12-12T23:01:47.663Z"
+        },
+        {
+          "keyIndex": 1,
+          "error": "Access denied. Please check your network settings.",
+          "statusCode": 403,
+          "timestamp": "2025-12-12T23:39:55.260Z"
+        }
+      ],
+      "firstFailure": "2025-12-12T23:01:47.663Z",
+      "failureCount": 2,
+      "lastFailure": "2025-12-12T23:39:55.260Z"
+    },
+    "groq/mixtral-8x7b-32768": {
+      "provider": "groq",
+      "model": "mixtral-8x7b-32768",
+      "failures": [
+        {
+          "keyIndex": 1,
+          "error": "Access denied. Please check your network settings.",
+          "statusCode": 403,
+          "timestamp": "2025-12-12T23:01:47.664Z"
+        },
+        {
+          "keyIndex": 1,
+          "error": "Access denied. Please check your network settings.",
+          "statusCode": 403,
+          "timestamp": "2025-12-12T23:39:55.260Z"
+        }
+      ],
+      "firstFailure": "2025-12-12T23:01:47.664Z",
+      "failureCount": 2,
+      "lastFailure": "2025-12-12T23:39:55.260Z"
+    },
+    "groq/gemma-7b-it": {
+      "provider": "groq",
+      "model": "gemma-7b-it",
+      "failures": [
+        {
+          "keyIndex": 1,
+          "error": "Access denied. Please check your network settings.",
+          "statusCode": 403,
+          "timestamp": "2025-12-12T23:01:47.665Z"
+        },
+        {
+          "keyIndex": 1,
+          "error": "Access denied. Please check your network settings.",
+          "statusCode": 403,
+          "timestamp": "2025-12-12T23:39:55.261Z"
+        }
+      ],
+      "firstFailure": "2025-12-12T23:01:47.665Z",
+      "failureCount": 2,
+      "lastFailure": "2025-12-12T23:39:55.261Z"
+    },
+    "openrouter/google/gemma-3-12b:free": {
+      "provider": "openrouter",
+      "model": "google/gemma-3-12b:free",
+      "failures": [
+        {
+          "keyIndex": 1,
+          "error": "google/gemma-3-12b:free is not a valid model ID",
+          "statusCode": 400,
+          "timestamp": "2025-12-12T23:01:47.665Z"
+        },
+        {
+          "keyIndex": 1,
+          "error": "google/gemma-3-12b:free is not a valid model ID",
+          "statusCode": 400,
+          "timestamp": "2025-12-12T23:39:55.261Z"
+        }
+      ],
+      "firstFailure": "2025-12-12T23:01:47.665Z",
+      "failureCount": 2,
+      "lastFailure": "2025-12-12T23:39:55.261Z"
+    },
+    "openrouter/google/gemma-3-27b:free": {
+      "provider": "openrouter",
+      "model": "google/gemma-3-27b:free",
+      "failures": [
+        {
+          "keyIndex": 1,
+          "error": "google/gemma-3-27b:free is not a valid model ID",
+          "statusCode": 400,
+          "timestamp": "2025-12-12T23:01:47.666Z"
+        },
+        {
+          "keyIndex": 1,
+          "error": "google/gemma-3-27b:free is not a valid model ID",
+          "statusCode": 400,
+          "timestamp": "2025-12-12T23:39:55.261Z"
+        }
+      ],
+      "firstFailure": "2025-12-12T23:01:47.666Z",
+      "failureCount": 2,
+      "lastFailure": "2025-12-12T23:39:55.261Z"
+    },
+    "openrouter/google/gemini-pro-1.5": {
+      "provider": "openrouter",
+      "model": "google/gemini-pro-1.5",
+      "failures": [
+        {
+          "keyIndex": 1,
+          "error": "No endpoints found for google/gemini-pro-1.5.",
+          "statusCode": 404,
+          "timestamp": "2025-12-12T23:01:47.667Z"
+        },
+        {
+          "keyIndex": 1,
+          "error": "No endpoints found for google/gemini-pro-1.5.",
+          "statusCode": 404,
+          "timestamp": "2025-12-12T23:39:55.262Z"
+        }
+      ],
+      "firstFailure": "2025-12-12T23:01:47.667Z",
+      "failureCount": 2,
+      "lastFailure": "2025-12-12T23:39:55.262Z"
+    },
+    "openrouter/google/gemini-flash-1.5": {
+      "provider": "openrouter",
+      "model": "google/gemini-flash-1.5",
+      "failures": [
+        {
+          "keyIndex": 1,
+          "error": "No endpoints found for google/gemini-flash-1.5.",
+          "statusCode": 404,
+          "timestamp": "2025-12-12T23:01:47.671Z"
+        },
+        {
+          "keyIndex": 1,
+          "error": "No endpoints found for google/gemini-flash-1.5.",
+          "statusCode": 404,
+          "timestamp": "2025-12-12T23:39:55.262Z"
+        }
+      ],
+      "firstFailure": "2025-12-12T23:01:47.671Z",
+      "failureCount": 2,
+      "lastFailure": "2025-12-12T23:39:55.262Z"
+    },
+    "google/gemini-2.0-flash-exp": {
+      "provider": "google",
+      "model": "gemini-2.0-flash-exp",
+      "failures": [
+        {
+          "keyIndex": 1,
+          "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash-exp\nPlease retry in 37.210654989s.",
+          "statusCode": 429,
+          "timestamp": "2025-12-12T23:01:47.673Z"
+        },
+        {
+          "keyIndex": 2,
+          "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash-exp\nPlease retry in 34.239421264s.",
+          "statusCode": 429,
+          "timestamp": "2025-12-12T23:01:47.676Z"
+        },
+        {
+          "keyIndex": 3,
+          "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-exp\nPlease retry in 30.92230654s.",
+          "statusCode": 429,
+          "timestamp": "2025-12-12T23:01:47.680Z"
+        },
+        {
+          "keyIndex": 1,
+          "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash-exp\nPlease retry in 12.127552711s.",
+          "statusCode": 429,
+          "timestamp": "2025-12-12T23:39:55.264Z"
+        },
+        {
+          "keyIndex": 2,
+          "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash-exp\nPlease retry in 8.839203394s.",
+          "statusCode": 429,
+          "timestamp": "2025-12-12T23:39:55.265Z"
+        },
+        {
+          "keyIndex": 3,
+          "error": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/usage?tab=rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-exp\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-exp\nPlease retry in 5.57402206s.",
+          "statusCode": 429,
+          "timestamp": "2025-12-12T23:39:55.267Z"
+        }
+      ],
+      "firstFailure": "2025-12-12T23:01:47.673Z",
+      "failureCount": 6,
+      "lastFailure": "2025-12-12T23:39:55.267Z"
+    },
+    "google/gemini-exp-1206": {
+      "provider": "google",
+      "model": "gemini-exp-1206",
+      "failures": [
+        {
+          "keyIndex": 1,
+          "error": "Your API key was reported as leaked. Please use another API key.",
+          "statusCode": 403,
+          "timestamp": "2025-12-12T23:01:47.673Z"
+        },
+        {
+          "keyIndex": 2,
+          "error": "Your API key was reported as leaked. Please use another API key.",
+          "statusCode": 403,
+          "timestamp": "2025-12-12T23:01:47.677Z"
+        },
+        {
+          "keyIndex": 3,
+          "error": "Your API key was reported as leaked. Please use another API key.",
+          "statusCode": 403,
+          "timestamp": "2025-12-12T23:01:47.681Z"
+        },
+        {
+          "keyIndex": 1,
+          "error": "Your API key was reported as leaked. Please use another API key.",
+          "statusCode": 403,
+          "timestamp": "2025-12-12T23:39:55.264Z"
+        },
+        {
+          "keyIndex": 2,
+          "error": "Your API key was reported as leaked. Please use another API key.",
+          "statusCode": 403,
+          "timestamp": "2025-12-12T23:39:55.266Z"
+        },
+        {
+          "keyIndex": 3,
+          "error": "Your API key was reported as leaked. Please use another API key.",
+          "statusCode": 403,
+          "timestamp": "2025-12-12T23:39:55.267Z"
+        }
+      ],
+      "firstFailure": "2025-12-12T23:01:47.673Z",
+      "failureCount": 6,
+      "lastFailure": "2025-12-12T23:39:55.267Z"
+    },
+    "google/gemini-1.5-pro-latest": {
+      "provider": "google",
+      "model": "gemini-1.5-pro-latest",
+      "failures": [
+        {
+          "keyIndex": 1,
+          "error": "models/gemini-1.5-pro-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+          "statusCode": 404,
+          "timestamp": "2025-12-12T23:01:47.674Z"
+        },
+        {
+          "keyIndex": 2,
+          "error": "models/gemini-1.5-pro-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+          "statusCode": 404,
+          "timestamp": "2025-12-12T23:01:47.677Z"
+        },
+        {
+          "keyIndex": 3,
+          "error": "models/gemini-1.5-pro-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+          "statusCode": 404,
+          "timestamp": "2025-12-12T23:01:47.681Z"
+        },
+        {
+          "keyIndex": 1,
+          "error": "models/gemini-1.5-pro-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+          "statusCode": 404,
+          "timestamp": "2025-12-12T23:39:55.264Z"
+        },
+        {
+          "keyIndex": 2,
+          "error": "models/gemini-1.5-pro-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+          "statusCode": 404,
+          "timestamp": "2025-12-12T23:39:55.266Z"
+        },
+        {
+          "keyIndex": 3,
+          "error": "models/gemini-1.5-pro-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+          "statusCode": 404,
+          "timestamp": "2025-12-12T23:39:55.268Z"
+        }
+      ],
+      "firstFailure": "2025-12-12T23:01:47.674Z",
+      "failureCount": 6,
+      "lastFailure": "2025-12-12T23:39:55.268Z"
+    },
+    "google/gemini-1.5-flash-latest": {
+      "provider": "google",
+      "model": "gemini-1.5-flash-latest",
+      "failures": [
+        {
+          "keyIndex": 1,
+          "error": "models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+          "statusCode": 404,
+          "timestamp": "2025-12-12T23:01:47.675Z"
+        },
+        {
+          "keyIndex": 2,
+          "error": "models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+          "statusCode": 404,
+          "timestamp": "2025-12-12T23:01:47.678Z"
+        },
+        {
+          "keyIndex": 3,
+          "error": "models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+          "statusCode": 404,
+          "timestamp": "2025-12-12T23:01:47.682Z"
+        },
+        {
+          "keyIndex": 1,
+          "error": "models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+          "statusCode": 404,
+          "timestamp": "2025-12-12T23:39:55.265Z"
+        },
+        {
+          "keyIndex": 2,
+          "error": "models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+          "statusCode": 404,
+          "timestamp": "2025-12-12T23:39:55.266Z"
+        },
+        {
+          "keyIndex": 3,
+          "error": "models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+          "statusCode": 404,
+          "timestamp": "2025-12-12T23:39:55.269Z"
+        }
+      ],
+      "firstFailure": "2025-12-12T23:01:47.675Z",
+      "failureCount": 6,
+      "lastFailure": "2025-12-12T23:39:55.269Z"
+    },
+    "google/gemini-1.5-flash-8b-latest": {
+      "provider": "google",
+      "model": "gemini-1.5-flash-8b-latest",
+      "failures": [
+        {
+          "keyIndex": 1,
+          "error": "models/gemini-1.5-flash-8b-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+          "statusCode": 404,
+          "timestamp": "2025-12-12T23:01:47.675Z"
+        },
+        {
+          "keyIndex": 2,
+          "error": "models/gemini-1.5-flash-8b-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+          "statusCode": 404,
+          "timestamp": "2025-12-12T23:01:47.679Z"
+        },
+        {
+          "keyIndex": 3,
+          "error": "models/gemini-1.5-flash-8b-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+          "statusCode": 404,
+          "timestamp": "2025-12-12T23:01:47.683Z"
+        },
+        {
+          "keyIndex": 1,
+          "error": "models/gemini-1.5-flash-8b-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+          "statusCode": 404,
+          "timestamp": "2025-12-12T23:39:55.265Z"
+        },
+        {
+          "keyIndex": 2,
+          "error": "models/gemini-1.5-flash-8b-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+          "statusCode": 404,
+          "timestamp": "2025-12-12T23:39:55.267Z"
+        },
+        {
+          "keyIndex": 3,
+          "error": "models/gemini-1.5-flash-8b-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+          "statusCode": 404,
+          "timestamp": "2025-12-12T23:39:55.269Z"
+        }
+      ],
+      "firstFailure": "2025-12-12T23:01:47.675Z",
+      "failureCount": 6,
+      "lastFailure": "2025-12-12T23:39:55.269Z"
+    },
+    "sambanova/Deepseek-V3.1": {
+      "provider": "sambanova",
+      "model": "Deepseek-V3.1",
+      "failures": [
+        {
+          "keyIndex": 1,
+          "error": "Request failed with status code 404",
+          "statusCode": 404,
+          "timestamp": "2025-12-12T23:39:55.263Z"
+        }
+      ],
+      "firstFailure": "2025-12-12T23:39:55.263Z",
+      "failureCount": 1,
+      "lastFailure": "2025-12-12T23:39:55.263Z"
+    },
+    "sambanova/Whisper-Large-v3": {
+      "provider": "sambanova",
+      "model": "Whisper-Large-v3",
+      "failures": [
+        {
+          "keyIndex": 1,
+          "error": "Request failed with status code 500",
+          "statusCode": 500,
+          "timestamp": "2025-12-12T23:39:55.263Z"
+        }
+      ],
+      "firstFailure": "2025-12-12T23:39:55.263Z",
+      "failureCount": 1,
+      "lastFailure": "2025-12-12T23:39:55.263Z"
+    },
+    "sambanova/E5-Mistral-7B-Instruct": {
+      "provider": "sambanova",
+      "model": "E5-Mistral-7B-Instruct",
+      "failures": [
+        {
+          "keyIndex": 1,
+          "error": "Request failed with status code 500",
+          "statusCode": 500,
+          "timestamp": "2025-12-12T23:39:55.263Z"
+        }
+      ],
+      "firstFailure": "2025-12-12T23:39:55.263Z",
+      "failureCount": 1,
+      "lastFailure": "2025-12-12T23:39:55.263Z"
+    }
+  },
+  "failedKeys": {},
+  "failureCategories": {
+    "401_unauthorized": [],
+    "403_forbidden": [
+      "groq/llama-3.3-70b-versatile",
+      "groq/llama-3.3-70b-specdec",
+      "groq/llama-3.1-70b-versatile",
+      "groq/llama-3.1-8b-instant",
+      "groq/mixtral-8x7b-32768",
+      "groq/gemma-7b-it"
+    ],
+    "404_not_found": [
+      "openrouter/google/gemini-pro-1.5",
+      "openrouter/google/gemini-flash-1.5",
+      "google/gemini-1.5-pro-latest",
+      "google/gemini-1.5-flash-latest",
+      "google/gemini-1.5-flash-8b-latest",
+      "sambanova/Deepseek-V3.1"
+    ],
+    "429_rate_limit": [],
+    "network_error": [],
+    "timeout": [],
+    "quota_exceeded": [
+      "google/gemini-2.0-flash-exp"
+    ],
+    "key_leaked": [
+      "google/gemini-exp-1206"
+    ]
+  }
+}

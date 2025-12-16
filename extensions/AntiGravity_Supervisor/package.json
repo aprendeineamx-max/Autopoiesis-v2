@@ -1,0 +1,81 @@
+{
+    "name": "antigravity-supervisor",
+    "displayName": "AntiGravity Supervisor",
+    "description": "AI Supervisor agent that works alongside Gemini executor for autonomous development",
+    "version": "0.1.0",
+    "publisher": "antigravity-team",
+    "engines": {
+        "vscode": "^1.85.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onStartupFinished",
+        "onCommand:antigravity.supervisor.start",
+        "onCommand:antigravity.supervisor.stop",
+        "onCommand:antigravity.supervisor.status"
+    ],
+    "main": "./extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "antigravity.supervisor.start",
+                "title": "Start Autonomous Supervisor"
+            },
+            {
+                "command": "antigravity.supervisor.stop",
+                "title": "Stop Autonomous Supervisor"
+            },
+            {
+                "command": "antigravity.supervisor.status",
+                "title": "Supervisor Status"
+            },
+            {
+                "command": "antigravity.supervisor.emergencyStop",
+                "title": "🚨 EMERGENCY STOP - Halt All Agents"
+            },
+            {
+                "command": "antigravity.supervisor.singleCycle",
+                "title": "Run Single Supervisor Cycle (Test)"
+            }
+        ],
+        "configuration": {
+            "title": "AntiGravity Supervisor",
+            "properties": {
+                "antigravity.supervisor.provider": {
+                    "type": "string",
+                    "default": "groq",
+                    "enum": [
+                        "groq",
+                        "openrouter",
+                        "google"
+                    ],
+                    "description": "AI provider for Supervisor agent"
+                },
+                "antigravity.supervisor.cycleDelay": {
+                    "type": "number",
+                    "default": 30000,
+                    "description": "Delay between autonomous cycles (milliseconds)"
+                },
+                "antigravity.supervisor.maxCycles": {
+                    "type": "number",
+                    "default": 1000,
+                    "description": "Maximum autonomous cycles before stopping"
+                },
+                "antigravity.supervisor.autoStart": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Auto-start supervisor on extension activation"
+                }
+            }
+        }
+    },
+    "dependencies": {
+        "axios": "^1.6.0"
+    },
+    "devDependencies": {
+        "@types/vscode": "^1.85.0",
+        "@types/node": "^18.x"
+    }
+}

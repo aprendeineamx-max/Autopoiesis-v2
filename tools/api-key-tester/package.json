@@ -1,0 +1,29 @@
+{
+    "name": "@autopoiesis/api-key-tester",
+    "version": "2.0.0",
+    "description": "Professional API Key Testing Tool with Auto-Update to Central Config",
+    "main": "tester.js",
+    "scripts": {
+        "test": "node tester.js",
+        "test:quick": "node tester.js --quick",
+        "report": "node tester.js --report-only"
+    },
+    "keywords": [
+        "api",
+        "testing",
+        "validation",
+        "groq",
+        "openrouter",
+        "sambanova",
+        "google",
+        "gemini"
+    ],
+    "author": "aprendeineamx-max",
+    "license": "MIT",
+    "dependencies": {
+        "axios": "^1.6.0"
+    },
+    "engines": {
+        "node": ">=16.0.0"
+    }
+}
