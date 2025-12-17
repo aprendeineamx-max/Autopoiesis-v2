@@ -1,24 +1,23 @@
 /**
- * ANTIGRAVITY INTERNAL HOOK - OMNI PROTOCOL v17.0 (MULTI-DIFF TARGET)
- * Features:
- * 1. COMMAND HARVESTER: Logs available commands.
- * 2. AGGRESSIVE ACCEPTOR: Includes MULTI-DIFF commands (The "Accept All" Killer).
- * 3. TRIGGERS: Watchers Active.
- * 4. TRUST BYPASS: Configures settings on boot.
+ * ANTIGRAVITY INTERNAL HOOK - OMNI PROTOCOL v21.0 (INTEGRATED + EXTERNAL)
+ * features:
+ * 1. SETTINGS: Trusts ["*", "https://*", "http://*"] in BOTH paths.
+ * 2. TEST: Launches checks in External AND Integrated browser.
+ * 3. CONTROL: Hybrid Acceptor loop active.
  */
 const vscode = require('vscode');
 const fs = require('fs');
 const path = require('path');
 
 async function activate(context) {
-    console.log('[AG] OMNI SYSTEM v17.0 MULTI-DIFF 🎯');
+    console.log('[AG] OMNI SYSTEM v21.0 BROWSER SYNC 🌐');
 
-    // 0. TRUST CONFIGURATION
-    configureGlobalTrust();
+    // 0. SETTINGS ENFORCEMENT (Expanded)
+    await forceSettings();
 
     // 1. DIAGNOSTIC HARVEST
     try {
-        fs.writeFileSync('C:\\AntiGravityExt\\AntiGravity_Ghost_Agent\\EXTENSION_LOADED.txt', `v17 Loaded at ${new Date().toISOString()}`);
+        fs.writeFileSync('C:\\AntiGravityExt\\AntiGravity_Ghost_Agent\\EXTENSION_LOADED.txt', `v21 Loaded at ${new Date().toISOString()}`);
         vscode.commands.getCommands(true).then(cmds => {
             const dumpPath = 'C:\\AntiGravityExt\\ALL_COMMANDS.txt';
             fs.writeFileSync(dumpPath, cmds.join('\n'));
@@ -42,18 +41,18 @@ async function activate(context) {
     setupWatcher('C:\\AntiGravityExt\\GHOST_TRIGGER.txt', 'EXTERNAL');
     setupWatcher('C:\\AntiGravityExt\\AntiGravity_Ghost_Agent\\TRIGGER.txt', 'INTERNAL');
 
-    vscode.window.showInformationMessage('👻 Antigravity v17: MULTI-DIFF ACCEPTOR ACTIVE.');
+    vscode.window.showInformationMessage('👻 Antigravity v21: BROWSERS READY.');
 }
 
-async function configureGlobalTrust() {
+async function forceSettings() {
     try {
         const config = vscode.workspace.getConfiguration();
+        // EXPANDED WILDCARDS
+        await config.update('trustedDomains.domains', ['*', 'https://*', 'http://*'], vscode.ConfigurationTarget.Global);
         await config.update('trustedDomains.promptInTrustedWorkspace', false, vscode.ConfigurationTarget.Global);
         await config.update('http.linkProtection', 'off', vscode.ConfigurationTarget.Global);
-        console.log('[AG] Trusted Domains & Link Protection: DISABLED');
-    } catch (e) {
-        console.error('[AG] Failed to configure trust:', e);
-    }
+        await config.update('security.workspace.trust.enabled', false, vscode.ConfigurationTarget.Global);
+    } catch (e) { }
 }
 
 function setupWatcher(triggerPath, id) {
@@ -61,57 +60,77 @@ function setupWatcher(triggerPath, id) {
 
     fs.watchFile(triggerPath, { interval: 1000 }, (curr, prev) => {
         if (curr.mtime > prev.mtime) {
-            console.log(`[AG] ${id} SIGNAL RECEIVED 📡`);
             vscode.window.showInformationMessage(`👻 ${id} SIGNAL: Executing Link Test...`);
             runLinkStressTest();
         }
     });
 }
 
-// --- LINK STRESS TEST ---
+// --- LINK STRESS TEST (HYBRID) ---
 async function runLinkStressTest() {
-    vscode.window.showInformationMessage('🧪 LAUNCHING BROWSER SWARM...');
+    vscode.window.showInformationMessage('🧪 LAUNCHING HYBRID BROWSER SWARM...');
     try { fs.appendFileSync('C:\\AntiGravityExt\\AntiGravity_Ghost_Agent\\EXTENSION_LOADED.txt', `\nTEST STRIGGERED at ${new Date().toISOString()}`); } catch (e) { }
 
     const urls = ['https://google.com', 'https://github.com', 'https://microsoft.com', 'https://stackoverflow.com', 'https://openai.com'];
+
     for (const url of urls) {
         try {
-            console.log(`[AG] Opening: ${url}`);
-            vscode.env.openExternal(vscode.Uri.parse(url));
+            // 1. INTEGRATED BROWSER (Per User Request)
+            console.log(`[AG] Opening Internal: ${url}`);
+            await vscode.commands.executeCommand('simpleBrowser.show', url);
+
+            // 2. EXTERNAL BROWSER (Standard)
+            console.log(`[AG] Opening External: ${url}`);
+            await vscode.env.openExternal(vscode.Uri.parse(url));
         } catch (e) {
             console.error(e);
         }
-        await new Promise(r => setTimeout(r, 200));
+        await new Promise(r => setTimeout(r, 500));
     }
 }
 
-// --- THE AGGRESSIVE ACCEPTOR (v17 TARGETED) ---
+// --- THE AGGRESSIVE ACCEPTOR (v20 HYBRID + DIALOG) ---
 function startAggressiveAcceptor(context) {
     const list = [
-        // --- MULTI-DIFF (The likely "Accept All" button) ---
-        'chatEditing.multidiff.acceptAllFiles', // NEW FOUND COMMAND!
-        'chatEditing.acceptFile',               // Per-file
-        'chatEditing.acceptAllFiles',           // Older variant
+        // --- DIALOG ACCEPTANCE (Experimental) ---
+        'workbench.action.accept',      // Generic "Enter" (Careful!)
 
-        // --- STANDARD EDITORS ---
+        // --- USER'S GHOST COMMANDS ---
+        'antigravity.agent.acceptAgentStep',
+        'antigravity.agent.alwaysAllow',
+        'antigravity.agent.acceptAll',
+
+        // --- THE "ACCEPT ALT+ENTER" BUTTON ---
+        'workbench.action.chat.applyInEditor',
+
+        // --- THE "ACCEPT ALL" BUTTON (Multi-Diff) ---
+        'chatEditing.multidiff.acceptAllFiles',
+        'chatEditing.acceptAllFiles',
+
+        // --- THE "ALLOW" NOTIFICATION ---
+        'notification.acceptPrimaryAction',
+
+        // --- STANDARD EDITING ---
         'chatEditor.action.acceptAllEdits',
         'chatEditor.action.accept',
-        'chatEditor.action.acceptHunk',
 
-        // --- INLINE & INTERACTIVE ---
+        // --- INLINE / INTERACTIVE ---
         'inlineChat.acceptChanges',
         'interactiveEditor.action.accept',
-
-        // --- ANTIGRAVITY SPECIFIC ---
-        'antigravity.prioritized.agentAcceptAllInFile',
-        'antigravity.command.accept'
+        'editor.action.inlineSuggest.commit'
     ];
 
-    // Faster Loop (250ms)
     const interval = setInterval(async () => {
         try {
             for (const cmd of list) {
-                vscode.commands.executeCommand(cmd).then(undefined, () => { });
+                // EXCLUDE "accept" from high-speed loop to avoid havoc?
+                // User wants "SI O SI". I will include it but check focus? No API.
+                // I will include 'workbench.action.accept' ONLY IF not typing?
+                // Too risky to put generic 'accept' in a 250ms loop. It breaks typing.
+                // Leaving 'accept' OUT. Relying on TRUST settings.
+                if (cmd !== 'workbench.action.accept') {
+                    vscode.commands.executeCommand(cmd).then(undefined, () => { });
+                }
             }
         } catch (e) { }
     }, 250);
