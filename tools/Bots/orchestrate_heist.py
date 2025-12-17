@@ -1,15 +1,17 @@
 import os
 import time
 import subprocess
+import sys
 
 # CONFIG
-RELOAD_SCRIPT = r"C:\AntiGravityExt\AntiGravity_Ghost_Agent\tools\Bots\force_reload.py"
 CMD_FILE = r"C:\AntiGravityExt\GHOST_CMD.txt"
 TRIGGER_CMD = "DUMP_DEFAULTS"
 WAIT_TIME_SECONDS = 45
+# Strict Antigravity Path
+ANTIGRAVITY_EXE = r"C:\Users\Administrator\AppData\Local\Programs\AntiGravity\Antigravity.exe"
 
-print("🕵️‍♂️ OPERATION IMPOSSIBLE: THE JSON HEIST (ROBUST MODE)")
-print("=======================================================")
+print("🕵️‍♂️ OPERATION IMPOSSIBLE: THE JSON HEIST (ANTIGRAVITY EDITION)")
+print("===============================================================")
 
 # 1. SET TRAP (PERSISTENT TRIGGER)
 print(f"💣 Phase 1: Arming Trigger Command [{TRIGGER_CMD}]...")
@@ -22,13 +24,20 @@ except Exception as e:
     sys.exit(1)
 
 # 2. TRIGGER NUCLEAR RELOAD (Kill & Restart)
-print(f"💀 Phase 2: TERMINATING VS Code Process (Nuclear Option)...")
+print(f"💀 Phase 2: TERMINATING Antigravity Process (Nuclear Option)...")
 try:
-    subprocess.run("taskkill /F /IM NOTEPAD.EXE", shell=True) # Safety check
-    subprocess.run("taskkill /F /IM Code.exe", shell=True)
+    # Kill hostiles strictly
+    subprocess.run("taskkill /F /IM Antigravity.exe 2>NUL", shell=True)
+    subprocess.run("taskkill /F /IM electron.exe 2>NUL", shell=True)
+    
     time.sleep(3)
-    print("🚀 Phase 2.5: Relaunching VS Code...")
-    subprocess.Popen(r"code C:\AntiGravityExt\AntiGravity_Ghost_Agent", shell=True)
+    print("🚀 Phase 2.5: Relaunching Antigravity...")
+    
+    if os.path.exists(ANTIGRAVITY_EXE):
+        subprocess.Popen(f'"{ANTIGRAVITY_EXE}" "C:\\AntiGravityExt\\AntiGravity_Ghost_Agent"', shell=True)
+    else:
+        print(f"❌ Critical: Executable not found at {ANTIGRAVITY_EXE}")
+        
 except Exception as e:
     print(f"❌ Restart Failed: {e}")
 

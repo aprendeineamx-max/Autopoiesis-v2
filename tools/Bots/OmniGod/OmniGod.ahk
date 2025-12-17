@@ -183,8 +183,8 @@ WatchDog() {
         ActiveProcess := ""
     }
     
-    ; Solo procesar si es VS Code o ventana objetivo Y está activa
-    if (ActiveProcess = "Code.exe" || ActiveProcess = "Antigravity.exe" || ActiveProcess = "AntiGravity.exe") {
+    ; Solo procesar si es Antigravity ventana objetivo Y está activa
+    if (ActiveProcess = "Antigravity.exe" || ActiveProcess = "AntiGravity.exe") {
         HasWindow := true
         WinGetPos &WX, &WY, &WW, &WH, "ahk_id " . WinID
     } else {
@@ -723,9 +723,7 @@ GetFriendlyName(procName) {
         return "Escritorio/Explorer"
     if (procName == "chrome.exe")
         return "Google Chrome"
-    if (procName == "Code.exe")
-        return "VS Code"
-    if (procName == "notepad.exe")
+    return procName ; Default fallback
         return "Bloc de Notas"
     if (procName == "powershell.exe")
         return "PowerShell / Terminal"
