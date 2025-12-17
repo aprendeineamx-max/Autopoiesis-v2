@@ -1,4 +1,4 @@
-// GENESIS BUILDER LOGIC v3.0 (Advanced Features)
+// GENESIS STUDIO ENGINE v4.0 (Premium)
 const state = {
     timeline: [],
     draggedItem: null,
@@ -9,60 +9,62 @@ const state = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Genesis Engine v3.0 Loaded.");
+    console.log("Genesis Studio v4.0 Active");
 
-    // --- UI ELEMENTS ---
-    const helpBtn = document.getElementById('btn-help');
-    const helpModal = document.getElementById('help-modal');
-    const closeHelp = document.getElementById('close-help');
-    const searchInput = document.getElementById('search-box');
+    // Elements
     const pool = document.getElementById('command-pool');
     const timeline = document.getElementById('timeline');
+    const codePreview = document.getElementById('code-preview');
     const exportBtn = document.getElementById('btn-export');
+    const copyBtn = document.getElementById('btn-copy');
+    const clearBtn = document.getElementById('btn-clear');
+    const searchInput = document.getElementById('search-box');
     const exportNameInput = document.getElementById('export-name');
-    const sentinel = document.getElementById('sentinel');
 
-    // Toggle Help
-    helpBtn.addEventListener('click', () => { helpModal.classList.add('visible'); });
-    closeHelp.addEventListener('click', () => { helpModal.classList.remove('visible'); });
-
-    // Validate Data
-    if (typeof COMMAND_DB === 'undefined') {
-        alert("CRITICAL ERROR: data.js not loaded.");
-        return;
-    }
-
-    // Initialize
+    // Init
+    if (typeof COMMAND_DB === 'undefined') { alert("DB Error"); return; }
     state.filteredPool = COMMAND_DB;
     renderBatch(true);
 
-    // Infinite Scroll
-    state.observer = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) loadMore();
-    }, { root: pool, threshold: 0.1 });
-    if (sentinel) state.observer.observe(sentinel);
+    // --- EVENT LISTENERS ---
+
+    // Clear
+    clearBtn.addEventListener('click', () => {
+        if (confirm('Clear timeline?')) {
+            state.timeline = [];
+            renderTimeline();
+        }
+    });
+
+    // Copy
+    copyBtn.addEventListener('click', () => {
+        const code = generateCodeStr();
+        navigator.clipboard.writeText(code).then(() => {
+            copyBtn.innerText = '✅ Copied!';
+            setTimeout(() => copyBtn.innerText = '📋 Copy Code', 2000);
+        });
+    });
+
+    // Export
+    exportBtn.addEventListener('click', () => {
+        const code = generateCodeStr();
+        const blob = new Blob([code], { type: 'text/javascript' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = (exportNameInput.value || 'agent') + '.js';
+        a.click();
+    });
 
     // Search
-    let debounceTimer;
     searchInput.addEventListener('input', (e) => {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => {
-            const query = e.target.value.toLowerCase().trim();
-            state.currentQuery = query;
-            state.visibleLimit = 50;
-
-            if (query === '') {
-                state.filteredPool = COMMAND_DB;
-            } else {
-                state.filteredPool = COMMAND_DB.filter(cmd => {
-                    const idMatch = cmd.command.toLowerCase().includes(query);
-                    const keyMatch = cmd.key && cmd.key.toLowerCase().includes(query);
-                    const pretty = prettifyCommand(cmd.command).toLowerCase();
-                    return idMatch || keyMatch || pretty.includes(query);
-                });
-            }
-            renderBatch(true);
-        }, 300);
+        const query = e.target.value.toLowerCase().trim();
+        state.filteredPool = COMMAND_DB.filter(cmd =>
+            cmd.command.toLowerCase().includes(query) ||
+            (cmd.key && cmd.key.toLowerCase().includes(query))
+        );
+        state.visibleLimit = 50;
+        renderBatch(true);
     });
 
     // Drag & Drop
@@ -77,163 +79,106 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    exportBtn.addEventListener('click', generateExtensionCode);
-
-    // --- LOGIC ---
-
-    function loadMore() {
-        if (state.visibleLimit >= state.filteredPool.length) return;
-        state.visibleLimit += 50;
-        renderBatch(false);
-    }
+    // --- RENDERERS ---
 
     function renderBatch(reset) {
         if (reset) pool.innerHTML = '';
-        const fragment = document.createDocumentFragment();
-        const currentCount = pool.children.length;
-        const targetCount = Math.min(state.visibleLimit, state.filteredPool.length);
+        const target = state.filteredPool.slice(0, state.visibleLimit);
 
-        state.filteredPool.slice(currentCount, targetCount).forEach(cmd => {
-            fragment.appendChild(createCommandCard(cmd));
+        target.forEach(cmd => {
+            const el = document.createElement('div');
+            el.className = 'command-item';
+            el.draggable = true;
+            el.innerHTML = `
+                <div class="cmd-pretty">${prettify(cmd.command)}</div>
+                <div class="cmd-id">${cmd.command}</div>
+                ${cmd.key ? `<span style="font-size:0.7rem; background:rgba(255,255,255,0.1); padding:2px 6px; border-radius:4px;">${cmd.key}</span>` : ''}
+            `;
+
+            el.addEventListener('dragstart', () => {
+                state.draggedItem = { ...cmd, delay: 500 };
+                el.style.opacity = '0.5';
+            });
+            el.addEventListener('dragend', () => { el.style.opacity = '1'; });
+            el.addEventListener('dblclick', () => { addToTimeline({ ...cmd, delay: 500 }); });
+
+            pool.appendChild(el);
         });
-
-        pool.appendChild(fragment);
-        if (sentinel) pool.appendChild(sentinel);
-    }
-
-    function createCommandCard(cmd) {
-        const el = document.createElement('div');
-        el.className = 'command-item';
-        el.draggable = true;
-        const prettyName = prettifyCommand(cmd.command);
-        const description = generateDescription(cmd.command);
-
-        el.innerHTML = `
-            <div class="cmd-pretty">${prettyName}</div>
-            <div class="cmd-id">${cmd.command}</div>
-            <div class="cmd-desc">${description}</div>
-            ${cmd.key ? `<span class="cmd-key">⌨ ${cmd.key}</span>` : ''}
-        `;
-
-        el.addEventListener('dragstart', () => {
-            // Clone to avoid modifying DB reference directly in timeline logic
-            state.draggedItem = { ...cmd, delay: 500 };
-            el.style.opacity = '0.5';
-        });
-        el.addEventListener('dragend', () => { el.style.opacity = '1'; });
-        el.addEventListener('dblclick', () => { addToTimeline({ ...cmd, delay: 500 }); });
-
-        return el;
-    }
-
-    // Helper: Name Prettifier
-    function prettifyCommand(rawId) {
-        const parts = rawId.split('.');
-        let capitalized = parts.map(p => p.charAt(0).toUpperCase() + p.slice(1));
-        if (capitalized[0] === 'Workbench' && capitalized[1] === 'Action') return capitalized.slice(2).join(' ');
-        if (capitalized[0] === 'Editor' && capitalized[1] === 'Action') return "Editor: " + capitalized.slice(2).join(' ');
-        return capitalized.join(' ');
-    }
-
-    function generateDescription(rawId) {
-        if (rawId.includes('copy')) return "Copia selección al clipboard.";
-        if (rawId.includes('paste')) return "Pega desde el clipboard.";
-        if (rawId.includes('chat')) return "Interactúa con el asistente.";
-        if (rawId.includes('terminal')) return "Acciones de terminal.";
-        return "Acción de sistema interno.";
-    }
-
-    function addToTimeline(cmd) {
-        state.timeline.push(cmd);
-        renderTimeline();
     }
 
     function renderTimeline() {
         timeline.innerHTML = '';
-        const emptyMsg = document.createElement('div');
-        emptyMsg.id = 'empty-msg';
-        emptyMsg.style.cssText = 'text-align:center; color:#555; margin-top:50px; display:none';
-        emptyMsg.innerText = 'Arrastra comandos aquí...';
-        timeline.appendChild(emptyMsg);
-
         if (state.timeline.length === 0) {
-            emptyMsg.style.display = 'block';
-            return;
+            timeline.innerHTML = `<div id="empty-msg" style="text-align:center; color:rgba(255,255,255,0.3); margin-top:100px;">
+                <span style="font-size:3rem; display:block; margin-bottom:10px;">✨</span>
+                Drag commands here
+            </div>`;
         }
 
-        state.timeline.forEach((cmd, index) => {
-            const pretty = prettifyCommand(cmd.command);
+        state.timeline.forEach((cmd, i) => {
             const block = document.createElement('div');
             block.className = 'timeline-block';
-
             block.innerHTML = `
-                <div class="block-info">
-                    <span class="step-num">#${index + 1}</span>
-                    <strong style="color:var(--accent)">${pretty}</strong>
-                    <div style="font-size:0.8rem; color:#888">${cmd.command}</div>
+                <div style="display:flex; align-items:center;">
+                    <span class="step-badge">${i + 1}</span>
+                    <div>
+                        <div style="font-weight:bold; color:white;">${prettify(cmd.command)}</div>
+                        <div style="font-size:0.75rem; color:#aaa;">${cmd.command}</div>
+                    </div>
                 </div>
-                
-                <div class="block-config">
-                    <span class="config-label">Delay (ms):</span>
-                    <input type="number" class="delay-input" value="${cmd.delay}" min="0" step="100">
-                </div>
-
-                <div class="block-actions">
-                    <span class="btn-del" title="Eliminar" onclick="removeFromTimeline(${index})">🗑️</span>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span style="font-size:0.8rem; color:#888;">Delay:</span>
+                    <input type="number" class="delay-input" value="${cmd.delay}" style="width:60px; background:rgba(0,0,0,0.3); border:1px solid #444; color:white; padding:4px; text-align:center; border-radius:4px;">
+                    <button class="secondary" onclick="delStep(${i})" style="padding:8px; display:flex; align-items:center; justify-content:center;">🗑️</button>
                 </div>
             `;
 
-            // Bind Input
-            const input = block.querySelector('.delay-input');
-            input.addEventListener('change', (e) => {
+            block.querySelector('input').addEventListener('change', (e) => {
                 cmd.delay = parseInt(e.target.value) || 0;
+                updatePreview();
             });
 
             timeline.appendChild(block);
         });
 
         timeline.scrollTop = timeline.scrollHeight;
+        updatePreview();
     }
 
-    window.removeFromTimeline = (index) => {
-        state.timeline.splice(index, 1);
+    window.delStep = (i) => {
+        state.timeline.splice(i, 1);
         renderTimeline();
     };
 
-    function generateExtensionCode() {
-        if (state.timeline.length === 0) {
-            alert("Timeline vacío. Añade acciones.");
-            return;
-        }
+    function addToTimeline(cmd) {
+        state.timeline.push(cmd);
+        renderTimeline();
+    }
 
-        const exportName = exportNameInput.value.trim() || 'extension';
-        const cleanName = exportName.replace(/[^a-zA-Z0-9_-]/g, '_');
+    function prettify(raw) {
+        return raw.split('.').pop().replace(/([A-Z])/g, ' $1').trim().replace(/^action /, '');
+    }
 
-        let code = `/**\n * GENERATED BY ANTIGRAVITY GENESIS\n * File: ${cleanName}.js\n * Date: ${new Date().toISOString()}\n */\n`;
-        code += `const vscode = require('vscode');\n\n`;
-        code += `async function activate(context) {\n`;
-        code += `    vscode.window.showInformationMessage('🚀 Genesis Running: ${cleanName}');\n\n`;
-        code += `    let disposable = vscode.commands.registerCommand('${cleanName.toLowerCase()}.run', async () => {\n`;
+    function generateCodeStr() {
+        if (state.timeline.length === 0) return "// Drag commands to generate code...";
 
-        state.timeline.forEach((cmd, i) => {
-            code += `        // [Step ${i + 1}] ${prettifyCommand(cmd.command)} (Delay: ${cmd.delay}ms)\n`;
-            code += `        await vscode.commands.executeCommand('${cmd.command}');\n`;
-            code += `        await new Promise(r => setTimeout(r, ${cmd.delay}));\n\n`;
+        const name = exportNameInput.value.replace(/[^a-zA-Z0-9]/g, '_');
+        let c = `// GENESIS AUTO-SCRIPT: ${name}\n`;
+        c += `const vscode = require('vscode');\n\n`;
+        c += `async function activate(context) {\n`;
+        c += `    vscode.commands.registerCommand('${name}.run', async () => {\n`;
+
+        state.timeline.forEach(cmd => {
+            c += `        // ${prettify(cmd.command)}\n`;
+            c += `        await vscode.commands.executeCommand('${cmd.command}');\n`;
+            if (cmd.delay > 0) c += `        await new Promise(r => setTimeout(r, ${cmd.delay}));\n`;
         });
 
-        code += `    });\n\n`;
-        code += `    context.subscriptions.push(disposable);\n`;
-        code += `    // Auto-Run\n`;
-        code += `    vscode.commands.executeCommand('${cleanName.toLowerCase()}.run');\n`;
-        code += `}\n\n`;
-        code += `function deactivate() {}\n\n`;
-        code += `module.exports = { activate, deactivate };`;
+        c += `    });\n}\nmodule.exports = { activate };`;
+        return c;
+    }
 
-        const blob = new Blob([code], { type: 'text/javascript' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${cleanName}.js`;
-        a.click();
+    function updatePreview() {
+        codePreview.textContent = generateCodeStr();
     }
 });

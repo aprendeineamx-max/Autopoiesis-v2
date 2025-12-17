@@ -1,78 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Genesis | AntiGravity Ext Builder</title>
+    <title>Genesis | Omni Studio</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Google Font for Premium Feel -->
+    <style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap');</style>
 </head>
-
 <body>
-    <!-- HELP MODAL -->
-    <div id="help-modal" class="modal-overlay">
-        <div class="modal-content">
-            <span id="close-help" class="modal-close">&times;</span>
-            <h2>📖 Genesis 3.0: Control Total</h2>
-            <div class="doc-step">
-                <h3>1. Personaliza Tiempos</h3>
-                <p>Ahora puedes editar el <strong>Delay (ms)</strong> de cada paso individualmente. Ajusta la velocidad
-                    de ejecución bloque por bloque.</p>
-            </div>
-            <div class="doc-step">
-                <h3>2. Exportación Personalizada</h3>
-                <p>Elige el nombre de tu extensión antes de exportar (ej. "MiScriptAutomatizado"). El sistema generará
-                    el archivo con ese nombre.</p>
-            </div>
-            <div class="doc-step">
-                <h3>3. Flujo Preciso</h3>
-                <p>Arrastra, reordena y configura cada acción para crear scripts de automatización complejos como un
-                    profesional.</p>
-            </div>
-        </div>
-    </div>
 
+    <!-- SIDEBAR: Sourcing -->
     <div id="sidebar">
         <div class="header-row">
-            <div class="logo">PROPULSOR 🚀 <span style="color:#fff">GENESIS</span></div>
+            <div class="logo">GENESIS <span style="font-weight:300; opacity:0.8">STUDIO</span></div>
         </div>
-        <input type="text" id="search-box" placeholder="🔍 Buscar comando (ej. chat)...">
+        <input type="text" id="search-box" placeholder="🔍 Search Commands...">
 
         <div id="command-pool">
-            <!-- Commands injected by JS -->
+            <!-- Injected Items -->
         </div>
-        <div id="sentinel"></div> <!-- Anchor for Infinite Scroll -->
+        <div id="sentinel"></div>
     </div>
 
+    <!-- MAIN STAGE: Building -->
     <div id="main-stage">
-        <h2 style="display:flex; align-items:center; gap:10px;">
-            📜 Flow Cronológico
-            <span style="font-size:0.8rem; opacity:0.5; font-weight:normal">(Arrastra aquí)</span>
-        </h2>
+        
+        <!-- EDITOR AREA -->
+        <div id="editor-area">
+            <h2 style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <span>📜 Sequence Builder</span>
+                <button class="secondary" id="btn-clear" style="padding:6px 12px; font-size:0.8rem;">Clear All</button>
+            </h2>
 
-        <div id="timeline">
-            <div id="empty-msg" style="text-align:center; color:#555; margin-top:50px;">
-                Arrastra comandos aquí para construir tu extensión...
+            <div id="timeline">
+                <div id="empty-msg" style="text-align:center; color:rgba(255,255,255,0.3); margin-top:100px;">
+                    <span style="font-size:3rem; display:block; margin-bottom:10px;">✨</span>
+                    Drag commands here to design your flow
+                </div>
+            </div>
+
+            <!-- FOOTER TOOLBAR -->
+            <div id="toolbar">
+                <div class="export-options">
+                    <span style="color:#aaa; font-size:0.9rem;">Extension Name:</span>
+                    <input type="text" id="export-name" value="my_agent" 
+                           style="width:200px; margin:0 0 0 10px; background:rgba(0,0,0,0.5);">
+                </div>
+                <div style="display:flex; gap:10px;">
+                    <button class="secondary" id="btn-copy">📋 Copy Code</button>
+                    <button id="btn-export">⚡ Export JS</button>
+                </div>
             </div>
         </div>
 
-        <div id="toolbar">
-            <div class="export-options">
-                <button id="btn-help">❓ Ayuda</button>
-            </div>
-
-            <div class="export-options">
-                <span class="config-label">Nombre del Export:</span>
-                <input type="text" id="export-name" class="export-input" value="extension"
-                    placeholder="Nombre de archivo">
-                <button id="btn-export">⚡ EXPORTAR JS</button>
-            </div>
+        <!-- PREVIEW AREA (New) -->
+        <div id="preview-area">
+            <h3>👁️ Live Code</h3>
+            <pre id="code-preview">// Your generated code will appear here...</pre>
         </div>
+
     </div>
 
-    <!-- DATA SOURCE (JSONP Style) -->
+    <!-- Scripts -->
     <script src="data.js"></script>
     <script src="app.js"></script>
 </body>
-
 </html>
