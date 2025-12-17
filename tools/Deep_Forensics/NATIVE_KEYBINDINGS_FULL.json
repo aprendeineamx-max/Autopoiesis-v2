@@ -1,0 +1,148 @@
+// NATIVE KEYBINDINGS DUMP (STATIC MANIFEST SCAN)
+// Source: ['C:\\Users\\Administrator\\.vscode\\extensions', 'C:\\Users\\Administrator\\AppData\\Local\\Programs\\AntiGravity\\resources\\app\\extensions']
+// Date: <built-in function times>
+// Status: VERIFIED FROM INSTALLED BINARIES
+[
+    {
+        "key": "alt+enter",
+        "command": "antigravity.agent.acceptAgentStep",
+        "when": "!editorTextFocus",
+        "source_extension": "google.antigravity"
+    },
+    {
+        "key": "alt+shift+backspace",
+        "command": "antigravity.agent.rejectAgentStep",
+        "when": "!editorTextFocus",
+        "source_extension": "google.antigravity"
+    },
+    {
+        "key": "ctrl+enter",
+        "command": "antigravity.command.accept",
+        "when": "editorTextFocus && !editorHasSelection && antigravity.canAcceptOrRejectCommand",
+        "source_extension": "google.antigravity",
+        "key_mac": "cmd+enter"
+    },
+    {
+        "key": "ctrl+backspace",
+        "command": "antigravity.command.reject",
+        "when": "editorTextFocus && !editorHasSelection && antigravity.canAcceptOrRejectCommand",
+        "source_extension": "google.antigravity",
+        "key_mac": "cmd+backspace"
+    },
+    {
+        "key": "ctrl+shift+a",
+        "command": "antigravity.openConversationPicker",
+        "when": "!editorTextFocus",
+        "source_extension": "google.antigravity",
+        "key_mac": "cmd+shift+a"
+    },
+    {
+        "key": "alt+enter",
+        "command": "antigravity.prioritized.agentAcceptFocusedHunk",
+        "when": "editorTextFocus && antigravity.canAcceptOrRejectFocusedHunk",
+        "source_extension": "google.antigravity",
+        "key_mac": "alt+enter"
+    },
+    {
+        "key": "alt+j",
+        "command": "antigravity.prioritized.agentFocusNextHunk",
+        "when": "editorTextFocus && antigravity.canAcceptOrRejectAllAgentEditsInFile",
+        "source_extension": "google.antigravity",
+        "key_mac": "alt+j"
+    },
+    {
+        "key": "alt+k",
+        "command": "antigravity.prioritized.agentFocusPreviousHunk",
+        "when": "editorTextFocus && antigravity.canAcceptOrRejectAllAgentEditsInFile",
+        "source_extension": "google.antigravity",
+        "key_mac": "alt+k"
+    },
+    {
+        "key": "alt+shift+backspace",
+        "command": "antigravity.prioritized.agentRejectFocusedHunk",
+        "when": "editorTextFocus && antigravity.canAcceptOrRejectFocusedHunk",
+        "source_extension": "google.antigravity",
+        "key_mac": "alt+shift+backspace"
+    },
+    {
+        "key": "ctrl+l",
+        "command": "antigravity.prioritized.chat.open",
+        "when": "!terminalFocus",
+        "source_extension": "google.antigravity",
+        "key_mac": "cmd+l"
+    },
+    {
+        "key": "ctrl+shift+l",
+        "command": "antigravity.prioritized.chat.openNewConversation",
+        "when": "!terminalFocus",
+        "source_extension": "google.antigravity",
+        "key_mac": "cmd+shift+l"
+    },
+    {
+        "key": "ctrl+i",
+        "command": "antigravity.prioritized.command.open",
+        "when": "editorTextFocus && !antigravity.isAgentModeInputBoxFocused",
+        "source_extension": "google.antigravity",
+        "key_mac": "cmd+i"
+    },
+    {
+        "key": "tab",
+        "command": "antigravity.prioritized.supercompleteAccept",
+        "when": "editorTextFocus && ((inlineSuggestionVisible && (inlineSuggestionHasIndentationLessThanTabSize || (vim.active && vim.mode == 'Normal') || (neovim.init && neovim.mode == 'normal'))) || antigravity.customCompletionShown)",
+        "source_extension": "google.antigravity",
+        "key_mac": "tab"
+    },
+    {
+        "key": "escape",
+        "command": "antigravity.prioritized.supercompleteEscape",
+        "when": "!(editorTextFocus && ((vim.active && vim.mode != 'Normal') || (neovim.init && neovim.mode != 'normal'))) && (antigravity.customCompletionShown || antigravity.postApplyDecorationShown || inlineSuggestionVisible) && !suggestWidgetVisible",
+        "source_extension": "google.antigravity",
+        "key_mac": "escape"
+    },
+    {
+        "key": "ctrl+i",
+        "command": "antigravity.prioritized.terminalCommand.open",
+        "when": "terminalFocus && !agentUiTerminalFocus",
+        "source_extension": "google.antigravity",
+        "key_mac": "cmd+i"
+    },
+    {
+        "key": "alt+enter",
+        "command": "antigravity.terminalCommand.accept",
+        "when": "terminalFocus && antigravity.canTriggerTerminalCommandAction",
+        "source_extension": "google.antigravity"
+    },
+    {
+        "key": "ctrl+backspace",
+        "command": "antigravity.terminalCommand.reject",
+        "when": "terminalFocus && antigravity.canTriggerTerminalCommandAction",
+        "source_extension": "google.antigravity",
+        "key_mac": "cmd+backspace"
+    },
+    {
+        "key": "ctrl+enter",
+        "command": "antigravity.terminalCommand.run",
+        "when": "terminalFocus && antigravity.canTriggerTerminalCommandAction",
+        "source_extension": "google.antigravity",
+        "key_mac": "cmd+enter"
+    },
+    {
+        "key": "ctrl+shift+i",
+        "command": "antigravity.triggerAgent",
+        "when": "",
+        "source_extension": "google.antigravity",
+        "key_mac": "cmd+shift+i"
+    },
+    {
+        "key": "alt+\\",
+        "command": "editor.action.inlineSuggest.trigger",
+        "when": "editorTextFocus && !editorHasSelection && !inlineSuggestionsVisible",
+        "source_extension": "google.antigravity"
+    },
+    {
+        "key": "escape",
+        "command": "extension.vim_escape",
+        "when": "editorTextFocus && vim.active && !inDebugRepl",
+        "source_extension": "google.antigravity"
+    }
+]

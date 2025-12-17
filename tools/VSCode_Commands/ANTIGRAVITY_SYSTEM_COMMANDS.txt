@@ -1,0 +1,41 @@
+ANTIGRAVITY SYSTEM COMMANDS (FULL)
+Source: Visual Transcription & Keybinding Analysis (Verified)
+
+=== EDITOR & NAVIGATION (User Defined / Configured) ===
+[ID] antigravity.prioritized.explainProblem        (Key: Ctrl+Shift+.)
+[ID] workbench.action.openAntigravitySettings      (Key: Ctrl+,) (Source: System)
+[ID] antigravity.prioritized.chat.open             (Key: Ctrl+L) (Config: !terminalFocus)
+[ID] workbench.antigravity.showLaunchpad           (Key: Ctrl+OEM_1)
+[ID] antigravity.triggerAgent                      (Key: Ctrl+Shift+I)
+[ID] editor.action.inlineSuggest.trigger           (Key: Alt+OEM_5)
+[ID] antigravity.agent.acceptAgentStep             (Key: Alt+Enter) (Config: !editorTextFocus)
+[ID] antigravity.agent.rejectAgentStep             (Key: Shift+Alt+Backspace)
+[ID] antigravity.artifacts.startComment            (Key: Ctrl+Alt+M)
+[ID] antigravity.command.accept                    (Key: Ctrl+Enter)
+[ID] antigravity.command.reject                    (Key: Ctrl+Backspace)
+[ID] antigravity.openAgent                         (Key: Ctrl+Alt+B)
+[ID] antigravity.openConversationPicker            (Key: Ctrl+Shift+A)
+[ID] antigravity.prioritized.agentAcceptAllInFile  (Key: Ctrl+Enter)
+[ID] antigravity.prioritized.agentAcceptFocusedHunk (Key: Alt+Enter)
+[ID] antigravity.prioritized.agentFocusNextFile    (Key: Alt+L)
+
+=== PREVIOUSLY EXTRACTED SYSTEM COMMANDS ===
+[ID] antigravity.prioritized.chat.openNewWindow
+[ID] antigravity.prioritized.chat.openNewTerminal
+[ID] antigravity.prioritized.command.open
+[ID] antigravity.prioritized.supercomplete
+[ID] antigravity.prioritized.agentRejectFocusedHunk
+[ID] antigravity.prioritized.agentFocusNextHunk
+[ID] antigravity.prioritized.agentFocusPreviousHunk
+[ID] antigravity.terminalCommand.accept
+[ID] antigravity.terminalCommand.reject
+[ID] antigravity.terminalCommand.run
+[ID] antigravity.sendTerminalToChat
+[ID] antigravity.manager.onboarding.reset
+[ID] antigravity.onboarding.reset
+[ID] antigravity.enableTracing
+[ID] antigravity.endDemoMode
+[ID] antigravity.startDemoMode
+[ID] antigravity.toggleManagerDevTools
+[ID] antigravity-remotewsl.explorer.addDistro
+[ID] antigravity.switchBetweenWorkspaceAnd...

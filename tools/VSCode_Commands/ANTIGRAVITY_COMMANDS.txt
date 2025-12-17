@@ -1,0 +1,35 @@
+ANTIGRAVITY COMMAND EXTRACTION (DEFINITIVE)
+Generated: Deep Source Code Analysis (Regex)
+
+=== INTERNAL AGENT SIGNALS (Hidden/Automated) ===
+These commands are used internally by the Hook to drive the agent or accept permissions. they are likely "virtual" commands listened to by the core agent.
+[ID] antigravity.agent.acceptAgentStep
+[ID] antigravity.agent.alwaysAllow
+[ID] antigravity.agent.acceptAll
+[ID] antigravity.agent.allow
+
+=== SUPERVISOR COMMANDS (Autonomous Control) ===
+[ID] antigravity.supervisor.start         (Start the autonomous loop)
+[ID] antigravity.supervisor.stop          (Stop the autonomous loop)
+[ID] antigravity.supervisor.status        (Show current status)
+[ID] antigravity.supervisor.emergencyStop (HALT ALL AGENTS IMMEDIATELY)
+[ID] antigravity.supervisor.singleCycle   (Run one test cycle)
+
+=== CHAT EXPORTER COMMANDS (Data Management) ===
+[ID] antigravity.exportChatNow           (Force export immediately)
+[ID] antigravity.importFromClipboard     (Import chat from clipboard)
+[ID] antigravity.exporter.configure      (Open settings)
+[ID] antigravity.exporter.autoCopyChat   (Shortcut: Ctrl+Alt+C)
+[ID] antigravity.exporter.exportJSON     (Shortcut: Ctrl+Alt+J)
+[ID] antigravity.exporter.exportMarkdown (Shortcut: Ctrl+Alt+M)
+[ID] antigravity.exporter.validateExport (Verify integrity)
+[ID] antigravity.exporter.openFolder     (Open output directory)
+
+=== INTERNAL HOOK COMMANDS ===
+[ID] antigravity.hook.status             (Check hook liveness)
+
+=== CONFIGURATION KEYS (Settings) ===
+antigravity.supervisor.provider
+antigravity.supervisor.cycleDelay
+antigravity.supervisor.maxCycles
+antigravity.supervisor.autoStart
