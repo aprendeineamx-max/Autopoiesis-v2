@@ -6,7 +6,9 @@ const crypto = require('crypto');
 function activate(context) {
     const debugLog = (msg) => {
         try {
-            const logPath = path.join(__dirname, '..', '..', 'exporter_debug.log');
+            // SAFE PATH JOIN
+            const baseDir = __dirname || '.';
+            const logPath = path.join(baseDir, '..', '..', 'exporter_debug.log');
             fs.appendFileSync(logPath, `[${new Date().toISOString()}] ${msg}\n`);
         } catch (e) { }
     };
@@ -15,15 +17,27 @@ function activate(context) {
 
     const defaults = {
         exportDir: 'C:\\AntiGravityExt\\AntiGravity_Ghost_Agent\\Exports',
-        autoExportMode: 'clipboard_monitor',  // 'omnigod_signal' or 'clipboard_monitor'
-        monitorInterval: 10,  // seconds
+        autoExportMode: 'clipboard_monitor',
+        monitorInterval: 10,
         exportFormat: 'manual_style',
         historyFile: 'Chat_Conversation.md'
     };
 
     let config = context.globalState.get('exporterConfig', defaults);
-    if (!fs.existsSync(config.exportDir)) { try { fs.mkdirSync(config.exportDir, { recursive: true }); } catch (e) { } }
 
+    // SAFETY CHECK: Ensure config.exportDir is strictly a string
+    if (typeof config.exportDir !== 'string' || !config.exportDir) {
+        config.exportDir = defaults.exportDir;
+    }
+    if (typeof config.historyFile !== 'string' || !config.historyFile) {
+        config.historyFile = defaults.historyFile;
+    }
+
+    if (!fs.existsSync(config.exportDir)) {
+        try { fs.mkdirSync(config.exportDir, { recursive: true }); } catch (e) { }
+    }
+
+    // SAFE PATH JOIN
     const historyPath = path.join(config.exportDir, config.historyFile);
     const signalPath = 'C:\\AntiGravityExt\\AntiGravity_Ghost_Agent\\.auto_export_signal';
 
@@ -261,6 +275,12 @@ function activate(context) {
     // --- OMNIGOD SIGNAL WATCHER ---
     const startSignalWatcher = () => {
         if (signalWatcher) return;
+
+        // SAFE PATH CHECK
+        if (typeof signalPath !== 'string') {
+            console.error('[Exporter] Signal path undefined');
+            return;
+        }
 
         const watchDir = path.dirname(signalPath);
         if (!fs.existsSync(watchDir)) fs.mkdirSync(watchDir, { recursive: true });

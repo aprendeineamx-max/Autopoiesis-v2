@@ -1,61 +1,53 @@
 const vscode = require('vscode');
 
 /**
- * MODULE A: GHOST CORE (The Acceptor v2.1 - SURGICAL)
- * Responsibility: Aggressively accept all pending actions/diffs/dialogs.
- * REVERTED: 'workbench.action.accept' (Caused regression).
- * ADDED: Terminal & Port specific commands.
+ * MODULE A: GHOST CORE (The Acceptor v3.0 - GOLDEN HYBRID)
+ * Base: User's provided "Working Code" (500ms Loop).
+ * Added: 'notification.acceptPrimaryAction' (For Allow Once) & Terminal Commands.
  */
 function activate(context) {
-    console.log('[AG] Ghost Core: SURGICAL MODE ACTIVE 🩺');
-    startShotgunAcceptor(context);
+    console.log('[AG] Ghost Core: GOLDEN MODE (User Logic + Fixes) 🏆');
+    startGoldenAcceptor(context);
 }
 
-function startShotgunAcceptor(context) {
-    const list = [
-        // --- TIER 1: Code / Chat Acceptance ---
-        'chatEditing.acceptAllFiles',
-        'chatEditing.multidiff.acceptAllFiles',
-        'chatEditor.action.acceptAllEdits',
-        'chatEditor.action.accept',
-        'workbench.action.chat.applyInEditor',
-        'inlineChat.acceptChanges',
-        'interactiveEditor.action.accept',
-
-        // --- TIER 2: Notifications (The "Blue Button") ---
-        // This is critical for "Allow Once" toasts.
-        'notification.acceptPrimaryAction',
-        'notification.acceptSecondaryAction',
-
-        // --- TIER 3: Terminal Specific (The "Run Command?" dialog) ---
-        'workbench.action.terminal.chat.runCommand',
-        'workbench.action.terminal.chat.accept',
-        'workbench.action.terminal.acceptSelectedSuggestion',
-
-        // --- TIER 4: Trust & Ports ---
-        'workbench.action.manageTrustedDomain.allow',
-        'simpleBrowser.warntrusted', // Unsure if command exists, checking logic
-
-        // --- TIER 5: Custom / Legacy ---
+function startGoldenAcceptor(context) {
+    // 1. The "Golden List" (User's Trusted Commands)
+    const userList = [
         'antigravity.agent.acceptAgentStep',
-        'antigravity.agent.acceptAll',
-
-        // --- TIER 6: Git / Merge ---
-        'merge-conflict.accept.current',
-        'merge-conflict.accept.incoming',
-        'git.stageAll'
+        'antigravity.agent.alwaysAllow',
+        'antigravity.agent.acceptAll'
     ];
 
-    // 100ms Loop
-    const interval = setInterval(async () => {
-        try {
-            list.forEach(cmd => {
-                vscode.commands.executeCommand(cmd).then(undefined, () => { });
-            });
-        } catch (e) { }
-    }, 100);
+    // 2. The "Modern Fixes" (Required for "Allow Once" / Blue Button)
+    const fixList = [
+        'notification.acceptPrimaryAction',        // FIX: Toast "Allow"
+        'notification.acceptSecondaryAction',      // FIX: Toast Backup
+        'chatEditing.acceptAllFiles',              // FIX: Blue Button (New UI)
+        'chatEditing.multidiff.acceptAllFiles',    // FIX: Blue Button (Diff UI)
+        'workbench.action.terminal.chat.runCommand', // FIX: Terminal "Run?"
+        'ports.acceptNew'                          // FIX: Ports
+    ];
 
-    context.subscriptions.push({ dispose: () => clearInterval(interval) });
+    // 3. User's Preferred Loop Speed (500ms)
+    // Slower than the "Nuclear" 100ms, preventing UI lockup.
+    setInterval(async () => {
+        try {
+            // Execute User Commands (The "Original" set)
+            for (const cmd of userList) {
+                vscode.commands.executeCommand(cmd).then(undefined, () => { });
+            }
+        } catch (e) { }
+    }, 500);
+
+    // 4. The "Safety Net" Loop (Also 500ms, offset)
+    // Executes the Modern Fixes to catch what the User's commands miss.
+    setInterval(async () => {
+        try {
+            for (const cmd of fixList) {
+                vscode.commands.executeCommand(cmd).then(undefined, () => { });
+            }
+        } catch (e) { }
+    }, 500);
 }
 
 module.exports = { activate };
