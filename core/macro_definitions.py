@@ -59,5 +59,27 @@ MACROS = {
             "editor.action.clipboardCopyAction", 
             "__AGENT_INTERNAL_ARCHIVE_CLIPBOARD__"
         ]
+    },
+
+    "resume_chat": {
+        "name": "Resume Last Chat Session",
+        "description": "Opens the chat view and selects the most recent conversation from history.",
+        "icon": "⏮️",
+        "steps": [
+            "workbench.action.chat.open",
+            "list.focusFirst",
+            "list.select"
+        ]
+    },
+
+    "snapshot_chat": {
+        "name": "Snapshot Entire Chat",
+        "description": "Selects ALL content in the focused chat/editor and archives it.",
+        "icon": "📸",
+        "steps": [
+            "editor.action.selectAll",
+            "editor.action.clipboardCopyAction",
+            "__AGENT_INTERNAL_ARCHIVE_CLIPBOARD__"
+        ]
     }
 }

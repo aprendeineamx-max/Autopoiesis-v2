@@ -18,10 +18,15 @@
   "contributes": {
     "commands": [
       {
-        "command": "antigravity.hook.status",
-        "title": "AntiGravity Hook: Status"
+        "command": "antigravity.dumpDefaults",
+        "title": "Antigravity: Dump Default Keybindings"
+      },
+      {
+        "command": "antigravity.resume",
+        "title": "Antigravity: Resume Chat (Manual)"
       }
-    ]
+    ],
+    "keybindings": []
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

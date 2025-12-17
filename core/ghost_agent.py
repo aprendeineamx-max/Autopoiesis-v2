@@ -37,6 +37,42 @@ class GhostAgent:
         return sqlite3.connect(DB_FILE)
 
     # ... (Database methods stay same)
+    
+    def find_command(self, query):
+        """Searches specific command or keyword."""
+        # Simple exact search on ID first
+        self.cursor.execute("SELECT command_id, keybinding, description FROM commands WHERE command_id = ?", (query,))
+        res = self.cursor.fetchone()
+        if res: return res
+        
+        # Fuzzy search on description/keywords
+        like_query = f"%{query}%"
+        self.cursor.execute("SELECT command_id, keybinding, description FROM commands WHERE description LIKE ? OR keywords LIKE ?", (like_query, like_query))
+        return self.cursor.fetchone()
+
+    def find_command_by_id(self, cmd_id):
+        """Direct lookup by ID."""
+        self.cursor.execute("SELECT command_id, keybinding, description FROM commands WHERE command_id = ?", (cmd_id,))
+        return self.cursor.fetchone()
+
+    def parse_keybinding(self, keybinding):
+        """Parses VS Code keybinding string into PyAutoGUI compatible list."""
+        # Example: "ctrl+k ctrl+c" -> [['ctrl', 'k'], ['ctrl', 'c']]
+        # Example: "ctrl+shift+p" -> [['ctrl', 'shift', 'p']]
+        
+        chords = []
+        parts = keybinding.lower().split(" ")
+        for part in parts:
+            keys = part.split("+")
+            chords.append(keys)
+        return chords
+
+    def execute_keys(self, chords):
+        """Executes a list of key chords."""
+        for chord in chords:
+            print(f"   ⌨️ Pressing: {chord}")
+            pyautogui.hotkey(*chord)
+            time.sleep(0.1)
 
     def get_clipboard_content(self, root=None):
         """Robustly retrieves text from clipboard."""
@@ -56,14 +92,14 @@ class GhostAgent:
     def execute_internal_command(self, token):
         """Executes special internal Python actions."""
         if token == "__AGENT_INTERNAL_ARCHIVE_CLIPBOARD__":
-            print("💾 Executing Internal Archive...")
+            print("💾 Ejecutando Archivo Interno...")
             
             # 1. Get Content (Wait a bit for copy to finish)
             time.sleep(0.5) 
             content = self.get_clipboard_content()
             
             if not content:
-                print("⚠️ Clipboard is empty!")
+                print("⚠️ ¡El portapapeles está vacío!")
                 return False
                 
             # 2. Prepare Data
@@ -75,15 +111,15 @@ class GhostAgent:
                 with open(self.log_file, 'r', encoding='utf-8') as f:
                     entry_id = f.read().count("---_ENTRY_SEPARATOR_---") + 1
 
-            # 3. Format Entry
-            entry = f"\n## Response #{entry_id} | {timestamp}\n{content}\n\n---_ENTRY_SEPARATOR_---\n"
+            # 3. Format Entry (Header kept in English/Code or translated? Let's translate header too for consistency)
+            entry = f"\n## Respuesta #{entry_id} | {timestamp}\n{content}\n\n---_ENTRY_SEPARATOR_---\n"
             
             # 4. Write
             os.makedirs(os.path.dirname(self.log_file), exist_ok=True)
             with open(self.log_file, 'a', encoding='utf-8') as f:
                 f.write(entry)
                 
-            print(f"✅ Archived entry #{entry_id} to {self.log_file}")
+            print(f"✅ Entrada #{entry_id} archivada en {self.log_file}")
             return True
             
         return False
@@ -94,11 +130,11 @@ class GhostAgent:
         if not macro:
             return False
             
-        print(f"🌀 Initiating Macro: {macro['name']} ({macro['icon']})")
+        print(f"🌀 Iniciando Macro: {macro['name']} ({macro['icon']})")
         print(f"   ℹ️ {macro['description']}")
         
         for step_cmd_id in macro['steps']:
-            print(f"   ➡️ Step: {step_cmd_id}")
+            print(f"   ➡️ Paso: {step_cmd_id}")
             
             # Check for Internal Command
             if step_cmd_id.startswith("__"):
@@ -114,19 +150,45 @@ class GhostAgent:
                     chords = self.parse_keybinding(keybinding)
                     self.execute_keys(chords)
                 else:
-                    print(f"      ⚠️ No keybinding for {step_cmd_id} (Skipping)")
+                    print(f"      ⚠️ Sin atajo para {step_cmd_id} (Saltando)")
             else:
-                print(f"      ❌ Command ID not found in DB: {step_cmd_id}")
+                print(f"      ❌ ID de comando no encontrado: {step_cmd_id}")
             
             # Delay between macro steps
             time.sleep(0.5)
             
-        print(f"✅ Macro '{macro['name']}' Completed.")
+        print(f"✅ Macro '{macro['name']}' Completada.")
         return True
+
+    def check_window_focus(self):
+        """Ensures the active window is Antigravity or VS Code."""
+        try:
+            import ctypes
+            hwnd = ctypes.windll.user32.GetForegroundWindow()
+            length = ctypes.windll.user32.GetWindowTextLengthW(hwnd)
+            buff = ctypes.create_unicode_buffer(length + 1)
+            ctypes.windll.user32.GetWindowTextW(hwnd, buff, length + 1)
+            title = buff.value
+            
+            # Audit: Target Antigravity specifically, fallback to Code
+            if "Antigravity" in title or "Visual Studio Code" in title or "Code" in title:
+                return True, title
+            return False, title
+        except Exception as e:
+            print(f"⚠️ Focus Check Failed: {e}")
+            return True, "Unknown"
 
     def act(self, intention):
         """Main entry point: Intention -> Action"""
-        print(f"👻 Ghost Agent received intention: '{intention}'")
+        
+        # 🛡️ SAFETY CHECK (AUDIT)
+        valid, title = self.check_window_focus()
+        if not valid:
+            print(f"🛑 SEGURIDAD: Ventana activa '{title}' no es Antigravity.")
+            print("   Abortando para evitar escritura accidental.")
+            return False
+
+        print(f"👻 Agente Fantasma recibió intención: '{intention}'")
         
         # 1. Check Macros First
         intention_lower = intention.lower().replace(" ", "_")
@@ -144,15 +206,15 @@ class GhostAgent:
         result = self.find_command(intention)
         
         if not result:
-            print("🤷 I don't know how to do that yet.")
+            print("🤷 No sé cómo hacer eso todavía.")
             return False
             
         cmd_id, keybinding, desc = result
-        print(f"🧠 Matched: {desc} ({cmd_id})")
-        print(f"🔑 Keys: {keybinding}")
+        print(f"🧠 Encontrado: {desc} ({cmd_id})")
+        print(f"🔑 Teclas: {keybinding}")
         
         if not keybinding:
-            print("⚠️ Command found, but no keybinding assigned!")
+            print("⚠️ Comando encontrado, ¡pero sin teclas asignadas!")
             return False
             
         chords = self.parse_keybinding(keybinding)
@@ -161,9 +223,9 @@ class GhostAgent:
 
     def watch_mode(self):
         """Monitors clipboard and archives changes automatically."""
-        print("👀 GHOST SENTINEL MODE ACTIVATED")
-        print("   Listening for clipboard changes... (Ctrl+C to stop)")
-        print(f"   📂 Logging to: {self.log_file}")
+        print("👀 MODO CENTINELA ACTIVADO")
+        print("   Escuchando el portapapeles... (Ctrl+C para detener)")
+        print(f"   📂 Guardando en: {self.log_file}")
         
         # Persistent Tk root for stability
         root = tk.Tk()
@@ -186,14 +248,14 @@ class GhostAgent:
                             with open(self.log_file, 'r', encoding='utf-8') as f:
                                 entry_id = f.read().count("---_ENTRY_SEPARATOR_---") + 1
                                 
-                        entry = f"\n## Sentinel Capture #{entry_id} | {timestamp}\n{content}\n\n---_ENTRY_SEPARATOR_---\n"
+                        entry = f"\n## Captura Centinela #{entry_id} | {timestamp}\n{content}\n\n---_ENTRY_SEPARATOR_---\n"
                         
                         os.makedirs(os.path.dirname(self.log_file), exist_ok=True)
                         with open(self.log_file, 'a', encoding='utf-8') as f:
                             f.write(entry)
                         
                         preview = content[:50].replace('\n', ' ')
-                        print(f"✅ Archived #{entry_id}: {preview}...")
+                        print(f"✅ Archivado #{entry_id}: {preview}...")
                         
                     last_content = content
                 
@@ -202,15 +264,15 @@ class GhostAgent:
                 time.sleep(1.0)
                 
         except KeyboardInterrupt:
-            print("\n🛑 Sentinel Deactivated.")
+            print("\n🛑 Centinela Desactivado.")
 
 if __name__ == "__main__":
     agent = GhostAgent()
     import argparse
     
-    parser = argparse.ArgumentParser(description="AntiGravity Ghost Agent")
-    parser.add_argument("intention", nargs="*", help="Natural language command")
-    parser.add_argument("--watch", action="store_true", help="Start Sentinel Mode (Clipboard Monitor)")
+    parser = argparse.ArgumentParser(description="Agente Fantasma AntiGravity")
+    parser.add_argument("intention", nargs="*", help="Comando en lenguaje natural")
+    parser.add_argument("--watch", action="store_true", help="Iniciar Modo Centinela (Monitor de Portapapeles)")
     
     args = parser.parse_args()
     
@@ -218,15 +280,15 @@ if __name__ == "__main__":
         agent.watch_mode()
     elif args.intention:
         intention = " ".join(args.intention)
-        print("⏳ Executing in 3 seconds... FOCUS TARGET WINDOW!")
+        print("⏳ Ejecutando en 3 segundos... ¡ENFOCA LA VENTANA DESTINO!")
         time.sleep(3)
         agent.act(intention)
     else:
         # Default test / help
-        print("Usage: python ghost_agent.py [--watch] <intention>")
-        print("\n🧪 Running Self-Test...")
+        print("Uso: python ghost_agent.py [--watch] <intención>")
+        print("\n🧪 Ejecutando Auto-Prueba...")
         result = agent.find_command("format document")
         if result:
-            print(f"Test Find 'format document': ✅ Found {result}")
+            print(f"Prueba 'format document': ✅ Encontrado {result}")
         else:
-            print(f"Test Find 'format document': ❌ Not Found")
+            print(f"Prueba 'format document': ❌ No Encontrado")

@@ -89,7 +89,7 @@ function activate(context) {
     vscode.window.showInformationMessage('👻 ANTIGRAVITY HOOK: AUTONOMOUS MODE', { modal: false });
 
     // 2. State & Paths
-    const cmdPath = 'C:\\AntiGravityExt\\GHOST_CMD.txt';
+    // cmdPath is already defined at line 17
     const statusPath = 'C:\\AntiGravityExt\\GHOST_STATUS.txt';
     let typingTimer = null;
     let isTyping = false;
@@ -97,25 +97,56 @@ function activate(context) {
     if (!fs.existsSync(cmdPath)) { fs.writeFileSync(cmdPath, 'IDLE'); }
     if (!fs.existsSync(statusPath)) { fs.writeFileSync(statusPath, 'IDLE'); }
 
-    // 3. Smart Typing (Idle Detection) & PROBE
+    // 3. Smart Typing & AUTO-RESUME (Zero-Touch)
     vscode.workspace.onDidChangeTextDocument(e => {
         if (typingTimer) clearTimeout(typingTimer);
         isTyping = true;
         try { fs.writeFileSync(statusPath, 'TYPING'); } catch (err) { }
-
-        // --- PROBE START ---
-        try {
-            const doc = e.document;
-            const probeInfo = `[${new Date().toISOString()}] Scheme: ${doc.uri.scheme} | Lang: ${doc.languageId} | Path: ${doc.fileName}\n`;
-            fs.appendFileSync('C:\\AntiGravityExt\\DEBUG_DOC_TYPES.txt', probeInfo);
-        } catch (err) { }
-        // --- PROBE END ---
 
         typingTimer = setTimeout(() => {
             isTyping = false;
             try { fs.writeFileSync(statusPath, 'IDLE'); } catch (err) { }
         }, 1000);
     });
+
+    // 🧠 GHOST RESUME LOGIC (Shared)
+    const performResume = async (origin = 'AUTO') => {
+        console.log(`[Ghost] Resume Sequence Initiated (${origin})`);
+        vscode.window.setStatusBarMessage(`👻 Antigravity: Resumiendo Chat (${origin})...`, 3000);
+
+        try {
+            await vscode.commands.executeCommand('workbench.action.chat.open');
+            await new Promise(r => setTimeout(r, 500)); // Wait for UI
+            await vscode.commands.executeCommand('list.focusFirst');
+            await vscode.commands.executeCommand('list.select');
+            console.log('[Ghost] Resume: OK');
+        } catch (e) {
+            console.error('[Ghost] Resume Failed:', e);
+            if (origin === 'MANUAL') vscode.window.showErrorMessage("Error al resumir: " + e.message);
+        }
+    };
+
+    // Registrar Comando Manual
+    context.subscriptions.push(vscode.commands.registerCommand('antigravity.resume', () => performResume('MANUAL')));
+
+    // 🧠 GHOST AUTO-RESUME: Sistema Robusto
+    setTimeout(async () => {
+        let attempts = 0;
+        const autoRetry = setInterval(async () => {
+            attempts++;
+            if (attempts > 5) { clearInterval(autoRetry); return; }
+
+            // Try to resume
+            await performResume(`AUTO-${attempts}`);
+
+            // If we want to stop on success, we'd need a way to detect it.
+            // For now, repeating focus 5 times is annoying but guarantees attention.
+            // Let's stop if window state is active? Hard to tell.
+            // We'll run it 3 times max instead of 5 to be less intrusive but still robust.
+            if (attempts >= 3) clearInterval(autoRetry);
+
+        }, 2000); // Run every 2s for 6s total
+    }, 2000); // Initial delay
 
     // Listener for Active Editor Change (Probe Upgrade)
     vscode.window.onDidChangeActiveTextEditor(editor => {
@@ -143,15 +174,16 @@ function activate(context) {
         'inlineChat.acceptChanges',
         'interactiveEditor.accept',
         'workbench.action.chat.applyInEditor',
-        'workbench.action.speech.accept', // Si usas voz
+        'workbench.action.speech.accept',
         // --- Generic UI Actions ---
-        'notifications.acceptAction',
+        'notifications.focusFirstToast', // ATENCION: Enfocar notificación
+        'notifications.acceptAction',    // ACCION: Aceptar (Allow Once)
         'workbench.action.acceptSelectedQuickOpenItem',
         'repl.action.acceptInput',
-        'scm.acceptInput', // Aceptar commits pendientes (Cuidado, pero solicitado)
-        'notebook.cell.execute', // A veces los prompts son de ejecución
+        'scm.acceptInput',
+        'notebook.cell.execute',
         'refactor.perform',
-        'copy-paste.accept' // Nuevo en algunas versiones
+        'copy-paste.accept'
     ];
 
     // Bucle Maestro (Cada 250ms - 4 veces por segundo para máxima velocidad)
