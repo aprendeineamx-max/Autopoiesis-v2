@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genesis | AntiGravity Ext Builder</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="sidebar">
+        <div class="logo">PROPULSOR 🚀 <span style="color:#fff">GENESIS</span></div>
+        <input type="text" id="search-box" placeholder="🔍 Buscar comando (ej. chat.open)...">
+        
+        <div id="command-pool">
+            <!-- Commands injected by JS -->
+        </div>
+    </div>
+
+    <div id="main-stage">
+        <h2>📜 Flow Cronológico</h2>
+        <div id="timeline">
+            <div style="text-align:center; color:#555; margin-top:50px;">
+                Arrastra comandos aquí para construir tu extensión...
+            </div>
+        </div>
+        
+        <div id="toolbar">
+            <button id="btn-export">⚡ EXPORTAR EXTENSION.JS</button>
+        </div>
+    </div>
+
+    <!-- DATA SOURCE (JSONP Style) -->
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
