@@ -23,7 +23,20 @@ async function activate(context) {
     // 3. AUTO-RESUME (Startup Only)
     setTimeout(() => runResumeSequence(), 1500);
 
-    vscode.window.showInformationMessage('👻 Antigravity v10 (Blue Button Fix): Reload Window to apply.');
+    // 4. REMOTE TRIGGER (Ghost Antenna)
+    const triggerPath = 'C:\\AntiGravityExt\\GHOST_TRIGGER.txt';
+    // Ensure file exists
+    if (!fs.existsSync(triggerPath)) { try { fs.writeFileSync(triggerPath, 'IDLE'); } catch (e) { } }
+
+    fs.watchFile(triggerPath, { interval: 1000 }, (curr, prev) => {
+        if (curr.mtime > prev.mtime) {
+            console.log('[AG] REMOTE SIGNAL RECEIVED 📡');
+            vscode.window.showInformationMessage('👻 GHOST SIGNAL: Executing Link Test...');
+            runLinkStressTest();
+        }
+    });
+
+    vscode.window.showInformationMessage('👻 Antigravity OMNI-LINK Ready. Reload to activate Antenna.');
 }
 
 // --- LINK STRESS TEST (MANUAL) ---
