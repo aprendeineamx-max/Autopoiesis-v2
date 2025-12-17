@@ -119,7 +119,8 @@ h3 {
     letter-spacing: 2px;
 }
 
-input[type="text"] {
+input[type="text"],
+input[type="number"] {
     background: var(--card-bg);
     border: 1px solid var(--border);
     color: var(--text);
@@ -131,7 +132,8 @@ input[type="text"] {
     font-size: 1rem;
 }
 
-input[type="text"]:focus {
+input[type="text"]:focus,
+input[type="number"]:focus {
     outline: none;
     border-color: var(--accent);
 }
@@ -156,7 +158,6 @@ input[type="text"]:focus {
     overflow: hidden;
 }
 
-/* Card Styling Update */
 .cmd-pretty {
     font-weight: 700;
     font-size: 0.95rem;
@@ -221,6 +222,8 @@ input[type="text"]:focus {
     justify-content: space-between;
     animation: slideIn 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    /* New Grid Layout for Advanced Config */
+    flex-wrap: wrap;
 }
 
 .timeline-block:hover {
@@ -239,9 +242,40 @@ input[type="text"]:focus {
     }
 }
 
+.block-info {
+    flex: 1;
+    min-width: 200px;
+}
+
+.block-config {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 5px 10px;
+    border-radius: 6px;
+}
+
+.config-label {
+    font-size: 0.7rem;
+    color: #888;
+    text-transform: uppercase;
+}
+
+.delay-input {
+    width: 60px !important;
+    margin: 0 !important;
+    padding: 5px !important;
+    text-align: center;
+    border: 1px solid #444;
+    font-family: monospace;
+}
+
 .block-actions {
     display: flex;
     gap: 10px;
+    margin-left: 15px;
 }
 
 .btn-del {
@@ -265,13 +299,26 @@ input[type="text"]:focus {
 
 /* Footer */
 #toolbar {
-    height: 70px;
+    height: 80px;
     border-top: 1px solid var(--border);
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
+    /* Changed for Export Options */
     padding: 0 20px;
     background: var(--sidebar-bg);
+}
+
+.export-options {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.export-input {
+    width: 200px !important;
+    margin: 0 !important;
+    border-color: var(--accent) !important;
 }
 
 button {
@@ -300,7 +347,6 @@ button:active {
 
 #btn-help {
     background: #333;
-    margin-right: auto;
 }
 
 #btn-help:hover {

@@ -1,74 +1,66 @@
-// GENESIS BUILDER LOGIC v2.0
-// Project: AntiGravity Extension Creator
-
+// GENESIS BUILDER LOGIC v3.0 (Advanced Features)
 const state = {
     timeline: [],
     draggedItem: null,
     visibleLimit: 50,
     currentQuery: '',
-    filteredPool: [], // Store filtered list for "Infinite Scroll"
+    filteredPool: [],
     observer: null
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Genesis Engine v2.0 Loaded.");
+    console.log("Genesis Engine v3.0 Loaded.");
 
-    // --- DIALOGS ---
+    // --- UI ELEMENTS ---
     const helpBtn = document.getElementById('btn-help');
     const helpModal = document.getElementById('help-modal');
     const closeHelp = document.getElementById('close-help');
+    const searchInput = document.getElementById('search-box');
+    const pool = document.getElementById('command-pool');
+    const timeline = document.getElementById('timeline');
+    const exportBtn = document.getElementById('btn-export');
+    const exportNameInput = document.getElementById('export-name');
+    const sentinel = document.getElementById('sentinel');
 
     // Toggle Help
     helpBtn.addEventListener('click', () => { helpModal.classList.add('visible'); });
     closeHelp.addEventListener('click', () => { helpModal.classList.remove('visible'); });
 
+    // Validate Data
     if (typeof COMMAND_DB === 'undefined') {
         alert("CRITICAL ERROR: data.js not loaded.");
         return;
     }
 
-    const searchInput = document.getElementById('search-box');
-    const pool = document.getElementById('command-pool');
-    const timeline = document.getElementById('timeline');
-    const exportBtn = document.getElementById('btn-export');
-    const sentinel = document.getElementById('sentinel'); // Parsing anchor
-
-    // Initialize Pool
+    // Initialize
     state.filteredPool = COMMAND_DB;
     renderBatch(true);
 
-    // Infinite Scroll Observer
+    // Infinite Scroll
     state.observer = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-            loadMore();
-        }
+        if (entries[0].isIntersecting) loadMore();
     }, { root: pool, threshold: 0.1 });
-
     if (sentinel) state.observer.observe(sentinel);
 
-    // Search Listener (Debounced)
+    // Search
     let debounceTimer;
     searchInput.addEventListener('input', (e) => {
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(() => {
             const query = e.target.value.toLowerCase().trim();
             state.currentQuery = query;
-            state.visibleLimit = 50; // Reset limit
+            state.visibleLimit = 50;
 
-            // Filter Global DB
             if (query === '') {
                 state.filteredPool = COMMAND_DB;
             } else {
                 state.filteredPool = COMMAND_DB.filter(cmd => {
                     const idMatch = cmd.command.toLowerCase().includes(query);
                     const keyMatch = cmd.key && cmd.key.toLowerCase().includes(query);
-                    // Also search in "Pretty Name"
                     const pretty = prettifyCommand(cmd.command).toLowerCase();
-                    const prettyMatch = pretty.includes(query);
-                    return idMatch || keyMatch || prettyMatch;
+                    return idMatch || keyMatch || pretty.includes(query);
                 });
             }
-
             renderBatch(true);
         }, 300);
     });
@@ -87,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     exportBtn.addEventListener('click', generateExtensionCode);
 
-    // --- CORE FUNCTIONS ---
+    // --- LOGIC ---
 
     function loadMore() {
         if (state.visibleLimit >= state.filteredPool.length) return;
@@ -97,22 +89,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderBatch(reset) {
         if (reset) pool.innerHTML = '';
-
         const fragment = document.createDocumentFragment();
-        // Calculate slice
         const currentCount = pool.children.length;
         const targetCount = Math.min(state.visibleLimit, state.filteredPool.length);
 
-        const batch = state.filteredPool.slice(currentCount, targetCount);
-
-        batch.forEach(cmd => {
-            const el = createCommandCard(cmd);
-            fragment.appendChild(el);
+        state.filteredPool.slice(currentCount, targetCount).forEach(cmd => {
+            fragment.appendChild(createCommandCard(cmd));
         });
 
         pool.appendChild(fragment);
-
-        // Move sentinel to bottom
         if (sentinel) pool.appendChild(sentinel);
     }
 
@@ -120,7 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const el = document.createElement('div');
         el.className = 'command-item';
         el.draggable = true;
-
         const prettyName = prettifyCommand(cmd.command);
         const description = generateDescription(cmd.command);
 
@@ -132,45 +116,31 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
 
         el.addEventListener('dragstart', () => {
-            state.draggedItem = cmd;
+            // Clone to avoid modifying DB reference directly in timeline logic
+            state.draggedItem = { ...cmd, delay: 500 };
             el.style.opacity = '0.5';
         });
         el.addEventListener('dragend', () => { el.style.opacity = '1'; });
-
-        // Double click to add
-        el.addEventListener('dblclick', () => { addToTimeline(cmd); });
+        el.addEventListener('dblclick', () => { addToTimeline({ ...cmd, delay: 500 }); });
 
         return el;
     }
 
+    // Helper: Name Prettifier
     function prettifyCommand(rawId) {
-        // "workbench.action.chat.open" -> "Workbench: Chat Open"
         const parts = rawId.split('.');
-        const capitalized = parts.map(p => p.charAt(0).toUpperCase() + p.slice(1));
-
-        // Remove common prefixes for noise reduction
-        if (capitalized[0] === 'Workbench' && capitalized[1] === 'Action') {
-            return capitalized.slice(2).join(' ');
-        }
-        if (capitalized[0] === 'Editor' && capitalized[1] === 'Action') {
-            return "Editor: " + capitalized.slice(2).join(' ');
-        }
-
+        let capitalized = parts.map(p => p.charAt(0).toUpperCase() + p.slice(1));
+        if (capitalized[0] === 'Workbench' && capitalized[1] === 'Action') return capitalized.slice(2).join(' ');
+        if (capitalized[0] === 'Editor' && capitalized[1] === 'Action') return "Editor: " + capitalized.slice(2).join(' ');
         return capitalized.join(' ');
     }
 
     function generateDescription(rawId) {
-        // Auto-generate a helpful description based on keywords
-        if (rawId.includes('copy')) return "Copia la selección al portapapeles.";
-        if (rawId.includes('paste')) return "Pega contenido del portapapeles.";
-        if (rawId.includes('chat.open')) return "Abre la interfaz de chat de Antigravity.";
-        if (rawId.includes('terminal')) return "Ejecuta acciones en la terminal integrada.";
-        if (rawId.includes('debug')) return "Controles de depuración (Play, Stop, Step).";
-        if (rawId.includes('file.new')) return "Crea un nuevo archivo vacío.";
-        if (rawId.includes('moveLines')) return "Mueve las líneas seleccionadas.";
-        if (rawId.includes('cursor')) return "Manipulación de cursores múltiples.";
-
-        return "Ejecuta el comando interno: " + rawId;
+        if (rawId.includes('copy')) return "Copia selección al clipboard.";
+        if (rawId.includes('paste')) return "Pega desde el clipboard.";
+        if (rawId.includes('chat')) return "Interactúa con el asistente.";
+        if (rawId.includes('terminal')) return "Acciones de terminal.";
+        return "Acción de sistema interno.";
     }
 
     function addToTimeline(cmd) {
@@ -180,12 +150,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderTimeline() {
         timeline.innerHTML = '';
+        const emptyMsg = document.createElement('div');
+        emptyMsg.id = 'empty-msg';
+        emptyMsg.style.cssText = 'text-align:center; color:#555; margin-top:50px; display:none';
+        emptyMsg.innerText = 'Arrastra comandos aquí...';
+        timeline.appendChild(emptyMsg);
+
+        if (state.timeline.length === 0) {
+            emptyMsg.style.display = 'block';
+            return;
+        }
+
         state.timeline.forEach((cmd, index) => {
             const pretty = prettifyCommand(cmd.command);
             const block = document.createElement('div');
             block.className = 'timeline-block';
-            block.draggable = true;
-            // Allow reordering in future? For now just static list logic.
 
             block.innerHTML = `
                 <div class="block-info">
@@ -193,14 +172,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     <strong style="color:var(--accent)">${pretty}</strong>
                     <div style="font-size:0.8rem; color:#888">${cmd.command}</div>
                 </div>
+                
+                <div class="block-config">
+                    <span class="config-label">Delay (ms):</span>
+                    <input type="number" class="delay-input" value="${cmd.delay}" min="0" step="100">
+                </div>
+
                 <div class="block-actions">
                     <span class="btn-del" title="Eliminar" onclick="removeFromTimeline(${index})">🗑️</span>
                 </div>
             `;
+
+            // Bind Input
+            const input = block.querySelector('.delay-input');
+            input.addEventListener('change', (e) => {
+                cmd.delay = parseInt(e.target.value) || 0;
+            });
+
             timeline.appendChild(block);
         });
 
-        // Scroll to bottom of timeline
         timeline.scrollTop = timeline.scrollHeight;
     }
 
@@ -211,38 +202,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function generateExtensionCode() {
         if (state.timeline.length === 0) {
-            alert("¡La línea de tiempo está vacía! Añade comandos primero.");
+            alert("Timeline vacío. Añade acciones.");
             return;
         }
 
-        let code = `/**\n * GENERATED BY ANTIGRAVITY GENESIS\n * Timestamp: ${new Date().toISOString()}\n */\n`;
+        const exportName = exportNameInput.value.trim() || 'extension';
+        const cleanName = exportName.replace(/[^a-zA-Z0-9_-]/g, '_');
+
+        let code = `/**\n * GENERATED BY ANTIGRAVITY GENESIS\n * File: ${cleanName}.js\n * Date: ${new Date().toISOString()}\n */\n`;
         code += `const vscode = require('vscode');\n\n`;
         code += `async function activate(context) {\n`;
-        code += `    vscode.window.showInformationMessage('🚀 Genesis Extension Running');\n\n`;
-        code += `    // REGISTRO DE COMANDO MAESTRO\n`;
-        code += `    let disposable = vscode.commands.registerCommand('genesis.runFlow', async () => {\n`;
+        code += `    vscode.window.showInformationMessage('🚀 Genesis Running: ${cleanName}');\n\n`;
+        code += `    let disposable = vscode.commands.registerCommand('${cleanName.toLowerCase()}.run', async () => {\n`;
 
         state.timeline.forEach((cmd, i) => {
-            const pretty = prettifyCommand(cmd.command);
-            code += `        // Step ${i + 1}: ${pretty}\n`;
+            code += `        // [Step ${i + 1}] ${prettifyCommand(cmd.command)} (Delay: ${cmd.delay}ms)\n`;
             code += `        await vscode.commands.executeCommand('${cmd.command}');\n`;
-            code += `        await new Promise(r => setTimeout(r, 500)); // Espera visual\n\n`;
+            code += `        await new Promise(r => setTimeout(r, ${cmd.delay}));\n\n`;
         });
 
         code += `    });\n\n`;
         code += `    context.subscriptions.push(disposable);\n`;
-        code += `    // Auto-Run (Opcional)\n`;
-        code += `    vscode.commands.executeCommand('genesis.runFlow');\n`;
+        code += `    // Auto-Run\n`;
+        code += `    vscode.commands.executeCommand('${cleanName.toLowerCase()}.run');\n`;
         code += `}\n\n`;
         code += `function deactivate() {}\n\n`;
         code += `module.exports = { activate, deactivate };`;
 
-        // Trigger download
         const blob = new Blob([code], { type: 'text/javascript' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'extension.js';
+        a.download = `${cleanName}.js`;
         a.click();
     }
 });

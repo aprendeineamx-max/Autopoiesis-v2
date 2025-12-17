@@ -13,31 +13,21 @@
     <div id="help-modal" class="modal-overlay">
         <div class="modal-content">
             <span id="close-help" class="modal-close">&times;</span>
-            <h2>📖 Guía de Uso: Genesis Builder</h2>
+            <h2>📖 Genesis 3.0: Control Total</h2>
             <div class="doc-step">
-                <h3>1. Busca el Comando</h3>
-                <p>Usa la barra de búsqueda para filtrar entre los 3,600+ comandos disponibles. Puedes buscar por nombre
-                    (ej. "chat") o atajo (ej. "Ctrl+C").</p>
+                <h3>1. Personaliza Tiempos</h3>
+                <p>Ahora puedes editar el <strong>Delay (ms)</strong> de cada paso individualmente. Ajusta la velocidad
+                    de ejecución bloque por bloque.</p>
             </div>
             <div class="doc-step">
-                <h3>2. Arrastrar y Soltar</h3>
-                <p>Arrastra las tarjetas desde la izquierda hacia la zona de "Flow Cronológico". También puedes hacer
-                    <strong>doble clic</strong> para añadir rápido.</p>
+                <h3>2. Exportación Personalizada</h3>
+                <p>Elige el nombre de tu extensión antes de exportar (ej. "MiScriptAutomatizado"). El sistema generará
+                    el archivo con ese nombre.</p>
             </div>
             <div class="doc-step">
-                <h3>3. Organiza tu Flujo</h3>
-                <p>El orden importa. La extensión ejecutará los pasos de arriba a abajo, esperando 500ms entre cada
-                    acción.</p>
-            </div>
-            <div class="doc-step">
-                <h3>4. Exportar</h3>
-                <p>Haz clic en <strong>⚡ EXPORTAR</strong> para descargar el archivo <code>extension.js</code>.
-                    Reemplaza tu archivo actual con este código para probar tu creación.</p>
-            </div>
-
-            <div style="background:#333; padding:10px; border-radius:5px; margin-top:20px;">
-                <strong>💡 Tip Pro:</strong> Intenta comandos como <code>workbench.action.terminal.toggleTerminal</code>
-                o <code>editor.action.formatDocument</code>.
+                <h3>3. Flujo Preciso</h3>
+                <p>Arrastra, reordena y configura cada acción para crear scripts de automatización complejos como un
+                    profesional.</p>
             </div>
         </div>
     </div>
@@ -61,14 +51,22 @@
         </h2>
 
         <div id="timeline">
-            <div style="text-align:center; color:#555; margin-top:50px;">
+            <div id="empty-msg" style="text-align:center; color:#555; margin-top:50px;">
                 Arrastra comandos aquí para construir tu extensión...
             </div>
         </div>
 
         <div id="toolbar">
-            <button id="btn-help">❓ Ayuda / Docs</button>
-            <button id="btn-export">⚡ EXPORTAR EXTENSION.JS</button>
+            <div class="export-options">
+                <button id="btn-help">❓ Ayuda</button>
+            </div>
+
+            <div class="export-options">
+                <span class="config-label">Nombre del Export:</span>
+                <input type="text" id="export-name" class="export-input" value="extension"
+                    placeholder="Nombre de archivo">
+                <button id="btn-export">⚡ EXPORTAR JS</button>
+            </div>
         </div>
     </div>
 
