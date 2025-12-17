@@ -49,5 +49,15 @@ MACROS = {
             "workbench.action.toggleZenMode",
             "workbench.action.closeSidebar"
         ]
+    },
+
+    "archive_chat": {
+        "name": "Archive Chat Response",
+        "description": "Copies selected text and appends it to the chat log with metadata.",
+        "icon": "📜",
+        "steps": [
+            "editor.action.clipboardCopyAction", 
+            "__AGENT_INTERNAL_ARCHIVE_CLIPBOARD__"
+        ]
     }
 }

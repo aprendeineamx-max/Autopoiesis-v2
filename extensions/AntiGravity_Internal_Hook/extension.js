@@ -97,16 +97,35 @@ function activate(context) {
     if (!fs.existsSync(cmdPath)) { fs.writeFileSync(cmdPath, 'IDLE'); }
     if (!fs.existsSync(statusPath)) { fs.writeFileSync(statusPath, 'IDLE'); }
 
-    // 3. Smart Typing (Idle Detection)
+    // 3. Smart Typing (Idle Detection) & PROBE
     vscode.workspace.onDidChangeTextDocument(e => {
         if (typingTimer) clearTimeout(typingTimer);
         isTyping = true;
         try { fs.writeFileSync(statusPath, 'TYPING'); } catch (err) { }
 
+        // --- PROBE START ---
+        try {
+            const doc = e.document;
+            const probeInfo = `[${new Date().toISOString()}] Scheme: ${doc.uri.scheme} | Lang: ${doc.languageId} | Path: ${doc.fileName}\n`;
+            fs.appendFileSync('C:\\AntiGravityExt\\DEBUG_DOC_TYPES.txt', probeInfo);
+        } catch (err) { }
+        // --- PROBE END ---
+
         typingTimer = setTimeout(() => {
             isTyping = false;
             try { fs.writeFileSync(statusPath, 'IDLE'); } catch (err) { }
         }, 1000);
+    });
+
+    // Listener for Active Editor Change (Probe Upgrade)
+    vscode.window.onDidChangeActiveTextEditor(editor => {
+        if (editor) {
+            try {
+                const doc = editor.document;
+                const probeInfo = `[${new Date().toISOString()}] FOCUS: Scheme: ${doc.uri.scheme} | Lang: ${doc.languageId}\n`;
+                fs.appendFileSync('C:\\AntiGravityExt\\DEBUG_DOC_TYPES.txt', probeInfo);
+            } catch (err) { }
+        }
     });
 
     // 4. "REFLEJOS AUTOMÁTICOS": ARRAY DE COMANDOS DE ACEPTACIÓN AGRESIVA
