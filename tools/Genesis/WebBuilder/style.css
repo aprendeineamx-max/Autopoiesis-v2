@@ -3,6 +3,7 @@
     --sidebar-bg: #161620;
     --card-bg: #1e1e2d;
     --accent: #af00db;
+    --accent-hover: #d200ff;
     --text: #ffffff;
     --text-dim: #a0a0b0;
     --border: #333344;
@@ -19,13 +20,72 @@ body {
     overflow: hidden;
 }
 
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+
+.modal-overlay.visible {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.modal-content {
+    background: var(--card-bg);
+    width: 600px;
+    max-width: 90%;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid var(--accent);
+    box-shadow: 0 0 40px rgba(175, 0, 219, 0.3);
+    position: relative;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-dim);
+}
+
+.modal-close:hover {
+    color: #fff;
+}
+
+.doc-step {
+    margin-bottom: 20px;
+    border-left: 3px solid var(--accent);
+    padding-left: 15px;
+}
+
+.doc-step h3 {
+    margin-top: 0;
+    color: #bca0dc;
+}
+
 #sidebar {
-    width: 350px;
+    width: 380px;
     background-color: var(--sidebar-bg);
     border-right: 1px solid var(--border);
     display: flex;
     flex-direction: column;
-    padding: 10px;
+    padding: 15px;
 }
 
 #main-stage {
@@ -34,20 +94,46 @@ body {
     display: flex;
     flex-direction: column;
     background-image: radial-gradient(circle at center, #1a1a25 0%, #0d0d12 100%);
+    position: relative;
 }
 
-h1, h2, h3 { color: var(--text); margin-top: 0; }
-.logo { color: var(--accent); font-weight: bold; font-size: 1.2rem; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
+h1,
+h2,
+h3 {
+    color: var(--text);
+    margin-top: 0;
+}
+
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.logo {
+    color: var(--accent);
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
 
 input[type="text"] {
     background: var(--card-bg);
     border: 1px solid var(--border);
     color: var(--text);
-    padding: 10px;
+    padding: 12px;
     border-radius: 6px;
     width: 100%;
     box-sizing: border-box;
     margin-bottom: 15px;
+    font-size: 1rem;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border-color: var(--accent);
 }
 
 /* Command List */
@@ -60,33 +146,63 @@ input[type="text"] {
 .command-item {
     background: var(--card-bg);
     padding: 12px;
-    border-radius: 6px;
-    margin-bottom: 8px;
+    border-radius: 8px;
+    margin-bottom: 10px;
     cursor: grab;
     border: 1px solid transparent;
     transition: all 0.2s;
     user-select: none;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Card Styling Update */
+.cmd-pretty {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #fff;
+    margin-bottom: 4px;
+}
+
+.cmd-id {
+    font-size: 0.75rem;
+    color: #666;
+    font-family: monospace;
+    word-break: break-all;
+    margin-bottom: 6px;
+}
+
+.cmd-desc {
+    font-size: 0.8rem;
+    color: #b0baee;
+    line-height: 1.3;
+}
+
+.cmd-key {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 0.7rem;
+    background: #333;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #4fd1c5;
 }
 
 .command-item:hover {
     border-color: var(--accent);
     transform: translateX(4px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    background: #252538;
 }
 
-.cmd-id { font-size: 0.9rem; font-weight: 600; color: #fff; word-break: break-all; }
-.cmd-key, .cmd-when { font-size: 0.75rem; color: var(--text-dim); margin-top: 4px; display: block; }
-.cmd-key { color: #4fd1c5; }
-
-/* Timeline (Drop Zone) */
+/* Timeline */
 #timeline {
     flex: 1;
-    background: rgba(0,0,0,0.2);
+    background: rgba(0, 0, 0, 0.2);
     border: 2px dashed var(--border);
     border-radius: 12px;
     padding: 20px;
     overflow-y: auto;
-    position: relative;
 }
 
 #timeline.drag-over {
@@ -104,16 +220,52 @@ input[type="text"] {
     align-items: center;
     justify-content: space-between;
     animation: slideIn 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
-@keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.timeline-block:hover {
+    transform: scale(1.01);
+}
 
-.block-actions { display: flex; gap: 10px; }
-.btn-del { color: #ff5555; cursor: pointer; }
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
 
-/* Footer / Export */
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.block-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-del {
+    cursor: pointer;
+    opacity: 0.7;
+    font-size: 1.2rem;
+    transition: 0.2s;
+}
+
+.btn-del:hover {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+.step-num {
+    font-size: 0.8rem;
+    color: #666;
+    margin-right: 10px;
+    font-family: monospace;
+}
+
+/* Footer */
 #toolbar {
-    height: 60px;
+    height: 70px;
     border-top: 1px solid var(--border);
     display: flex;
     align-items: center;
@@ -126,11 +278,37 @@ button {
     background: var(--accent);
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 12px 24px;
     border-radius: 6px;
     font-weight: bold;
     cursor: pointer;
     transition: transform 0.1s;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-button:active { transform: scale(0.95); }
+button:hover {
+    background: var(--accent-hover);
+    box-shadow: 0 0 15px rgba(175, 0, 219, 0.4);
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+#btn-help {
+    background: #333;
+    margin-right: auto;
+}
+
+#btn-help:hover {
+    background: #444;
+    box-shadow: none;
+}
+
+#sentinel {
+    height: 20px;
+    margin-top: 10px;
+}
