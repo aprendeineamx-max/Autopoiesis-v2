@@ -170,8 +170,8 @@ class GhostAgent:
             ctypes.windll.user32.GetWindowTextW(hwnd, buff, length + 1)
             title = buff.value
             
-            # Audit: Target Antigravity specifically, fallback to Code
-            if "Antigravity" in title or "Visual Studio Code" in title or "Code" in title:
+            # Audit: STRICT ANTIGRAVITY ONLY
+            if "Antigravity" in title:
                 return True, title
             return False, title
         except Exception as e:

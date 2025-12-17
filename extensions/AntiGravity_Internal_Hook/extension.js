@@ -109,20 +109,39 @@ function activate(context) {
         }, 1000);
     });
 
-    // 🧠 GHOST RESUME LOGIC (Shared)
+    // 🧠 GHOST RESUME LOGIC (Advanced UI Flow)
     const performResume = async (origin = 'AUTO') => {
         console.log(`[Ghost] Resume Sequence Initiated (${origin})`);
         vscode.window.setStatusBarMessage(`👻 Antigravity: Resumiendo Chat (${origin})...`, 3000);
 
         try {
+            // 1. Abrir Vista de Chat
             await vscode.commands.executeCommand('workbench.action.chat.open');
-            await new Promise(r => setTimeout(r, 500)); // Wait for UI
-            await vscode.commands.executeCommand('list.focusFirst');
-            await vscode.commands.executeCommand('list.select');
-            console.log('[Ghost] Resume: OK');
+            await new Promise(r => setTimeout(r, 600));
+
+            // 2. Abrir Historial (Past Conversations)
+            // Intentamos el comando estándar de historial. Si falla, el usuario debe corregirnos.
+            // "workbench.action.chat.history" o "workbench.action.chat.openEditSession"
+            // Probaremos "workbench.action.chat.history" que es lo más común.
+            await vscode.commands.executeCommand('workbench.action.chat.history');
+            await new Promise(r => setTimeout(r, 800)); // Esperar a que el QuickPick cargue
+
+            // 3. Seleccionar el PRIMERO (Última conversación)
+            await vscode.commands.executeCommand('workbench.action.quickOpenSelectNext'); // Asegurar selección
+            await vscode.commands.executeCommand('workbench.action.acceptSelectedQuickOpenItem');
+
+            // 4. Esperar al Diálogo Secundario ("Open in to...")
+            await new Promise(r => setTimeout(r, 800));
+
+            // 5. Seleccionar "Open in current window" (Primera opción usualmente)
+            // A veces requiere foco de nuevo
+            await vscode.commands.executeCommand('workbench.action.quickOpenSelectNext');
+            await vscode.commands.executeCommand('workbench.action.acceptSelectedQuickOpenItem');
+
+            console.log('[Ghost] Resume: Sequence Complete');
         } catch (e) {
             console.error('[Ghost] Resume Failed:', e);
-            if (origin === 'MANUAL') vscode.window.showErrorMessage("Error al resumir: " + e.message);
+            if (origin === 'MANUAL') vscode.window.showErrorMessage("Fallo en secuencia: " + e.message);
         }
     };
 
@@ -221,7 +240,7 @@ function activate(context) {
                         const commands = await vscode.commands.getCommands(true);
                         // HARDCODED PATH FOR SAFETY
                         const dumpPath = 'C:\\AntiGravityExt\\AntiGravity_Ghost_Agent\\tools\\VSCode_Commands\\FULL_COMMAND_LIST.txt';
-                        const content = `VS CODE SYSTEM DUMP (FULL)\nGenerated: ${new Date().toISOString()}\nTotal: ${commands.length}\n\n` + commands.join('\n');
+                        const content = `ANTIGRAVITY SYSTEM DUMP (FULL)\nGenerated: ${new Date().toISOString()}\nTotal: ${commands.length}\n\n` + commands.join('\n');
                         fs.writeFileSync(dumpPath, content);
                         vscode.window.showInformationMessage(`✅ DUMP COMPLETE: ${commands.length} Commands`);
                     } catch (e) {
@@ -273,7 +292,7 @@ function activate(context) {
             const dumpPath = 'C:\\AntiGravityExt\\AntiGravity_Ghost_Agent\\tools\\VSCode_Commands\\FULL_COMMAND_LIST.txt';
 
             // Header del reporte
-            const content = `VS CODE COMMAND DUMP (AUTO-GENERATED)\nGenerated: ${new Date().toISOString()}\nTotal Commands: ${commands.length}\n\n` + commands.join('\n');
+            const content = `ANTIGRAVITY COMMAND DUMP (AUTO-GENERATED)\nGenerated: ${new Date().toISOString()}\nTotal Commands: ${commands.length}\n\n` + commands.join('\n');
 
             fs.writeFileSync(dumpPath, content);
             console.log(`[Ghost Hook] Commands dumped to: ${dumpPath}`);
@@ -290,7 +309,7 @@ function activate(context) {
         if (fs.existsSync(scriptPath)) {
             console.log(`[Ghost Hook] Launching external clicker: ${scriptPath}`);
             // Spawn detached process so it survives extension reloads if needed, 
-            // but usually we want it coupled. Detached = True allows it to run independent of VS Code's process tree constraints.
+            // but usually we want it coupled. Detached = True allows it to run independent of Antigravity's process tree constraints.
             const child = cp.spawn('python', [scriptPath], {
                 detached: true,
                 stdio: 'ignore'
