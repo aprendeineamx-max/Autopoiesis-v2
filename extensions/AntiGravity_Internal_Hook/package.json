@@ -27,6 +27,14 @@
       {
         "command": "antigravity.resume",
         "title": "Antigravity: Resume Chat (Manual)"
+      },
+      {
+        "command": "antigravity.test_links",
+        "title": "Antigravity: Link Stress Test"
+      },
+      {
+        "command": "antigravity.force_accept_loop",
+        "title": "Antigravity: Force Accept Loop"
       }
     ],
     "keybindings": []

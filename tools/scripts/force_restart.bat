@@ -16,15 +16,17 @@ set "PATH_2=C:\Program Files\AntiGravity\Antigravity.exe"
 set "WS_PATH=C:\AntiGravityExt\AntiGravity_Ghost_Agent"
 
 :: 3. VERIFICAR Y LANZAR
+set "EXT_DEV_PATH=C:\AntiGravityExt\AntiGravity_Ghost_Agent\extensions\AntiGravity_Internal_Hook"
+
 if exist "%PATH_1%" (
-    echo [LAUNCH] Detectado en AppData. Lanzando...
-    start "" "%PATH_1%" "%WS_PATH%"
+    echo [LAUNCH] Detectado en AppData. Inyectando Extension...
+    start "" "%PATH_1%" --extensionDevelopmentPath="%EXT_DEV_PATH%" "%WS_PATH%"
     goto :success
 )
 
 if exist "%PATH_2%" (
-    echo [LAUNCH] Detectado en Program Files. Lanzando...
-    start "" "%PATH_2%" "%WS_PATH%"
+    echo [LAUNCH] Detectado en Program Files. Inyectando Extension...
+    start "" "%PATH_2%" --extensionDevelopmentPath="%EXT_DEV_PATH%" "%WS_PATH%"
     goto :success
 )
 
