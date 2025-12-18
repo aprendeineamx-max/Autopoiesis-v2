@@ -1,5 +1,5 @@
 /**
- * Ghost Agent Dashboard Server v1.0
+ * Ghost Agent Dashboard Server v1.1
  * Unified HTTP server for dashboard and stats API
  * 
  * Serves:
@@ -8,6 +8,7 @@
  *   - Stats API at /api/stats
  *   - Heartbeat API at /api/heartbeat
  *   - Allowlist API at /api/allowlist
+ *   - OmniGod API at /api/omnigod
  */
 
 const http = require('http');
@@ -21,6 +22,12 @@ const GEMINI_PATH = path.join(process.env.USERPROFILE || 'C:\\Users\\Administrat
 const STATS_FILE = path.join(GEMINI_PATH, '.ghost_stats.json');
 const HEARTBEAT_FILE = path.join(GEMINI_PATH, '.ghost_heartbeat.json');
 const ALLOWLIST_FILE = path.join(GEMINI_PATH, 'browserAllowlist.txt');
+
+// === OMNIGOD PATHS ===
+const OMNIGOD_DIR = path.join(__dirname, 'Bots', 'OmniGod');
+const OMNIGOD_LOG = path.join(OMNIGOD_DIR, 'OmniGod_Logs.txt');
+const OMNIGOD_STATUS_FILE = path.join(OMNIGOD_DIR, 'OMNIGOD_STATUS.json');
+const OMNIGOD_SIGNAL_FILE = path.join(OMNIGOD_DIR, 'GHOST_SIGNAL.json');
 
 // === ENSURE INITIAL FILES EXIST ===
 function ensureFilesExist() {
@@ -155,6 +162,68 @@ function apiGetAllowlist(res) {
     }
 }
 
+// === API: Get OmniGod Status ===
+function apiGetOmniGodStatus(res) {
+    try {
+        let status = {
+            running: false,
+            state: 'UNKNOWN',
+            phase: 'IDLE',
+            logSize: 0,
+            lastModified: null
+        };
+
+        // Check if OmniGod is running by log file activity
+        if (fs.existsSync(OMNIGOD_LOG)) {
+            const stats = fs.statSync(OMNIGOD_LOG);
+            const mtime = new Date(stats.mtime);
+            const now = new Date();
+            const diffSeconds = (now - mtime) / 1000;
+
+            status.running = diffSeconds < 60; // Active if log updated in last minute
+            status.logSize = stats.size;
+            status.lastModified = mtime.toISOString();
+        }
+
+        // Try to read status file if exists
+        if (fs.existsSync(OMNIGOD_STATUS_FILE)) {
+            const data = JSON.parse(fs.readFileSync(OMNIGOD_STATUS_FILE, 'utf-8'));
+            status = { ...status, ...data };
+        }
+
+        res.writeHead(200, {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+        });
+        res.end(JSON.stringify(status));
+    } catch (e) {
+        res.writeHead(500);
+        res.end(JSON.stringify({ error: e.message }));
+    }
+}
+
+// === API: Get OmniGod Logs ===
+function apiGetOmniGodLogs(res) {
+    try {
+        let logs = [];
+
+        if (fs.existsSync(OMNIGOD_LOG)) {
+            const content = fs.readFileSync(OMNIGOD_LOG, 'utf-8');
+            const allLines = content.split('\n').filter(l => l.trim());
+            logs = allLines.slice(-50); // Last 50 lines
+        }
+
+        res.writeHead(200, {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+        });
+        res.end(JSON.stringify({ logs, count: logs.length }));
+    } catch (e) {
+        res.writeHead(500);
+        res.end(JSON.stringify({ error: e.message }));
+    }
+}
+
 // === API: Update Stats (POST) ===
 function apiUpdateStats(req, res) {
     let body = '';
@@ -263,6 +332,17 @@ const server = http.createServer((req, res) => {
 
     if (url === '/api/allowlist') {
         apiGetAllowlist(res);
+        return;
+    }
+
+    // OmniGod Status API
+    if (url === '/api/omnigod') {
+        apiGetOmniGodStatus(res);
+        return;
+    }
+
+    if (url === '/api/omnigod/logs') {
+        apiGetOmniGodLogs(res);
         return;
     }
 
