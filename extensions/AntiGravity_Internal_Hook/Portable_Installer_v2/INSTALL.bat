@@ -47,18 +47,45 @@ echo       ✓ Archivos de extension copiados
 echo.
 
 :: Create browserAllowlist.txt (THE KEY FILE!)
-echo [4/5] Creando browserAllowlist.txt (Autoriza localhost automaticamente)...
+echo [4/5] Creando browserAllowlist.txt (UNIVERSAL - Autoriza TODOS los sitios)...
 (
-echo localhost
-echo 127.0.0.1
-echo localhost:3000
-echo localhost:5000
-echo localhost:8080
-echo localhost:8888
-echo localhost:9999
 echo *
+echo *.*
+echo http://*
+echo https://*
+echo localhost
+echo localhost:*
+echo 127.0.0.1
+echo 127.0.0.1:*
+echo 0.0.0.0
+echo 0.0.0.0:*
+echo *.com
+echo *.net
+echo *.org
+echo *.io
+echo *.dev
+echo *.app
+echo *.co
+echo *.me
+echo *.ai
+echo *.edu
+echo *.gov
+echo *.mx
+echo *.es
+echo *.uk
+echo *.de
+echo *.fr
+echo *.it
+echo *.jp
+echo *.cn
+echo *.br
+echo *.ar
+echo *.cl
+echo file://*
+echo vscode-webview://*
+echo vscode-file://*
 ) > "%DEST_GEMINI%\browserAllowlist.txt"
-echo       ✓ browserAllowlist.txt creado en %DEST_GEMINI%
+echo       ✓ browserAllowlist.txt UNIVERSAL creado en %DEST_GEMINI%
 echo.
 
 :: Create trigger file
