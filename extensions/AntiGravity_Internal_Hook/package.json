@@ -35,9 +35,44 @@
       {
         "command": "antigravity.force_accept_loop",
         "title": "Antigravity: Force Accept Loop"
+      },
+      {
+        "command": "antigravity.ghostAgent.toggle",
+        "title": "👻 Ghost Agent: Toggle On/Off"
+      },
+      {
+        "command": "antigravity.ghostAgent.openGenesis",
+        "title": "👻 Ghost Agent: Open Genesis Studio"
+      },
+      {
+        "command": "antigravity.ghostAgent.exportChat",
+        "title": "👻 Ghost Agent: Export Current Chat"
+      },
+      {
+        "command": "antigravity.ghostAgent.showStatus",
+        "title": "👻 Ghost Agent: Show Status"
+      },
+      {
+        "command": "antigravity.ghostAgent.configure",
+        "title": "👻 Ghost Agent: Configure Settings"
+      },
+      {
+        "command": "antigravity.ghostAgent.openDashboard",
+        "title": "👻 Ghost Agent: Open Dashboard"
       }
     ],
-    "keybindings": []
+    "keybindings": [
+      {
+        "command": "antigravity.ghostAgent.toggle",
+        "key": "ctrl+alt+g",
+        "mac": "cmd+alt+g"
+      },
+      {
+        "command": "antigravity.ghostAgent.showStatus",
+        "key": "ctrl+alt+s",
+        "mac": "cmd+alt+s"
+      }
+    ]
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -597,6 +597,83 @@ function activate(context) {
         }
     });
 
+    // === NEW v2.0: Direct Structured JSON Export ===
+    vscode.commands.registerCommand('antigravity.exporter.exportStructuredJSON', async () => {
+        debugLog('[Command] Export Structured JSON triggered');
+        try {
+            const clipboardText = await vscode.env.clipboard.readText();
+
+            if (!clipboardText || clipboardText.trim().length === 0) {
+                vscode.window.showWarningMessage('Clipboard is empty. Copy chat first.');
+                return;
+            }
+
+            const entries = parseToManualFormat(clipboardText);
+
+            // Build structured JSON with timestamps and code detection
+            const structuredExport = {
+                metadata: {
+                    exportedAt: new Date().toISOString(),
+                    exportVersion: '2.0',
+                    totalMessages: entries.length,
+                    source: 'AntiGravity Chat Exporter'
+                },
+                messages: entries.map((entry, index) => {
+                    // Detect code blocks
+                    const codeBlocks = [];
+                    const codeRegex = /```(\w*)\n([\s\S]*?)```/g;
+                    let match;
+                    while ((match = codeRegex.exec(entry.text)) !== null) {
+                        codeBlocks.push({
+                            language: match[1] || 'plaintext',
+                            code: match[2].trim()
+                        });
+                    }
+
+                    return {
+                        id: index + 1,
+                        role: entry.role,
+                        timestamp: new Date().toISOString(),
+                        content: entry.text,
+                        hasCode: codeBlocks.length > 0,
+                        codeBlocks: codeBlocks,
+                        wordCount: entry.text.split(/\s+/).length,
+                        charCount: entry.text.length
+                    };
+                }),
+                statistics: {
+                    userMessages: entries.filter(e => e.role === 'user').length,
+                    agentMessages: entries.filter(e => e.role === 'agent').length,
+                    totalCodeBlocks: entries.reduce((acc, e) => {
+                        const matches = e.text.match(/```/g);
+                        return acc + (matches ? matches.length / 2 : 0);
+                    }, 0)
+                }
+            };
+
+            // Save to file
+            const exportDir = `${process.env.USERPROFILE}\\Documents\\AntiGravity_Chat_Exports`;
+            if (!fs.existsSync(exportDir)) {
+                fs.mkdirSync(exportDir, { recursive: true });
+            }
+
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const filePath = path.join(exportDir, `Chat_Structured_${timestamp}.json`);
+            fs.writeFileSync(filePath, JSON.stringify(structuredExport, null, 2));
+
+            vscode.window.showInformationMessage(`✅ Exported ${entries.length} messages to structured JSON`);
+            debugLog(`[Command] Structured JSON exported: ${filePath}`);
+
+            // Open the file
+            const doc = await vscode.workspace.openTextDocument(filePath);
+            await vscode.window.showTextDocument(doc);
+
+        } catch (error) {
+            vscode.window.showErrorMessage('❌ Failed to export structured JSON: ' + error.message);
+            debugLog(`[Command] Structured JSON error: ${error.message}`);
+        }
+    });
+
     debugLog(`Extension ready. Mode: ${config.autoExportMode}, Interval: ${config.monitorInterval}s`);
 }
 

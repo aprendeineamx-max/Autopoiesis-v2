@@ -44,6 +44,10 @@
             {
                 "command": "antigravity.exporter.openFolder",
                 "title": "AntiGravity: Open Export Folder"
+            },
+            {
+                "command": "antigravity.exporter.exportStructuredJSON",
+                "title": "AntiGravity: Export Structured JSON (v2.0)"
             }
         ],
         "keybindings": [

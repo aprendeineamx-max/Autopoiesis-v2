@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Genesis | Omni Studio</title>
+    <title>Genesis | Omni Studio v5.0</title>
     <link rel="stylesheet" href="style.css">
     <!-- Google Font for Premium Feel -->
     <style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap');</style>
@@ -13,9 +13,14 @@
     <!-- SIDEBAR: Sourcing -->
     <div id="sidebar">
         <div class="header-row">
-            <div class="logo">GENESIS <span style="font-weight:300; opacity:0.8">STUDIO</span></div>
+            <div class="logo">GENESIS <span style="font-weight:300; opacity:0.8">STUDIO</span> <span class="version">v5.0</span></div>
         </div>
         <input type="text" id="search-box" placeholder="🔍 Search Commands...">
+
+        <!-- NEW: Category Filters -->
+        <div id="category-filters" class="category-container">
+            <!-- Injected by JS -->
+        </div>
 
         <div id="command-pool">
             <!-- Injected Items -->
@@ -30,13 +35,17 @@
         <div id="editor-area">
             <h2 style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <span>📜 Sequence Builder</span>
-                <button class="secondary" id="btn-clear" style="padding:6px 12px; font-size:0.8rem;">Clear All</button>
+                <div style="display:flex; gap:8px;">
+                    <button class="secondary" id="btn-load" style="padding:6px 12px; font-size:0.8rem;">📂 Load</button>
+                    <button class="secondary" id="btn-save" style="padding:6px 12px; font-size:0.8rem;">💾 Save</button>
+                    <button class="secondary" id="btn-clear" style="padding:6px 12px; font-size:0.8rem;">🗑️ Clear</button>
+                </div>
             </h2>
 
             <div id="timeline">
                 <div id="empty-msg" style="text-align:center; color:rgba(255,255,255,0.3); margin-top:100px;">
                     <span style="font-size:3rem; display:block; margin-bottom:10px;">✨</span>
-                    Drag commands here to design your flow
+                    Arrastra comandos aquí para diseñar tu flujo
                 </div>
             </div>
 
@@ -54,10 +63,10 @@
             </div>
         </div>
 
-        <!-- PREVIEW AREA (New) -->
+        <!-- PREVIEW AREA -->
         <div id="preview-area">
-            <h3>👁️ Live Code</h3>
-            <pre id="code-preview">// Your generated code will appear here...</pre>
+            <h3>👁️ Live Code Preview</h3>
+            <pre id="code-preview">// Tu código generado aparecerá aquí...</pre>
         </div>
 
     </div>

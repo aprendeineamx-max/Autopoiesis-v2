@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghost Agent Dashboard</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
+        :root {
+            --bg: #0a0a0f;
+            --card-bg: rgba(20, 20, 30, 0.8);
+            --accent: #8b5cf6;
+            --accent-glow: rgba(139, 92, 246, 0.3);
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --text: #ffffff;
+            --text-dim: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            background-image:
+                radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 30%),
+                radial-gradient(circle at 80% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 30%);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header .status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--card-bg);
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .card h3 {
+            font-size: 1rem;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stat {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .stat.success {
+            color: var(--success);
+        }
+
+        .stat.warning {
+            color: var(--warning);
+        }
+
+        .stat.error {
+            color: var(--error);
+        }
+
+        .extension-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .extension-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+
+        .extension-name {
+            font-weight: 600;
+        }
+
+        .extension-status {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .extension-status.active {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--success);
+        }
+
+        .extension-status.inactive {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--error);
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, var(--accent), #6366f1);
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px var(--accent-glow);
+        }
+
+        .action-btn.secondary {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .logs {
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 16px;
+            border-radius: 10px;
+        }
+
+        .log-entry {
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .log-time {
+            color: var(--text-dim);
+        }
+
+        .log-msg {
+            color: var(--text);
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .tool-item {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 16px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tool-item:hover {
+            background: rgba(139, 92, 246, 0.2);
+        }
+
+        .tool-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .tool-name {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>👻 Ghost Agent Dashboard</h1>
+        <div class="status">
+            <div class="status-dot"></div>
+            <span>Sistema Activo</span>
+        </div>
+    </div>
+
+    <div class="grid">
+        <!-- Stats -->
+        <div class="card">
+            <h3>📊 Auto-Accepts Hoy</h3>
+            <div class="stat success" id="accepts-count">847</div>
+            <div style="color: var(--text-dim);">Prompts auto-aceptados</div>
+        </div>
+
+        <div class="card">
+            <h3>🌐 Allowlist Entries</h3>
+            <div class="stat" id="allowlist-count">200+</div>
+            <div style="color: var(--text-dim);">browserAllowlist.txt</div>
+        </div>
+
+        <div class="card">
+            <h3>⚡ Extensiones Activas</h3>
+            <div class="stat success" id="extensions-count">3</div>
+            <div style="color: var(--text-dim);">de 3 instaladas</div>
+        </div>
+
+        <!-- Extensions -->
+        <div class="card" style="grid-column: span 2;">
+            <h3>🧩 Estado de Extensiones</h3>
+            <div class="extension-list">
+                <div class="extension-item">
+                    <span class="extension-name">AntiGravity Internal Hook</span>
+                    <span class="extension-status active">✓ Activo</span>
+                </div>
+                <div class="extension-item">
+                    <span class="extension-name">AntiGravity Chat Exporter</span>
+                    <span class="extension-status active">✓ Activo</span>
+                </div>
+                <div class="extension-item">
+                    <span class="extension-name">AntiGravity Supervisor</span>
+                    <span class="extension-status active">✓ Activo</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card">
+            <h3>⚡ Acciones Rápidas</h3>
+            <div class="quick-actions">
+                <button class="action-btn" onclick="openGenesis()">🎨 Genesis</button>
+                <button class="action-btn secondary" onclick="exportChat()">📤 Export Chat</button>
+                <button class="action-btn secondary" onclick="checkAPIs()">🔑 Check APIs</button>
+                <button class="action-btn secondary" onclick="openLogs()">📋 Logs</button>
+            </div>
+        </div>
+
+        <!-- Tools -->
+        <div class="card" style="grid-column: span 2;">
+            <h3>🛠️ Herramientas</h3>
+            <div class="tools-grid">
+                <div class="tool-item" onclick="openTool('genesis')">
+                    <div class="tool-icon">🎨</div>
+                    <div class="tool-name">Genesis Studio</div>
+                </div>
+                <div class="tool-item" onclick="openTool('api-manager')">
+                    <div class="tool-icon">🔑</div>
+                    <div class="tool-name">API Manager</div>
+                </div>
+                <div class="tool-item" onclick="openTool('deep-forensics')">
+                    <div class="tool-icon">🔍</div>
+                    <div class="tool-name">Deep Forensics</div>
+                </div>
+                <div class="tool-item" onclick="openTool('omnigod')">
+                    <div class="tool-icon">🤖</div>
+                    <div class="tool-name">OmniGod</div>
+                </div>
+                <div class="tool-item" onclick="openTool('exporter')">
+                    <div class="tool-icon">📤</div>
+                    <div class="tool-name">Chat Exporter</div>
+                </div>
+                <div class="tool-item" onclick="openTool('supervisor')">
+                    <div class="tool-icon">👁️</div>
+                    <div class="tool-name">Supervisor</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Logs -->
+        <div class="card">
+            <h3>📋 Últimos Logs</h3>
+            <div class="logs">
+                <div class="log-entry">
+                    <span class="log-time">[14:30:15]</span>
+                    <span class="log-msg">Ghost Core: Auto-accept loop running</span>
+                </div>
+                <div class="log-entry">
+                    <span class="log-time">[14:30:10]</span>
+                    <span class="log-msg">browserAllowlist.txt: 200+ entries loaded</span>
+                </div>
+                <div class="log-entry">
+                    <span class="log-time">[14:30:05]</span>
+                    <span class="log-msg">Extension activated: Internal Hook v2.0</span>
+                </div>
+                <div class="log-entry">
+                    <span class="log-time">[14:30:00]</span>
+                    <span class="log-msg">Dashboard initialized</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openGenesis() {
+            window.open('http://localhost:8888/', '_blank');
+        }
+
+        function exportChat() {
+            alert('Ejecuta: Ctrl+Shift+P → "AntiGravity: Export Structured JSON"');
+        }
+
+        function checkAPIs() {
+            alert('Ejecuta: node tools/api-manager/manager.js status');
+        }
+
+        function openLogs() {
+            alert('Logs en: C:\\AntiGravityExt\\AntiGravity_Ghost_Agent\\');
+        }
+
+        function openTool(tool) {
+            const paths = {
+                'genesis': 'http://localhost:8888/',
+                'api-manager': 'file:///C:/AntiGravityExt/AntiGravity_Ghost_Agent/tools/api-manager/',
+                'deep-forensics': 'file:///C:/AntiGravityExt/AntiGravity_Ghost_Agent/tools/Deep_Forensics/',
+                'omnigod': 'file:///C:/AntiGravityExt/AntiGravity_Ghost_Agent/tools/Bots/OmniGod/',
+                'exporter': 'vscode://command/antigravity.exporter.configure',
+                'supervisor': 'vscode://command/antigravity.supervisor.status'
+            };
+
+            if (paths[tool]) {
+                window.open(paths[tool], '_blank');
+            }
+        }
+
+        // Simulate live counter
+        let count = 847;
+        setInterval(() => {
+            count += Math.floor(Math.random() * 3);
+            document.getElementById('accepts-count').textContent = count;
+        }, 5000);
+    </script>
+</body>
+
+</html>
