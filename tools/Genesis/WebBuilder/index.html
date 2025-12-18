@@ -1,19 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Genesis | Omni Studio v5.0</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/genesis/style.css">
     <!-- Google Font for Premium Feel -->
-    <style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap');</style>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
+    </style>
 </head>
+
 <body>
 
     <!-- SIDEBAR: Sourcing -->
     <div id="sidebar">
         <div class="header-row">
-            <div class="logo">GENESIS <span style="font-weight:300; opacity:0.8">STUDIO</span> <span class="version">v5.0</span></div>
+            <div class="logo">GENESIS <span style="font-weight:300; opacity:0.8">STUDIO</span> <span
+                    class="version">v5.0</span></div>
         </div>
         <input type="text" id="search-box" placeholder="🔍 Search Commands...">
 
@@ -30,7 +35,7 @@
 
     <!-- MAIN STAGE: Building -->
     <div id="main-stage">
-        
+
         <!-- EDITOR AREA -->
         <div id="editor-area">
             <h2 style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
@@ -38,7 +43,8 @@
                 <div style="display:flex; gap:8px;">
                     <button class="secondary" id="btn-load" style="padding:6px 12px; font-size:0.8rem;">📂 Load</button>
                     <button class="secondary" id="btn-save" style="padding:6px 12px; font-size:0.8rem;">💾 Save</button>
-                    <button class="secondary" id="btn-clear" style="padding:6px 12px; font-size:0.8rem;">🗑️ Clear</button>
+                    <button class="secondary" id="btn-clear" style="padding:6px 12px; font-size:0.8rem;">🗑️
+                        Clear</button>
                 </div>
             </h2>
 
@@ -53,8 +59,8 @@
             <div id="toolbar">
                 <div class="export-options">
                     <span style="color:#aaa; font-size:0.9rem;">Extension Name:</span>
-                    <input type="text" id="export-name" value="my_agent" 
-                           style="width:200px; margin:0 0 0 10px; background:rgba(0,0,0,0.5);">
+                    <input type="text" id="export-name" value="my_agent"
+                        style="width:200px; margin:0 0 0 10px; background:rgba(0,0,0,0.5);">
                 </div>
                 <div style="display:flex; gap:10px;">
                     <button class="secondary" id="btn-copy">📋 Copy Code</button>
@@ -72,7 +78,8 @@
     </div>
 
     <!-- Scripts -->
-    <script src="data.js"></script>
-    <script src="app.js"></script>
+    <script src="/genesis/data.js"></script>
+    <script src="/genesis/app.js"></script>
 </body>
+
 </html>

@@ -215,11 +215,13 @@ function trackCommand(command, success = true) {
         stats.autoAccepts.failed++;
     }
 
-    // Save every 10 executions
-    if (stats.autoAccepts.executed % 10 === 0) {
-        saveStats();
-        sendHttpStats().catch(() => { }); // Try HTTP, ignore failures
-    }
+    // CHANGED: Send to dashboard IMMEDIATELY (not every 10)
+    // This enables real-time tracking in the dashboard
+    saveStats();
+    sendHttpStats().catch(() => {
+        // Silent fail - stats still saved locally
+        console.log('[StatsTracker] HTTP sync failed, stats saved to file');
+    });
 }
 
 function getStats() {
