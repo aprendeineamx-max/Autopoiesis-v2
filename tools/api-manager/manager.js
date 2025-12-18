@@ -12,15 +12,23 @@
 const path = require('path');
 const fs = require('fs');
 
-// Import existing modules
-const CreditChecker = require('../credit-checker/creditChecker');
-const APIKeyTester = require('../api-key-tester/tester');
+// Lazy loading for modules that may fail
+let CreditChecker = null;
+let APIKeyTester = null;
 
 class APIManager {
     constructor(configPath = '../../core/config/api-keys.json') {
         const keyPath = path.resolve(__dirname, configPath);
         this.configPath = keyPath;
         this.config = JSON.parse(fs.readFileSync(keyPath, 'utf-8'));
+
+        // Lazy load dependencies
+        if (!CreditChecker) {
+            CreditChecker = require('../credit-checker/creditChecker');
+        }
+        if (!APIKeyTester) {
+            APIKeyTester = require('../api-key-tester/tester');
+        }
 
         this.creditChecker = new CreditChecker(keyPath);
         this.tester = new APIKeyTester(configPath);
@@ -195,22 +203,62 @@ class APIManager {
 
 // CLI Runner
 if (require.main === module) {
-    const manager = new APIManager();
     const command = process.argv[2] || 'help';
+
+    // Show help without initialization
+    if (command === 'help') {
+        console.log(`
+╔═══════════════════════════════════════════════════════════════════╗
+║                    API MANAGER v1.0 - Help                        ║
+╠═══════════════════════════════════════════════════════════════════╣
+║                                                                   ║
+║  Commands:                                                        ║
+║    node manager.js status     Quick status of all providers       ║
+║    node manager.js credits    Check credits only                  ║
+║    node manager.js test       Test all keys                       ║
+║    node manager.js full       Full check (credits + test)         ║
+║    node manager.js list       List all configured keys            ║
+║    node manager.js help       Show this help                      ║
+║                                                                   ║
+║  Examples:                                                        ║
+║    node manager.js status                                         ║
+║    node manager.js credits                                        ║
+║                                                                   ║
+║  Requirements:                                                    ║
+║    - Node.js                                                      ║
+║    - npm install axios (in api-key-tester directory)              ║
+║    - Valid api-keys.json in core/config/                          ║
+║                                                                   ║
+╚═══════════════════════════════════════════════════════════════════╝
+        `);
+        process.exit(0);
+    }
+
+    // Try to initialize
+    let manager;
+    try {
+        manager = new APIManager();
+    } catch (error) {
+        console.error('\n❌ Initialization Error:', error.message);
+        console.error('\n💡 Possible fixes:');
+        console.error('   1. Verify core/config/api-keys.json exists');
+        console.error('   2. Run: cd tools/api-key-tester && npm install');
+        console.error('   3. Run: cd tools/credit-checker && npm install');
+        process.exit(1);
+    }
 
     const commands = {
         'status': () => manager.quickStatus(),
         'credits': () => manager.checkCredits(),
         'test': () => manager.testKeys(),
         'full': () => manager.fullCheck(),
-        'list': () => { manager.listKeys(); return Promise.resolve(); },
-        'help': () => { manager.showHelp(); return Promise.resolve(); }
+        'list': () => { manager.listKeys(); return Promise.resolve(); }
     };
 
     const action = commands[command];
     if (!action) {
         console.log(`Unknown command: ${command}`);
-        manager.showHelp();
+        console.log('Run: node manager.js help');
         process.exit(1);
     }
 
