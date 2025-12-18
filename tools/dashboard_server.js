@@ -141,6 +141,32 @@ function apiGetStats(res) {
     }
 }
 
+// === API: Reset Stats ===
+function apiResetStats(res) {
+    try {
+        const stats = {
+            autoAccepts: { executed: 0, successful: 0, failed: 0 },
+            allowlistEntries: 0,
+            sessionStart: new Date().toISOString(),
+            lastUpdate: new Date().toISOString()
+        };
+
+        fs.writeFileSync(STATS_FILE, JSON.stringify(stats, null, 2));
+
+        res.writeHead(200, {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+        });
+        res.end(JSON.stringify({ success: true, message: 'Stats reset to 0' }));
+
+        // Broadcast reset event
+        broadcast('stats_reset', stats);
+    } catch (e) {
+        res.writeHead(500);
+        res.end(JSON.stringify({ error: e.message }));
+    }
+}
+
 // === API: Get Heartbeat ===
 function apiGetHeartbeat(res) {
     try {
@@ -558,6 +584,11 @@ const server = http.createServer((req, res) => {
         } else {
             apiGetStats(res);
         }
+        return;
+    }
+
+    if (url === '/api/stats/reset' && req.method === 'POST') {
+        apiResetStats(res);
         return;
     }
 

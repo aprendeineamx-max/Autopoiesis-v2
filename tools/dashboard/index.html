@@ -612,177 +612,181 @@
         </div>
     </div>
 
-    <div class="grid">
-        <!-- Stats -->
-        <div class="card">
+    <!-- Stats -->
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
             <h3>📊 Auto-Accepts</h3>
-            <div class="stat success" id="accepts-executed">--</div>
-            <div class="stat-detail">
-                <span id="accepts-successful">--</span> exitosos ·
-                <span id="accepts-failed">--</span> fallidos
-            </div>
-            <div class="data-source">📁 .ghost_stats.json</div>
+            <button onclick="resetStats()"
+                style="background: rgba(255,100,100,0.2); border: 1px solid rgba(255,100,100,0.4); color: #ff6b6b; padding: 4px 10px; border-radius: 5px; cursor: pointer; font-size: 0.75rem;"
+                title="Restablecer conteo">🔄 Reset</button>
         </div>
-
-        <div class="card">
-            <h3>🌐 Allowlist Entries</h3>
-            <div class="stat" id="allowlist-count">--</div>
-            <div style="color: var(--text-dim);">browserAllowlist.txt</div>
-            <div class="data-source" id="allowlist-source">📁 Cargando...</div>
+        <div class="stat success" id="accepts-executed">--</div>
+        <div class="stat-detail">
+            <span id="accepts-successful">--</span> exitosos ·
+            <span id="accepts-failed">--</span> fallidos
         </div>
+        <div class="data-source">📁 .ghost_stats.json</div>
+    </div>
 
-        <div class="card">
-            <h3>⚡ Extensiones Activas</h3>
-            <div class="stat success" id="extensions-count">--</div>
-            <div style="color: var(--text-dim);" id="extensions-detail">de -- detectadas</div>
-            <div class="data-source">📁 .ghost_heartbeat.json</div>
+    <div class="card">
+        <h3>🌐 Allowlist Entries</h3>
+        <div class="stat" id="allowlist-count">--</div>
+        <div style="color: var(--text-dim);">browserAllowlist.txt</div>
+        <div class="data-source" id="allowlist-source">📁 Cargando...</div>
+    </div>
+
+    <div class="card">
+        <h3>⚡ Extensiones Activas</h3>
+        <div class="stat success" id="extensions-count">--</div>
+        <div style="color: var(--text-dim);" id="extensions-detail">de -- detectadas</div>
+        <div class="data-source">📁 .ghost_heartbeat.json</div>
+    </div>
+
+    <!-- Extensions -->
+    <div class="card" style="grid-column: span 2;">
+        <h3>🧩 Estado de Extensiones</h3>
+        <div class="extension-list" id="extension-list">
+            <!-- Populated by JS -->
         </div>
+    </div>
 
-        <!-- Extensions -->
-        <div class="card" style="grid-column: span 2;">
-            <h3>🧩 Estado de Extensiones</h3>
-            <div class="extension-list" id="extension-list">
-                <!-- Populated by JS -->
-            </div>
+    <!-- OmniGod Status -->
+    <div class="card">
+        <h3>🤖 OmniGod Status</h3>
+        <div class="stat" id="omnigod-status" style="font-size: 1.5rem;">--</div>
+        <div class="stat-detail" id="omnigod-details">
+            Log: <span id="omnigod-log-size">--</span>
         </div>
+        <div class="data-source">📁 /api/omnigod</div>
+    </div>
 
-        <!-- OmniGod Status -->
-        <div class="card">
-            <h3>🤖 OmniGod Status</h3>
-            <div class="stat" id="omnigod-status" style="font-size: 1.5rem;">--</div>
-            <div class="stat-detail" id="omnigod-details">
-                Log: <span id="omnigod-log-size">--</span>
-            </div>
-            <div class="data-source">📁 /api/omnigod</div>
+    <!-- Quick Actions -->
+    <div class="card">
+        <h3>⚡ Acciones Rápidas</h3>
+        <div class="quick-actions">
+            <button class="action-btn" onclick="openGenesis()">🎨 Genesis</button>
+            <button class="action-btn secondary" onclick="exportChat()">📤 Export Chat</button>
+            <button class="action-btn secondary" onclick="checkAPIs()">🔑 Check APIs</button>
+            <button class="action-btn secondary" onclick="refreshData()">🔄 Refresh</button>
+            <button class="action-btn secondary" onclick="checkPythonAPI()">🐍 Python API</button>
+            <button class="action-btn secondary" onclick="startOmniGod()">🤖 Start OmniGod</button>
         </div>
+    </div>
 
-        <!-- Quick Actions -->
-        <div class="card">
-            <h3>⚡ Acciones Rápidas</h3>
-            <div class="quick-actions">
-                <button class="action-btn" onclick="openGenesis()">🎨 Genesis</button>
-                <button class="action-btn secondary" onclick="exportChat()">📤 Export Chat</button>
-                <button class="action-btn secondary" onclick="checkAPIs()">🔑 Check APIs</button>
-                <button class="action-btn secondary" onclick="refreshData()">🔄 Refresh</button>
-                <button class="action-btn secondary" onclick="checkPythonAPI()">🐍 Python API</button>
-                <button class="action-btn secondary" onclick="startOmniGod()">🤖 Start OmniGod</button>
-            </div>
-        </div>
-
-        <!-- Analytics Dashboard -->
-        <div class="card" style="grid-column: span 2;">
-            <h3>📊 Analytics</h3>
-            <div class="analytics-container">
-                <!-- Activity Chart -->
-                <div class="chart-section">
-                    <div class="chart-title">Actividad Reciente (última hora)</div>
-                    <div class="bar-chart" id="activity-chart">
-                        <!-- Bars will be generated by JS -->
-                    </div>
-                    <div class="chart-labels">
-                        <span>-60m</span>
-                        <span>-45m</span>
-                        <span>-30m</span>
-                        <span>-15m</span>
-                        <span>Ahora</span>
-                    </div>
+    <!-- Analytics Dashboard -->
+    <div class="card" style="grid-column: span 2;">
+        <h3>📊 Analytics</h3>
+        <div class="analytics-container">
+            <!-- Activity Chart -->
+            <div class="chart-section">
+                <div class="chart-title">Actividad Reciente (última hora)</div>
+                <div class="bar-chart" id="activity-chart">
+                    <!-- Bars will be generated by JS -->
                 </div>
-
-                <!-- Productivity Metrics -->
-                <div class="metrics-row">
-                    <div class="metric">
-                        <div class="metric-value" id="productivity-score">--</div>
-                        <div class="metric-label">Productivity Score</div>
-                    </div>
-                    <div class="metric">
-                        <div class="metric-value" id="session-duration">--</div>
-                        <div class="metric-label">Session Duration</div>
-                    </div>
-                    <div class="metric">
-                        <div class="metric-value" id="commands-per-hour">--</div>
-                        <div class="metric-label">Commands/Hour</div>
-                    </div>
+                <div class="chart-labels">
+                    <span>-60m</span>
+                    <span>-45m</span>
+                    <span>-30m</span>
+                    <span>-15m</span>
+                    <span>Ahora</span>
                 </div>
             </div>
-        </div>
 
-        <!-- Smart Suggestions -->
-        <div class="card" style="grid-column: span 2;">
-            <h3>💡 Smart Suggestions</h3>
-            <div class="suggestions-container" id="suggestions-container">
-                <!-- Will be populated by JS -->
-            </div>
-            <div class="suggestions-footer">
-                <span id="suggestions-status">Analizando patrones...</span>
-                <button class="action-btn small" onclick="refreshSuggestions()">🔄 Actualizar</button>
-            </div>
-        </div>
-
-        <!-- AI Assistant -->
-        <div class="card" style="grid-column: span 2;">
-            <h3>🤖 AI Assistant</h3>
-            <div class="ai-chat-container">
-                <div class="chat-messages" id="chat-messages">
-                    <div class="chat-message assistant">
-                        <span class="msg-icon">🤖</span>
-                        <span class="msg-text">Hello! I'm your Ghost Agent AI assistant. Ask me anything about the
-                            system or give me commands.</span>
-                    </div>
+            <!-- Productivity Metrics -->
+            <div class="metrics-row">
+                <div class="metric">
+                    <div class="metric-value" id="productivity-score">--</div>
+                    <div class="metric-label">Productivity Score</div>
                 </div>
-                <div class="chat-input-container">
-                    <input type="text" id="chat-input" class="chat-input" placeholder="Ask AI or type a command..."
-                        onkeypress="handleChatKeypress(event)">
-                    <button class="action-btn" onclick="sendChatMessage()">Send</button>
+                <div class="metric">
+                    <div class="metric-value" id="session-duration">--</div>
+                    <div class="metric-label">Session Duration</div>
                 </div>
-            </div>
-            <div class="ai-status">
-                <span id="ai-status">🟢 AI Ready</span>
-                <span class="ai-provider">via Supervisor</span>
-            </div>
-        </div>
-
-        <!-- Tools -->
-        <div class="card" style="grid-column: span 2;">
-            <h3>🛠️ Herramientas</h3>
-            <div class="tools-grid">
-                <div class="tool-item" onclick="openTool('genesis')">
-                    <div class="tool-icon">🎨</div>
-                    <div class="tool-name">Genesis Studio</div>
-                </div>
-                <div class="tool-item" onclick="openTool('api-manager')">
-                    <div class="tool-icon">🔑</div>
-                    <div class="tool-name">API Manager</div>
-                </div>
-                <div class="tool-item" onclick="openTool('deep-forensics')">
-                    <div class="tool-icon">🔍</div>
-                    <div class="tool-name">Deep Forensics</div>
-                </div>
-                <div class="tool-item" onclick="openTool('omnigod')">
-                    <div class="tool-icon">🤖</div>
-                    <div class="tool-name">OmniGod</div>
-                </div>
-                <div class="tool-item" onclick="openTool('exporter')">
-                    <div class="tool-icon">📤</div>
-                    <div class="tool-name">Chat Exporter</div>
-                </div>
-                <div class="tool-item" onclick="openTool('supervisor')">
-                    <div class="tool-icon">👁️</div>
-                    <div class="tool-name">Supervisor</div>
+                <div class="metric">
+                    <div class="metric-value" id="commands-per-hour">--</div>
+                    <div class="metric-label">Commands/Hour</div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Logs -->
-        <div class="card">
-            <h3>📋 Últimos Logs</h3>
-            <div class="logs" id="logs-container">
-                <div class="log-entry">
-                    <span class="log-time">[--:--:--]</span>
-                    <span class="log-msg">Esperando datos...</span>
+    <!-- Smart Suggestions -->
+    <div class="card" style="grid-column: span 2;">
+        <h3>💡 Smart Suggestions</h3>
+        <div class="suggestions-container" id="suggestions-container">
+            <!-- Will be populated by JS -->
+        </div>
+        <div class="suggestions-footer">
+            <span id="suggestions-status">Analizando patrones...</span>
+            <button class="action-btn small" onclick="refreshSuggestions()">🔄 Actualizar</button>
+        </div>
+    </div>
+
+    <!-- AI Assistant -->
+    <div class="card" style="grid-column: span 2;">
+        <h3>🤖 AI Assistant</h3>
+        <div class="ai-chat-container">
+            <div class="chat-messages" id="chat-messages">
+                <div class="chat-message assistant">
+                    <span class="msg-icon">🤖</span>
+                    <span class="msg-text">Hello! I'm your Ghost Agent AI assistant. Ask me anything about the
+                        system or give me commands.</span>
                 </div>
             </div>
-            <div class="data-source">📁 exporter_debug.log</div>
+            <div class="chat-input-container">
+                <input type="text" id="chat-input" class="chat-input" placeholder="Ask AI or type a command..."
+                    onkeypress="handleChatKeypress(event)">
+                <button class="action-btn" onclick="sendChatMessage()">Send</button>
+            </div>
         </div>
+        <div class="ai-status">
+            <span id="ai-status">🟢 AI Ready</span>
+            <span class="ai-provider">via Supervisor</span>
+        </div>
+    </div>
+
+    <!-- Tools -->
+    <div class="card" style="grid-column: span 2;">
+        <h3>🛠️ Herramientas</h3>
+        <div class="tools-grid">
+            <div class="tool-item" onclick="openTool('genesis')">
+                <div class="tool-icon">🎨</div>
+                <div class="tool-name">Genesis Studio</div>
+            </div>
+            <div class="tool-item" onclick="openTool('api-manager')">
+                <div class="tool-icon">🔑</div>
+                <div class="tool-name">API Manager</div>
+            </div>
+            <div class="tool-item" onclick="openTool('deep-forensics')">
+                <div class="tool-icon">🔍</div>
+                <div class="tool-name">Deep Forensics</div>
+            </div>
+            <div class="tool-item" onclick="openTool('omnigod')">
+                <div class="tool-icon">🤖</div>
+                <div class="tool-name">OmniGod</div>
+            </div>
+            <div class="tool-item" onclick="openTool('exporter')">
+                <div class="tool-icon">📤</div>
+                <div class="tool-name">Chat Exporter</div>
+            </div>
+            <div class="tool-item" onclick="openTool('supervisor')">
+                <div class="tool-icon">👁️</div>
+                <div class="tool-name">Supervisor</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logs -->
+    <div class="card">
+        <h3>📋 Últimos Logs</h3>
+        <div class="logs" id="logs-container">
+            <div class="log-entry">
+                <span class="log-time">[--:--:--]</span>
+                <span class="log-msg">Esperando datos...</span>
+            </div>
+        </div>
+        <div class="data-source">📁 exporter_debug.log</div>
+    </div>
     </div>
 
     <script>
@@ -834,6 +838,26 @@
                 console.log('Allowlist API Error:', e.message);
             }
             return false;
+        }
+
+        async function resetStats() {
+            if (!confirm('¿Restablecer contador de Auto-Accepts a 0?')) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/api/stats/reset`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                if (response.ok) {
+                    showToast('✓ Contador restablecido a 0', 'success');
+                    await loadStats();
+                    await refreshData();
+                } else {
+                    showToast('Error al restablecer', 'error');
+                }
+            } catch (e) {
+                showToast('Error de conexión', 'error');
+            }
         }
 
         function updateStatsUI(data) {
