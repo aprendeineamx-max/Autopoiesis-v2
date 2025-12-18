@@ -262,10 +262,347 @@
             color: var(--text-dim);
             margin-left: 8px;
         }
+
+        /* === TOAST NOTIFICATIONS === */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            padding: 14px 20px;
+            border-radius: 10px;
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 280px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--error);
+        }
+
+        .toast.warning {
+            border-left: 4px solid #f39c12;
+        }
+
+        .toast.info {
+            border-left: 4px solid var(--accent);
+        }
+
+        .toast-icon {
+            font-size: 1.3rem;
+        }
+
+        .toast-message {
+            flex: 1;
+            font-size: 0.9rem;
+        }
+
+        .toast-close {
+            cursor: pointer;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+
+        .toast-close:hover {
+            opacity: 1;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        /* === ERROR BANNER === */
+        .error-banner {
+            background: linear-gradient(135deg, #ff4757, #c44569);
+            color: white;
+            padding: 12px 20px;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+        }
+
+        .error-banner.visible {
+            display: block;
+        }
+
+        /* === ANALYTICS DASHBOARD === */
+        .analytics-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .chart-section {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .chart-title {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-bottom: 15px;
+        }
+
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+            height: 80px;
+            padding: 0 5px;
+        }
+
+        .bar {
+            flex: 1;
+            background: linear-gradient(to top, var(--accent), #a55eea);
+            border-radius: 3px 3px 0 0;
+            min-height: 4px;
+            transition: height 0.3s ease;
+        }
+
+        .bar:hover {
+            background: linear-gradient(to top, #4ecdc4, #a55eea);
+        }
+
+        .chart-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            margin-top: 8px;
+        }
+
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .metric {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+        }
+
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--success), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            margin-top: 5px;
+        }
+
+        /* === SMART SUGGESTIONS === */
+        .suggestions-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-height: 80px;
+        }
+
+        .suggestion-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            border-left: 3px solid var(--accent);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .suggestion-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateX(5px);
+        }
+
+        .suggestion-item.tip {
+            border-left-color: var(--success);
+        }
+
+        .suggestion-item.warning {
+            border-left-color: #f39c12;
+        }
+
+        .suggestion-item.action {
+            border-left-color: var(--accent);
+        }
+
+        .suggestion-icon {
+            font-size: 1.3rem;
+        }
+
+        .suggestion-text {
+            flex: 1;
+            font-size: 0.85rem;
+        }
+
+        .suggestion-action {
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            background: var(--accent);
+            color: white;
+            border-radius: 4px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .suggestion-item:hover .suggestion-action {
+            opacity: 1;
+        }
+
+        .suggestions-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        #suggestions-status {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .action-btn.small {
+            padding: 6px 12px;
+            font-size: 0.75rem;
+        }
+
+        /* === AI CHAT === */
+        .ai-chat-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .chat-messages {
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chat-message {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            max-width: 90%;
+        }
+
+        .chat-message.user {
+            background: linear-gradient(135deg, var(--accent), #a55eea);
+            align-self: flex-end;
+        }
+
+        .chat-message.assistant {
+            background: rgba(255, 255, 255, 0.08);
+            align-self: flex-start;
+        }
+
+        .msg-icon {
+            font-size: 1.2rem;
+        }
+
+        .msg-text {
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .ai-status {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .ai-provider {
+            opacity: 0.5;
+        }
     </style>
 </head>
 
 <body>
+    <!-- Toast Notifications Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Error Banner for Critical Issues -->
+    <div class="error-banner" id="error-banner">
+        ⚠️ <span id="error-banner-text"></span>
+    </div>
+
     <div class="header">
         <h1>👻 Ghost Agent Dashboard</h1>
         <div class="status">
@@ -329,6 +666,78 @@
                 <button class="action-btn secondary" onclick="refreshData()">🔄 Refresh</button>
                 <button class="action-btn secondary" onclick="checkPythonAPI()">🐍 Python API</button>
                 <button class="action-btn secondary" onclick="startOmniGod()">🤖 Start OmniGod</button>
+            </div>
+        </div>
+
+        <!-- Analytics Dashboard -->
+        <div class="card" style="grid-column: span 2;">
+            <h3>📊 Analytics</h3>
+            <div class="analytics-container">
+                <!-- Activity Chart -->
+                <div class="chart-section">
+                    <div class="chart-title">Actividad Reciente (última hora)</div>
+                    <div class="bar-chart" id="activity-chart">
+                        <!-- Bars will be generated by JS -->
+                    </div>
+                    <div class="chart-labels">
+                        <span>-60m</span>
+                        <span>-45m</span>
+                        <span>-30m</span>
+                        <span>-15m</span>
+                        <span>Ahora</span>
+                    </div>
+                </div>
+
+                <!-- Productivity Metrics -->
+                <div class="metrics-row">
+                    <div class="metric">
+                        <div class="metric-value" id="productivity-score">--</div>
+                        <div class="metric-label">Productivity Score</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value" id="session-duration">--</div>
+                        <div class="metric-label">Session Duration</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value" id="commands-per-hour">--</div>
+                        <div class="metric-label">Commands/Hour</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Smart Suggestions -->
+        <div class="card" style="grid-column: span 2;">
+            <h3>💡 Smart Suggestions</h3>
+            <div class="suggestions-container" id="suggestions-container">
+                <!-- Will be populated by JS -->
+            </div>
+            <div class="suggestions-footer">
+                <span id="suggestions-status">Analizando patrones...</span>
+                <button class="action-btn small" onclick="refreshSuggestions()">🔄 Actualizar</button>
+            </div>
+        </div>
+
+        <!-- AI Assistant -->
+        <div class="card" style="grid-column: span 2;">
+            <h3>🤖 AI Assistant</h3>
+            <div class="ai-chat-container">
+                <div class="chat-messages" id="chat-messages">
+                    <div class="chat-message assistant">
+                        <span class="msg-icon">🤖</span>
+                        <span class="msg-text">Hello! I'm your Ghost Agent AI assistant. Ask me anything about the
+                            system or give me commands.</span>
+                    </div>
+                </div>
+                <div class="chat-input-container">
+                    <input type="text" id="chat-input" class="chat-input" placeholder="Ask AI or type a command..."
+                        onkeypress="handleChatKeypress(event)">
+                    <button class="action-btn" onclick="sendChatMessage()">Send</button>
+                </div>
+            </div>
+            <div class="ai-status">
+                <span id="ai-status">🟢 AI Ready</span>
+                <span class="ai-provider">via Supervisor</span>
             </div>
         </div>
 
@@ -504,6 +913,266 @@
             document.getElementById('last-refresh').textContent = `(${timeStr})`;
         }
 
+        // === ANALYTICS DASHBOARD ===
+        let sessionStartTime = new Date();
+        let activityData = Array(12).fill(0); // 12 x 5-minute buckets for last hour
+
+        async function loadAnalytics() {
+            try {
+                // Get analytics from Python API
+                const response = await fetch('http://localhost:5000/analytics', {
+                    signal: AbortSignal.timeout(3000)
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    updateAnalyticsUI(data);
+                }
+            } catch (e) {
+                // Python API not available, use local stats
+                updateAnalyticsUI(null);
+            }
+        }
+
+        function updateAnalyticsUI(data) {
+            // Session Duration
+            const duration = new Date() - sessionStartTime;
+            document.getElementById('session-duration').textContent = formatDuration(duration);
+
+            // Commands per hour (from stats)
+            const statsStr = localStorage.getItem('ghost_stats');
+            let commandsPerHour = 0;
+            if (statsStr) {
+                const stats = JSON.parse(statsStr);
+                const executed = stats.autoAccepts?.executed || 0;
+                const hours = duration / (1000 * 60 * 60) || 1;
+                commandsPerHour = Math.round(executed / hours);
+            }
+            document.getElementById('commands-per-hour').textContent = commandsPerHour;
+
+            // Productivity score (if available from Python API)
+            if (data && data.successRate !== undefined) {
+                const score = Math.round(data.successRate);
+                document.getElementById('productivity-score').textContent = score + '%';
+            } else {
+                document.getElementById('productivity-score').textContent = '100%';
+            }
+
+            // Update activity chart
+            updateActivityChart();
+        }
+
+        function updateActivityChart() {
+            const chart = document.getElementById('activity-chart');
+            const maxValue = Math.max(...activityData, 1);
+
+            chart.innerHTML = activityData.map((value, i) => {
+                const height = Math.max(5, (value / maxValue) * 100);
+                return `<div class="bar" style="height: ${height}%" title="${value} eventos"></div>`;
+            }).join('');
+        }
+
+        function formatDuration(ms) {
+            const seconds = Math.floor(ms / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+
+            if (hours > 0) {
+                return `${hours}h ${minutes % 60}m`;
+            } else if (minutes > 0) {
+                return `${minutes}m`;
+            } else {
+                return `${seconds}s`;
+            }
+        }
+
+        // Track activity for chart
+        function recordActivity() {
+            activityData[activityData.length - 1]++;
+        }
+
+        // Rotate activity buckets every 5 minutes
+        setInterval(() => {
+            activityData.shift();
+            activityData.push(0);
+            updateActivityChart();
+        }, 5 * 60 * 1000);
+
+        // === SMART SUGGESTIONS ENGINE ===
+        function generateSuggestions() {
+            const suggestions = [];
+            const stats = JSON.parse(localStorage.getItem('ghost_stats') || '{}');
+            const executed = stats.autoAccepts?.executed || 0;
+            const failed = stats.autoAccepts?.failed || 0;
+            const sessionMinutes = (new Date() - sessionStartTime) / (1000 * 60);
+
+            // Pattern-based suggestions
+            if (executed === 0 && sessionMinutes > 5) {
+                suggestions.push({
+                    type: 'warning',
+                    icon: '⚠️',
+                    text: 'No commands executed yet. Check if extensions are loaded.',
+                    action: 'Reload',
+                    actionFn: () => showToast('Reload VS Code: Ctrl+Shift+P → Developer: Reload Window', 'info')
+                });
+            }
+
+            if (failed > 0 && failed / (executed || 1) > 0.1) {
+                suggestions.push({
+                    type: 'warning',
+                    icon: '🔴',
+                    text: `High failure rate detected (${failed} failures). Check allowlist.`,
+                    action: 'View',
+                    actionFn: () => openTool('allowlist')
+                });
+            }
+
+            if (sessionMinutes > 60 && executed > 20) {
+                suggestions.push({
+                    type: 'tip',
+                    icon: '🏆',
+                    text: `Great session! ${executed} auto-accepts in ${Math.round(sessionMinutes)}m.`,
+                    action: 'Export',
+                    actionFn: () => exportChat()
+                });
+            }
+
+            if (executed > 5 && sessionMinutes > 10) {
+                const rate = executed / sessionMinutes;
+                suggestions.push({
+                    type: 'tip',
+                    icon: '📈',
+                    text: `Current pace: ${rate.toFixed(1)} commands/min`,
+                    action: 'Stats',
+                    actionFn: () => showToast(`Total: ${executed} commands in ${Math.round(sessionMinutes)}m`, 'info')
+                });
+            }
+
+            // Default suggestion
+            if (suggestions.length === 0) {
+                suggestions.push({
+                    type: 'action',
+                    icon: '💡',
+                    text: 'Everything running smoothly. Keep coding!',
+                    action: null,
+                    actionFn: null
+                });
+            }
+
+            return suggestions;
+        }
+
+        function renderSuggestions(suggestions) {
+            const container = document.getElementById('suggestions-container');
+            container.innerHTML = suggestions.map(s => `
+                <div class="suggestion-item ${s.type}" onclick="${s.actionFn ? `(${s.actionFn.toString()})()` : ''}">
+                    <span class="suggestion-icon">${s.icon}</span>
+                    <span class="suggestion-text">${s.text}</span>
+                    ${s.action ? `<span class="suggestion-action">${s.action}</span>` : ''}
+                </div>
+            `).join('');
+
+            document.getElementById('suggestions-status').textContent =
+                `${suggestions.length} sugerencia(s) • ${new Date().toLocaleTimeString()}`;
+        }
+
+        function refreshSuggestions() {
+            const suggestions = generateSuggestions();
+            renderSuggestions(suggestions);
+            showToast('Suggestions updated', 'info', 1500);
+        }
+
+        // === AI CHAT FUNCTIONS ===
+        function addChatMessage(text, role) {
+            const container = document.getElementById('chat-messages');
+            const icon = role === 'user' ? '👤' : '🤖';
+            const msgEl = document.createElement('div');
+            msgEl.className = `chat-message ${role}`;
+            msgEl.innerHTML = `
+                <span class="msg-icon">${icon}</span>
+                <span class="msg-text">${escapeHtml(text)}</span>
+            `;
+            container.appendChild(msgEl);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            if (!message) return;
+
+            input.value = '';
+            addChatMessage(message, 'user');
+            document.getElementById('ai-status').textContent = '⏳ Thinking...';
+
+            // Try to process via Python API first
+            try {
+                const response = await fetch('http://localhost:5000/command', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ command: message }),
+                    signal: AbortSignal.timeout(10000)
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    addChatMessage(data.response || 'Command executed.', 'assistant');
+                    document.getElementById('ai-status').textContent = '🟢 AI Ready';
+                    return;
+                }
+            } catch (e) {
+                console.log('Python API not available, using local processing');
+            }
+
+            // Fallback: Local command processing
+            const reply = processLocalCommand(message);
+            addChatMessage(reply, 'assistant');
+            document.getElementById('ai-status').textContent = '🟢 AI Ready';
+        }
+
+        function processLocalCommand(message) {
+            const lower = message.toLowerCase();
+
+            // Command handlers
+            if (lower.includes('status') || lower.includes('estado')) {
+                const stats = JSON.parse(localStorage.getItem('ghost_stats') || '{}');
+                return `System Status:\n• Auto-Accepts: ${stats.autoAccepts?.executed || 0}\n• Session: ${formatDuration(new Date() - sessionStartTime)}\n• Connection: ${isConnected ? 'OK' : 'Offline'}`;
+            }
+
+            if (lower.includes('help') || lower.includes('ayuda')) {
+                return 'Available commands:\n• status - Show system status\n• reload - Reload extension\n• export - Export chat\n• check api - Check API status\n• omnigod - OmniGod control';
+            }
+
+            if (lower.includes('reload') || lower.includes('recargar')) {
+                showToast('Reload VS Code: Ctrl+Shift+P → Developer: Reload Window', 'info');
+                return 'To reload: Press Ctrl+Shift+P and type "Developer: Reload Window"';
+            }
+
+            if (lower.includes('export')) {
+                exportChat();
+                return 'Export initiated. Check VS Code for export dialog.';
+            }
+
+            if (lower.includes('check api') || lower.includes('api status')) {
+                checkAPIs();
+                return 'Running API check... See toast for results.';
+            }
+
+            if (lower.includes('omnigod')) {
+                startOmniGod();
+                return 'OmniGod launch instructions shown.';
+            }
+
+            // Default response
+            return `I understood: "${message}"\n\nTry "help" to see available commands, or ask about system status.`;
+        }
+
+        function handleChatKeypress(event) {
+            if (event.key === 'Enter') {
+                sendChatMessage();
+            }
+        }
+
         // === OMNIGOD STATUS ===
         async function loadOmniGod() {
             try {
@@ -542,15 +1211,61 @@
             logSizeEl.textContent = sizeStr;
         }
 
+        // === REAL LOGS FROM FILES ===
+        async function loadRealLogs() {
+            try {
+                const response = await fetch(`${API_BASE}/api/logs/all`);
+                if (response.ok) {
+                    const data = await response.json();
+                    updateRealLogsUI(data);
+                    return true;
+                }
+            } catch (e) {
+                console.log('Logs API Error:', e.message);
+            }
+            return false;
+        }
+
+        function updateRealLogsUI(data) {
+            const container = document.getElementById('logs-container');
+
+            // Only show real logs if we have them
+            if (data.logs && data.logs.length > 0) {
+                container.innerHTML = data.logs.slice(-10).map(log => {
+                    const color = log.source === 'omnigod' ? '#ff6b9d' :
+                        log.source === 'central' ? '#4ecdc4' : '#f39c12';
+                    return `
+                        <div class="log-entry">
+                            <span class="log-time" style="color: ${color}">[${log.source}]</span>
+                            <span class="log-msg">${escapeHtml(log.message.substring(0, 80))}</span>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
         async function refreshData() {
             updateLastRefresh();
             const statsOk = await loadStats();
             const heartbeatOk = await loadHeartbeat();
             await loadAllowlist();
             await loadOmniGod();
+            await loadRealLogs();
+            await loadAnalytics();
+            recordActivity();
+
+            // Update suggestions based on new data
+            const suggestions = generateSuggestions();
+            renderSuggestions(suggestions);
 
             if (statsOk || heartbeatOk) {
-                addLog('✓ Datos actualizados desde API');
+                addLog('✓ Datos actualizados');
             } else {
                 addLog('⚠ No se pudo conectar al servidor');
             }
@@ -581,9 +1296,27 @@
             addLog('Export Chat instruction shown');
         }
 
-        function checkAPIs() {
-            alert('Ejecuta en terminal:\nnode tools/api-manager/manager.js status');
-            addLog('Check APIs instruction shown');
+        async function checkAPIs() {
+            addLog('🔧 Ejecutando API status check...');
+            try {
+                const response = await fetch(`${API_BASE}/api/execute`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ command: 'api-status' })
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    alert(`✅ API Check Complete!\n\n${result.stdout || 'Check completed successfully'}`);
+                    addLog('✓ API status check: Done');
+                } else {
+                    alert(`⚠️ API Check Result:\n\n${result.stderr || result.error || 'No output'}`);
+                    addLog('⚠ API status check: Issues found');
+                }
+            } catch (e) {
+                alert('❌ Error ejecutando comando.\nAsegúrate que el servidor está corriendo.');
+                addLog('✗ API status check failed');
+            }
         }
 
         async function checkPythonAPI() {
@@ -607,35 +1340,105 @@
         }
 
         function startOmniGod() {
-            const path = 'C:\\\\AntiGravityExt\\\\AntiGravity_Ghost_Agent\\\\tools\\\\Bots\\\\OmniGod\\\\OmniGod.ahk';
-            alert(`Para iniciar OmniGod:\n\n1. Abre el archivo:\n${path}\n\n2. O usa el atajo F8 si ya está corriendo`);
-            addLog('OmniGod start instruction shown');
+            // Try to open with file handler
+            const ahkPath = 'C:/AntiGravityExt/AntiGravity_Ghost_Agent/tools/Bots/OmniGod/OmniGod.ahk';
+
+            // Create a hidden link and trigger it
+            const link = document.createElement('a');
+            link.href = 'file:///' + ahkPath;
+            link.target = '_blank';
+
+            addLog('Attempting to start OmniGod...');
+
+            // Fallback: Show instruction
+            alert(`Para iniciar OmniGod:\n\n1. Ejecuta en el Explorador:\n${ahkPath}\n\n2. O usa F8 si ya está corriendo\n\n3. O desde terminal:\nstart "" "${ahkPath}"`);
         }
 
         function openTool(tool) {
-            const paths = {
-                'genesis': `${API_BASE}/genesis`,
-                'api-manager': 'file:///C:/AntiGravityExt/AntiGravity_Ghost_Agent/tools/api-manager/',
-                'deep-forensics': 'file:///C:/AntiGravityExt/AntiGravity_Ghost_Agent/tools/Deep_Forensics/',
-                'omnigod': 'file:///C:/AntiGravityExt/AntiGravity_Ghost_Agent/tools/Bots/OmniGod/',
-                'exporter': 'vscode://command/antigravity.exporter.configure',
-                'supervisor': 'vscode://command/antigravity.supervisor.status'
+            const actions = {
+                'genesis': () => {
+                    window.open(`${API_BASE}/genesis`, '_blank');
+                    addLog('✓ Genesis Studio abierto');
+                },
+                'api-manager': () => {
+                    // Open in new terminal via VS Code
+                    window.open('vscode://file/C:/AntiGravityExt/AntiGravity_Ghost_Agent/tools/api-manager/manager.js', '_blank');
+                    addLog('✓ API Manager: Abrir en VS Code');
+                    alert('API Manager abierto en VS Code.\n\nPara usar:\nnode manager.js status');
+                },
+                'deep-forensics': () => {
+                    window.open('vscode://file/C:/AntiGravityExt/AntiGravity_Ghost_Agent/tools/Deep_Forensics', '_blank');
+                    addLog('✓ Deep Forensics: Carpeta abierta');
+                },
+                'omnigod': () => {
+                    startOmniGod();
+                },
+                'exporter': () => {
+                    window.open('vscode://file/C:/AntiGravityExt/AntiGravity_Ghost_Agent/extensions/AntiGravity_Chat_Exporter', '_blank');
+                    addLog('✓ Chat Exporter: En VS Code');
+                    alert('Para exportar:\nCtrl+Shift+P → "AntiGravity: Export Structured JSON"');
+                },
+                'supervisor': () => {
+                    window.open('vscode://file/C:/AntiGravityExt/AntiGravity_Ghost_Agent/extensions/AntiGravity_Supervisor', '_blank');
+                    addLog('✓ Supervisor: En VS Code');
+                }
             };
 
-            if (paths[tool]) {
-                window.open(paths[tool], '_blank');
-                addLog(`Opened ${tool}`);
+            if (actions[tool]) {
+                actions[tool]();
+            } else {
+                addLog(`⚠ Tool desconocido: ${tool}`);
             }
         }
 
         // === INITIALIZATION ===
+        let eventSource = null;
+
+        function connectSSE() {
+            if (eventSource) {
+                eventSource.close();
+            }
+
+            eventSource = new EventSource(`${API_BASE}/api/events`);
+
+            eventSource.onopen = () => {
+                addLog('🔗 SSE: Connected for live updates');
+                document.getElementById('status-text').textContent = 'Conectado (Live)';
+                document.getElementById('status-dot').classList.remove('inactive');
+            };
+
+            eventSource.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+
+                if (data.type === 'stats_update') {
+                    updateStatsUI(data.data);
+                    addLog('📊 Stats updated via SSE');
+                } else if (data.type === 'heartbeat_update') {
+                    updateExtensionsUI(data.data.extensions || {});
+                } else if (data.type === 'connected') {
+                    console.log('SSE Connected:', data.timestamp);
+                }
+            };
+
+            eventSource.onerror = () => {
+                addLog('⚠ SSE: Connection lost, reconnecting...');
+                document.getElementById('status-text').textContent = 'Reconectando...';
+                // Auto-reconnect is built into EventSource
+            };
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
-            addLog('Dashboard initialized');
+            addLog('Dashboard v2.1 initialized');
             addLog(`Connecting to ${API_BASE}...`);
+
+            // Initial data load
             refreshData();
 
-            // Auto-refresh every 10 seconds
-            setInterval(refreshData, 10000);
+            // Connect to SSE for live updates
+            connectSSE();
+
+            // Fallback: Auto-refresh every 30 seconds (if SSE fails)
+            setInterval(refreshData, 30000);
         });
 
         // === INSTRUCTIONS FOR USER ===

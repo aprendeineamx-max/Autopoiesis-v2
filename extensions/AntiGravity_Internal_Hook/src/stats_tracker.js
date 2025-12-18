@@ -1,18 +1,24 @@
 /**
- * Stats Tracker v1.0 - Real-time statistics for Ghost Agent
- * Tracks auto-accept commands executed and their success/failure
- * Writes to .ghost_stats.json for dashboard consumption
+ * Stats Tracker v2.0 - Real-time statistics with HTTP reporting
+ * Tracks auto-accept commands and reports to dashboard server via HTTP
+ * 
+ * v2.0 Changes:
+ *   - Added HTTP POST to dashboard server for real-time updates
+ *   - Fallback to file-based if server unavailable
+ *   - Immediate heartbeat on activation
  */
 
 const vscode = require('vscode');
 const fs = require('fs');
 const path = require('path');
+const http = require('http');
 
+// === CONFIGURATION ===
+const DASHBOARD_SERVER = 'http://localhost:9999';
 const STATS_FILE = path.join(
     process.env.USERPROFILE || 'C:\\Users\\Administrator',
     '.gemini', 'antigravity', '.ghost_stats.json'
 );
-
 const HEARTBEAT_FILE = path.join(
     process.env.USERPROFILE || 'C:\\Users\\Administrator',
     '.gemini', 'antigravity', '.ghost_heartbeat.json'
@@ -20,9 +26,9 @@ const HEARTBEAT_FILE = path.join(
 
 let stats = {
     autoAccepts: {
-        executed: 0,      // Commands sent to execute
-        successful: 0,    // Commands that completed without error
-        failed: 0         // Commands that threw errors
+        executed: 0,
+        successful: 0,
+        failed: 0
     },
     allowlistEntries: 0,
     sessionStart: new Date().toISOString(),
@@ -30,14 +36,97 @@ let stats = {
     extensionsActive: []
 };
 
+let serverAvailable = false;
+
+// === HTTP HELPERS ===
+
 /**
- * Load existing stats from file (persistence across sessions)
+ * POST data to dashboard server
  */
+function postToServer(endpoint, data) {
+    return new Promise((resolve, reject) => {
+        const url = new URL(endpoint, DASHBOARD_SERVER);
+        const postData = JSON.stringify(data);
+
+        const options = {
+            hostname: url.hostname,
+            port: url.port || 9999,
+            path: url.pathname,
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(postData)
+            },
+            timeout: 2000
+        };
+
+        const req = http.request(options, (res) => {
+            let body = '';
+            res.on('data', chunk => body += chunk);
+            res.on('end', () => {
+                serverAvailable = true;
+                resolve(body);
+            });
+        });
+
+        req.on('error', (e) => {
+            serverAvailable = false;
+            reject(e);
+        });
+
+        req.on('timeout', () => {
+            serverAvailable = false;
+            req.destroy();
+            reject(new Error('Timeout'));
+        });
+
+        req.write(postData);
+        req.end();
+    });
+}
+
+/**
+ * Send heartbeat to dashboard server
+ */
+async function sendHttpHeartbeat() {
+    try {
+        await postToServer('/api/heartbeat', {
+            extension: 'AntiGravity_Internal_Hook'
+        });
+        console.log('[StatsTracker] HTTP heartbeat sent successfully');
+        return true;
+    } catch (e) {
+        console.log('[StatsTracker] HTTP heartbeat failed, using file fallback');
+        return false;
+    }
+}
+
+/**
+ * Send stats update to dashboard server
+ */
+async function sendHttpStats() {
+    try {
+        await postToServer('/api/stats', {
+            increment: {
+                executed: 0,  // Will be set when tracking
+                successful: 0,
+                failed: 0
+            },
+            // Also send full stats for sync
+            fullStats: stats
+        });
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+// === FILE OPERATIONS (Fallback) ===
+
 function loadStats() {
     try {
         if (fs.existsSync(STATS_FILE)) {
             const data = JSON.parse(fs.readFileSync(STATS_FILE, 'utf-8'));
-            // Preserve cumulative counts, update session info
             stats.autoAccepts.executed = data.autoAccepts?.executed || 0;
             stats.autoAccepts.successful = data.autoAccepts?.successful || 0;
             stats.autoAccepts.failed = data.autoAccepts?.failed || 0;
@@ -48,29 +137,20 @@ function loadStats() {
     }
 }
 
-/**
- * Save stats to file
- */
 function saveStats() {
     try {
         stats.lastUpdate = new Date().toISOString();
-
-        // Ensure directory exists
         const dir = path.dirname(STATS_FILE);
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir, { recursive: true });
         }
-
         fs.writeFileSync(STATS_FILE, JSON.stringify(stats, null, 2));
     } catch (e) {
         console.error('[StatsTracker] Failed to save stats:', e.message);
     }
 }
 
-/**
- * Update heartbeat (for extension presence detection)
- */
-function updateHeartbeat() {
+function updateHeartbeatFile() {
     try {
         const heartbeat = {
             extensions: {
@@ -81,7 +161,6 @@ function updateHeartbeat() {
             }
         };
 
-        // Merge with existing heartbeats
         if (fs.existsSync(HEARTBEAT_FILE)) {
             const existing = JSON.parse(fs.readFileSync(HEARTBEAT_FILE, 'utf-8'));
             heartbeat.extensions = { ...existing.extensions, ...heartbeat.extensions };
@@ -89,13 +168,10 @@ function updateHeartbeat() {
 
         fs.writeFileSync(HEARTBEAT_FILE, JSON.stringify(heartbeat, null, 2));
     } catch (e) {
-        console.error('[StatsTracker] Failed to update heartbeat:', e.message);
+        console.error('[StatsTracker] Failed to update heartbeat file:', e.message);
     }
 }
 
-/**
- * Count allowlist entries
- */
 function countAllowlistEntries() {
     try {
         const allowlistPath = path.join(
@@ -113,10 +189,23 @@ function countAllowlistEntries() {
     }
 }
 
+// === MAIN FUNCTIONS ===
+
+/**
+ * Combined heartbeat update (HTTP + file fallback)
+ */
+async function updateHeartbeat() {
+    // Try HTTP first
+    const httpSuccess = await sendHttpHeartbeat();
+
+    // Always update file as fallback
+    updateHeartbeatFile();
+
+    return httpSuccess;
+}
+
 /**
  * Track a command execution
- * @param {string} command - Command name
- * @param {boolean} success - Whether it succeeded
  */
 function trackCommand(command, success = true) {
     stats.autoAccepts.executed++;
@@ -126,15 +215,13 @@ function trackCommand(command, success = true) {
         stats.autoAccepts.failed++;
     }
 
-    // Save periodically (every 10 executions to reduce I/O)
+    // Save every 10 executions
     if (stats.autoAccepts.executed % 10 === 0) {
         saveStats();
+        sendHttpStats().catch(() => { }); // Try HTTP, ignore failures
     }
 }
 
-/**
- * Get current stats
- */
 function getStats() {
     return { ...stats };
 }
@@ -142,20 +229,22 @@ function getStats() {
 /**
  * Initialize the stats tracker
  */
-function activate(context) {
-    console.log('[StatsTracker] Activating...');
+async function activate(context) {
+    console.log('[StatsTracker v2.0] Activating with HTTP support...');
 
     loadStats();
     countAllowlistEntries();
-    updateHeartbeat();
+
+    // Immediate heartbeat on activation
+    await updateHeartbeat();
     saveStats();
 
-    // Update heartbeat every 30 seconds
-    const heartbeatInterval = setInterval(() => {
-        updateHeartbeat();
+    // Update heartbeat every 15 seconds (more frequent for better detection)
+    const heartbeatInterval = setInterval(async () => {
+        await updateHeartbeat();
         countAllowlistEntries();
         saveStats();
-    }, 30000);
+    }, 15000);
 
     context.subscriptions.push({
         dispose: () => {
@@ -164,7 +253,8 @@ function activate(context) {
         }
     });
 
-    console.log('[StatsTracker] Active. Stats file:', STATS_FILE);
+    console.log('[StatsTracker v2.0] Active. Server:', DASHBOARD_SERVER);
+    console.log('[StatsTracker v2.0] Server available:', serverAvailable ? 'YES' : 'Checking...');
 }
 
 module.exports = {

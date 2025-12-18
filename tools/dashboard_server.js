@@ -1,6 +1,11 @@
 /**
- * Ghost Agent Dashboard Server v1.1
+ * Ghost Agent Dashboard Server v2.0
  * Unified HTTP server for dashboard and stats API
+ * 
+ * v2.0 Features:
+ *   - Server-Sent Events (SSE) for live updates
+ *   - Auto-reconnection support
+ *   - Enhanced error handling
  * 
  * Serves:
  *   - Dashboard at /
@@ -9,11 +14,15 @@
  *   - Heartbeat API at /api/heartbeat
  *   - Allowlist API at /api/allowlist
  *   - OmniGod API at /api/omnigod
+ *   - SSE at /api/events (NEW)
  */
 
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+
+// === SSE CLIENTS ===
+let sseClients = [];
 
 // === PATHS ===
 const DASHBOARD_PATH = path.join(__dirname, 'dashboard', 'index.html');
@@ -28,6 +37,10 @@ const OMNIGOD_DIR = path.join(__dirname, 'Bots', 'OmniGod');
 const OMNIGOD_LOG = path.join(OMNIGOD_DIR, 'OmniGod_Logs.txt');
 const OMNIGOD_STATUS_FILE = path.join(OMNIGOD_DIR, 'OMNIGOD_STATUS.json');
 const OMNIGOD_SIGNAL_FILE = path.join(OMNIGOD_DIR, 'GHOST_SIGNAL.json');
+
+// === OTHER LOGS ===
+const EXPORTER_LOG = path.join(__dirname, '..', 'exporter_debug.log');
+const CENTRAL_LOG = path.join(GEMINI_PATH, 'logs', 'ghost_agent.log');
 
 // === ENSURE INITIAL FILES EXIST ===
 function ensureFilesExist() {
@@ -224,6 +237,229 @@ function apiGetOmniGodLogs(res) {
     }
 }
 
+// === API: Get All Logs (Combined) ===
+function apiGetAllLogs(res) {
+    try {
+        let allLogs = [];
+
+        // Read exporter debug log
+        if (fs.existsSync(EXPORTER_LOG)) {
+            try {
+                const content = fs.readFileSync(EXPORTER_LOG, 'utf-8');
+                const lines = content.split('\n').filter(l => l.trim()).slice(-20);
+                allLogs = allLogs.concat(lines.map(l => ({
+                    source: 'exporter',
+                    message: l.substring(0, 200)  // Truncate long lines
+                })));
+            } catch (e) { }
+        }
+
+        // Read central logger
+        if (fs.existsSync(CENTRAL_LOG)) {
+            try {
+                const content = fs.readFileSync(CENTRAL_LOG, 'utf-8');
+                const lines = content.split('\n').filter(l => l.trim()).slice(-20);
+                allLogs = allLogs.concat(lines.map(l => ({
+                    source: 'central',
+                    message: l.substring(0, 200)
+                })));
+            } catch (e) { }
+        }
+
+        // Read OmniGod log (last 10 lines only due to size)
+        if (fs.existsSync(OMNIGOD_LOG)) {
+            try {
+                const content = fs.readFileSync(OMNIGOD_LOG, 'utf-8');
+                const lines = content.split('\n').filter(l => l.trim()).slice(-10);
+                allLogs = allLogs.concat(lines.map(l => ({
+                    source: 'omnigod',
+                    message: l.substring(0, 200)
+                })));
+            } catch (e) { }
+        }
+
+        // Sort by recency (assuming logs have timestamps at start)
+        // Take only last 30 combined
+        allLogs = allLogs.slice(-30);
+
+        res.writeHead(200, {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+        });
+        res.end(JSON.stringify({
+            logs: allLogs,
+            count: allLogs.length,
+            sources: {
+                exporter: fs.existsSync(EXPORTER_LOG),
+                central: fs.existsSync(CENTRAL_LOG),
+                omnigod: fs.existsSync(OMNIGOD_LOG)
+            }
+        }));
+    } catch (e) {
+        res.writeHead(500);
+        res.end(JSON.stringify({ error: e.message }));
+    }
+}
+
+// === SSE: Server-Sent Events for Live Updates ===
+function handleSSE(req, res) {
+    res.writeHead(200, {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+        'Access-Control-Allow-Origin': '*'
+    });
+
+    // Send initial connection message
+    res.write(`data: ${JSON.stringify({ type: 'connected', timestamp: new Date().toISOString() })}\n\n`);
+
+    // Add client to list
+    const clientId = Date.now();
+    const client = { id: clientId, res };
+    sseClients.push(client);
+    console.log(`[SSE] Client ${clientId} connected. Total clients: ${sseClients.length}`);
+
+    // Remove client on disconnect
+    req.on('close', () => {
+        sseClients = sseClients.filter(c => c.id !== clientId);
+        console.log(`[SSE] Client ${clientId} disconnected. Total clients: ${sseClients.length}`);
+    });
+
+    // Send heartbeat every 30 seconds to keep connection alive
+    const heartbeatInterval = setInterval(() => {
+        try {
+            res.write(`data: ${JSON.stringify({ type: 'heartbeat', timestamp: new Date().toISOString() })}\n\n`);
+        } catch (e) {
+            clearInterval(heartbeatInterval);
+        }
+    }, 30000);
+
+    req.on('close', () => clearInterval(heartbeatInterval));
+}
+
+/**
+ * Broadcast message to all connected SSE clients
+ */
+function broadcast(eventType, data) {
+    const message = JSON.stringify({ type: eventType, data, timestamp: new Date().toISOString() });
+    sseClients.forEach(client => {
+        try {
+            client.res.write(`data: ${message}\n\n`);
+        } catch (e) {
+            // Client disconnected, will be cleaned up
+        }
+    });
+}
+
+// === API: Execute Command (POST) ===
+// Whitelist of allowed commands for security
+const ALLOWED_COMMANDS = {
+    'api-status': {
+        cmd: 'node',
+        args: ['tools/api-manager/manager.js', 'status'],
+        cwd: path.join(__dirname, '..')
+    },
+    'start-omnigod': {
+        cmd: 'start',
+        args: ['""', path.join(__dirname, 'Bots', 'OmniGod', 'OmniGod.ahk')],
+        shell: true
+    },
+    'reload-extension': {
+        cmd: 'echo',
+        args: ['Reload extension via VS Code: Ctrl+Shift+P > Developer: Reload Window'],
+        shell: true
+    },
+    'check-python-api': {
+        cmd: 'curl',
+        args: ['-s', 'http://localhost:5000/status'],
+        timeout: 5000
+    },
+    'start-python-api': {
+        cmd: 'start',
+        args: ['""', 'python', 'core/ghost_api.py', '--port', '5000'],
+        shell: true,
+        cwd: path.join(__dirname, '..')
+    }
+};
+
+const { spawn, exec } = require('child_process');
+
+function apiExecuteCommand(req, res) {
+    let body = '';
+    req.on('data', chunk => body += chunk);
+    req.on('end', () => {
+        try {
+            const { command } = JSON.parse(body);
+
+            if (!ALLOWED_COMMANDS[command]) {
+                res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+                res.end(JSON.stringify({
+                    error: `Unknown command: ${command}`,
+                    available: Object.keys(ALLOWED_COMMANDS)
+                }));
+                return;
+            }
+
+            const cmdConfig = ALLOWED_COMMANDS[command];
+            const options = {
+                cwd: cmdConfig.cwd || __dirname,
+                shell: cmdConfig.shell || false,
+                timeout: cmdConfig.timeout || 30000
+            };
+
+            if (cmdConfig.shell) {
+                // Use exec for shell commands
+                const fullCmd = `${cmdConfig.cmd} ${cmdConfig.args.join(' ')}`;
+                exec(fullCmd, options, (error, stdout, stderr) => {
+                    res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+                    res.end(JSON.stringify({
+                        success: !error,
+                        command,
+                        stdout: stdout.toString(),
+                        stderr: stderr.toString(),
+                        error: error?.message
+                    }));
+
+                    // Broadcast command result
+                    broadcast('command_result', { command, success: !error });
+                });
+            } else {
+                // Use spawn for non-shell commands
+                const proc = spawn(cmdConfig.cmd, cmdConfig.args, options);
+                let stdout = '';
+                let stderr = '';
+
+                proc.stdout.on('data', data => stdout += data);
+                proc.stderr.on('data', data => stderr += data);
+
+                proc.on('close', code => {
+                    res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+                    res.end(JSON.stringify({
+                        success: code === 0,
+                        command,
+                        stdout,
+                        stderr,
+                        exitCode: code
+                    }));
+
+                    broadcast('command_result', { command, success: code === 0 });
+                });
+
+                proc.on('error', err => {
+                    res.writeHead(500, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+                    res.end(JSON.stringify({ error: err.message }));
+                });
+            }
+
+            console.log(`[CMD] Executing: ${command}`);
+
+        } catch (e) {
+            res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+            res.end(JSON.stringify({ error: e.message }));
+        }
+    });
+}
+
 // === API: Update Stats (POST) ===
 function apiUpdateStats(req, res) {
     let body = '';
@@ -247,6 +483,9 @@ function apiUpdateStats(req, res) {
 
             stats.lastUpdate = new Date().toISOString();
             fs.writeFileSync(STATS_FILE, JSON.stringify(stats, null, 2));
+
+            // Broadcast to all connected SSE clients
+            broadcast('stats_update', stats);
 
             res.writeHead(200, {
                 'Content-Type': 'application/json',
@@ -343,6 +582,24 @@ const server = http.createServer((req, res) => {
 
     if (url === '/api/omnigod/logs') {
         apiGetOmniGodLogs(res);
+        return;
+    }
+
+    // Combined Logs API
+    if (url === '/api/logs/all') {
+        apiGetAllLogs(res);
+        return;
+    }
+
+    // SSE Endpoint for Live Updates
+    if (url === '/api/events') {
+        handleSSE(req, res);
+        return;
+    }
+
+    // Command Execution API
+    if (url === '/api/execute' && req.method === 'POST') {
+        apiExecuteCommand(req, res);
         return;
     }
 
