@@ -1,52 +1,46 @@
 const vscode = require('vscode');
 
 /**
- * MODULE A: GHOST CORE (The Acceptor v5.1 - FIXED)
- * REMOVED: merge-conflict commands (caused spam)
- * REMOVED: focus stealing commands
- * KEPT: Only safe acceptance commands
+ * GHOST CORE v5.1 - PORTABLE
+ * ===========================
+ * Auto-accepts ALL prompts: Allow, Accept, Accept All, Blue Buttons
+ * Safe mode - No focus stealing
  */
 function activate(context) {
-    console.log('[AG] Ghost Core v5.1: SAFE MODE (No focus stealing) 🛡️');
+    console.log('[AG] Ghost Core v5.1: SAFE MODE ACTIVE');
     startSafeAcceptor(context);
 }
 
 function startSafeAcceptor(context) {
-    // SAFE COMMANDS ONLY - No focus stealing, no merge conflict spam
     const commands = [
-        // === ANTIGRAVITY AGENT ===
+        // ANTIGRAVITY AGENT
         'antigravity.agent.acceptAgentStep',
         'antigravity.agent.alwaysAllow',
         'antigravity.agent.acceptAll',
         'antigravity.prioritized.agentAcceptAllInFile',
 
-        // === CHAT EDITING (Blue Buttons) ===
+        // CHAT EDITING (Blue Buttons)
         'chatEditing.acceptAllFiles',
         'chatEditing.multidiff.acceptAllFiles',
         'chatEditor.action.acceptAllEdits',
         'chatEditor.action.accept',
 
-        // === NOTIFICATIONS (Toast buttons) ===
+        // NOTIFICATIONS (Toast buttons)
         'notification.acceptPrimaryAction',
         'notification.acceptSecondaryAction',
 
-        // === INLINE CHAT ===
+        // INLINE CHAT
         'inlineChat.acceptChanges',
         'interactiveEditor.action.accept',
 
-        // === TERMINAL ===
+        // TERMINAL
         'workbench.action.terminal.chat.runCommand',
         'workbench.action.terminal.chat.accept',
 
-        // === TRUST ===
+        // TRUST
         'workbench.action.manageTrustedDomain.allow'
-
-        // REMOVED: merge-conflict commands (spam when no conflict)
-        // REMOVED: focus commands (steal cursor)
-        // REMOVED: quickOpenAccept (modal interference)
     ];
 
-    // Execute every 500ms (silently, no errors shown)
     const interval = setInterval(() => {
         commands.forEach(cmd => {
             vscode.commands.executeCommand(cmd).catch(() => { });
