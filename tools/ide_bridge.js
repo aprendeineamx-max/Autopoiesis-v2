@@ -118,24 +118,39 @@ async function sendHeartbeats() {
 // Send stats update
 async function sendStats() {
     try {
-        // Read current stats
+        // Read current stats from file
         let stats = {
             autoAccepts: { executed: 0, successful: 0, failed: 0 },
-            allowlistEntries: 0
+            allowlistEntries: 0,
+            lastUpdate: new Date().toISOString()
         };
 
         if (fs.existsSync(STATS_FILE)) {
-            stats = JSON.parse(fs.readFileSync(STATS_FILE, 'utf-8'));
+            try {
+                stats = JSON.parse(fs.readFileSync(STATS_FILE, 'utf-8'));
+            } catch (e) {
+                // File might be corrupted, use defaults
+            }
         }
 
         // Count allowlist entries
-        const allowlistPath = path.join(process.env.USERPROFILE, '.gemini', 'antigravity', 'browserAllowlist.txt');
+        const allowlistPath = path.join(process.env.USERPROFILE || '', '.gemini', 'antigravity', 'browserAllowlist.txt');
         if (fs.existsSync(allowlistPath)) {
             const content = fs.readFileSync(allowlistPath, 'utf-8');
             stats.allowlistEntries = content.split('\n').filter(l => l.trim() && !l.startsWith('#')).length;
         }
 
+        // Send to dashboard
         await postToServer('/api/stats', stats);
+
+        // Also save updated stats with new timestamp
+        stats.lastUpdate = new Date().toISOString();
+        const dir = path.dirname(STATS_FILE);
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true });
+        }
+        fs.writeFileSync(STATS_FILE, JSON.stringify(stats, null, 2));
+
         return true;
     } catch (e) {
         return false;

@@ -1006,54 +1006,92 @@
             const failed = stats.autoAccepts?.failed || 0;
             const sessionMinutes = (new Date() - sessionStartTime) / (1000 * 60);
 
-            // Pattern-based suggestions
-            if (executed === 0 && sessionMinutes > 5) {
+            // Check if extensions are active
+            const extCount = parseInt(document.getElementById('extensions-count')?.textContent || '0');
+            const isConnected = document.getElementById('status-text')?.textContent?.includes('Activo');
+
+            // System status suggestions
+            if (isConnected && extCount > 0) {
                 suggestions.push({
-                    type: 'warning',
-                    icon: '⚠️',
-                    text: 'No commands executed yet. Check if extensions are loaded.',
-                    action: 'Reload',
-                    actionFn: () => showToast('Reload VS Code: Ctrl+Shift+P → Developer: Reload Window', 'info')
+                    type: 'tip',
+                    icon: '✅',
+                    text: `Sistema conectado: ${extCount} extensiones activas.`,
+                    action: null,
+                    actionFn: null
                 });
             }
 
+            // Session suggestions
+            if (sessionMinutes > 1) {
+                suggestions.push({
+                    type: 'tip',
+                    icon: '⏱️',
+                    text: `Sesión activa: ${Math.round(sessionMinutes)} minutos.`,
+                    action: null,
+                    actionFn: null
+                });
+            }
+
+            // Genesis suggestion
+            suggestions.push({
+                type: 'action',
+                icon: '🎨',
+                text: 'Usa Genesis Studio para crear secuencias de comandos.',
+                action: 'Abrir',
+                actionFn: () => window.open('/genesis', '_blank')
+            });
+
+            // Auto-accept tracking suggestion
+            if (executed === 0) {
+                suggestions.push({
+                    type: 'info',
+                    icon: '📊',
+                    text: 'Los auto-accepts se registrarán cuando las extensiones procesen comandos.',
+                    action: null,
+                    actionFn: null
+                });
+            }
+
+            // Failed command warning
             if (failed > 0 && failed / (executed || 1) > 0.1) {
                 suggestions.push({
                     type: 'warning',
                     icon: '🔴',
-                    text: `High failure rate detected (${failed} failures). Check allowlist.`,
-                    action: 'View',
+                    text: `Alta tasa de fallos (${failed}). Revisa el allowlist.`,
+                    action: 'Ver',
                     actionFn: () => openTool('allowlist')
                 });
             }
 
+            // Great session tip
             if (sessionMinutes > 60 && executed > 20) {
                 suggestions.push({
                     type: 'tip',
                     icon: '🏆',
-                    text: `Great session! ${executed} auto-accepts in ${Math.round(sessionMinutes)}m.`,
-                    action: 'Export',
+                    text: `¡Gran sesión! ${executed} auto-accepts en ${Math.round(sessionMinutes)}m.`,
+                    action: 'Exportar',
                     actionFn: () => exportChat()
                 });
             }
 
+            // Current pace
             if (executed > 5 && sessionMinutes > 10) {
                 const rate = executed / sessionMinutes;
                 suggestions.push({
                     type: 'tip',
                     icon: '📈',
-                    text: `Current pace: ${rate.toFixed(1)} commands/min`,
+                    text: `Ritmo actual: ${rate.toFixed(1)} comandos/min`,
                     action: 'Stats',
-                    actionFn: () => showToast(`Total: ${executed} commands in ${Math.round(sessionMinutes)}m`, 'info')
+                    actionFn: () => showToast(`Total: ${executed} comandos en ${Math.round(sessionMinutes)}m`, 'info')
                 });
             }
 
-            // Default suggestion
+            // Default if still empty
             if (suggestions.length === 0) {
                 suggestions.push({
                     type: 'action',
                     icon: '💡',
-                    text: 'Everything running smoothly. Keep coding!',
+                    text: 'Todo funcionando correctamente. ¡Sigue programando!',
                     action: null,
                     actionFn: null
                 });
