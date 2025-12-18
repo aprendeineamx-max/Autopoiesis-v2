@@ -512,10 +512,11 @@ function apiUpdateHeartbeat(req, res) {
                 heartbeat = JSON.parse(fs.readFileSync(HEARTBEAT_FILE, 'utf-8'));
             }
 
-            // Update extension status
-            if (update.extension) {
-                heartbeat.extensions[update.extension] = {
-                    active: true,
+            // Update extension status - accept both 'extension' and 'extensionId'
+            const extName = update.extension || update.extensionId;
+            if (extName) {
+                heartbeat.extensions[extName] = {
+                    active: update.active !== false,
                     lastSeen: new Date().toISOString()
                 };
             }

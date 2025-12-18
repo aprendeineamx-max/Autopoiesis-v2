@@ -876,7 +876,7 @@
             container.innerHTML = KNOWN_EXTENSIONS.map(ext => {
                 const status = extensions[ext.id];
                 const isActive = status && status.active &&
-                    status.lastSeen && (now - new Date(status.lastSeen)) < 120000; // Active if seen in last 2 min
+                    status.lastSeen && (now - new Date(status.lastSeen)) < 600000; // Active if seen in last 10 min
 
                 if (isActive) activeCount++;
 
