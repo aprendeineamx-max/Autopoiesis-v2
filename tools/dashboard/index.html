@@ -70,6 +70,11 @@
             animation: pulse 2s infinite;
         }
 
+        .status-dot.inactive {
+            background: var(--error);
+            animation: none;
+        }
+
         @keyframes pulse {
 
             0%,
@@ -121,6 +126,11 @@
 
         .stat.error {
             color: var(--error);
+        }
+
+        .stat-detail {
+            font-size: 0.8rem;
+            color: var(--text-dim);
         }
 
         .extension-list {
@@ -240,6 +250,18 @@
             font-size: 0.8rem;
             color: var(--text-dim);
         }
+
+        .data-source {
+            font-size: 0.65rem;
+            color: var(--accent);
+            margin-top: 4px;
+        }
+
+        .refresh-indicator {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            margin-left: 8px;
+        }
     </style>
 </head>
 
@@ -247,47 +269,43 @@
     <div class="header">
         <h1>👻 Ghost Agent Dashboard</h1>
         <div class="status">
-            <div class="status-dot"></div>
-            <span>Sistema Activo</span>
+            <div class="status-dot" id="status-dot"></div>
+            <span id="status-text">Conectando...</span>
+            <span class="refresh-indicator" id="last-refresh"></span>
         </div>
     </div>
 
     <div class="grid">
         <!-- Stats -->
         <div class="card">
-            <h3>📊 Auto-Accepts Hoy</h3>
-            <div class="stat success" id="accepts-count">847</div>
-            <div style="color: var(--text-dim);">Prompts auto-aceptados</div>
+            <h3>📊 Auto-Accepts</h3>
+            <div class="stat success" id="accepts-executed">--</div>
+            <div class="stat-detail">
+                <span id="accepts-successful">--</span> exitosos ·
+                <span id="accepts-failed">--</span> fallidos
+            </div>
+            <div class="data-source">📁 .ghost_stats.json</div>
         </div>
 
         <div class="card">
             <h3>🌐 Allowlist Entries</h3>
-            <div class="stat" id="allowlist-count">200+</div>
+            <div class="stat" id="allowlist-count">--</div>
             <div style="color: var(--text-dim);">browserAllowlist.txt</div>
+            <div class="data-source" id="allowlist-source">📁 Cargando...</div>
         </div>
 
         <div class="card">
             <h3>⚡ Extensiones Activas</h3>
-            <div class="stat success" id="extensions-count">3</div>
-            <div style="color: var(--text-dim);">de 3 instaladas</div>
+            <div class="stat success" id="extensions-count">--</div>
+            <div style="color: var(--text-dim);" id="extensions-detail">de -- detectadas</div>
+            <div class="data-source">📁 .ghost_heartbeat.json</div>
         </div>
 
         <!-- Extensions -->
         <div class="card" style="grid-column: span 2;">
             <h3>🧩 Estado de Extensiones</h3>
-            <div class="extension-list">
-                <div class="extension-item">
-                    <span class="extension-name">AntiGravity Internal Hook</span>
-                    <span class="extension-status active">✓ Activo</span>
-                </div>
-                <div class="extension-item">
-                    <span class="extension-name">AntiGravity Chat Exporter</span>
-                    <span class="extension-status active">✓ Activo</span>
-                </div>
-                <div class="extension-item">
-                    <span class="extension-name">AntiGravity Supervisor</span>
-                    <span class="extension-status active">✓ Activo</span>
-                </div>
+            <div class="extension-list" id="extension-list">
+                <!-- Populated by JS -->
             </div>
         </div>
 
@@ -298,7 +316,7 @@
                 <button class="action-btn" onclick="openGenesis()">🎨 Genesis</button>
                 <button class="action-btn secondary" onclick="exportChat()">📤 Export Chat</button>
                 <button class="action-btn secondary" onclick="checkAPIs()">🔑 Check APIs</button>
-                <button class="action-btn secondary" onclick="openLogs()">📋 Logs</button>
+                <button class="action-btn secondary" onclick="refreshData()">🔄 Refresh</button>
             </div>
         </div>
 
@@ -336,47 +354,190 @@
         <!-- Logs -->
         <div class="card">
             <h3>📋 Últimos Logs</h3>
-            <div class="logs">
+            <div class="logs" id="logs-container">
                 <div class="log-entry">
-                    <span class="log-time">[14:30:15]</span>
-                    <span class="log-msg">Ghost Core: Auto-accept loop running</span>
-                </div>
-                <div class="log-entry">
-                    <span class="log-time">[14:30:10]</span>
-                    <span class="log-msg">browserAllowlist.txt: 200+ entries loaded</span>
-                </div>
-                <div class="log-entry">
-                    <span class="log-time">[14:30:05]</span>
-                    <span class="log-msg">Extension activated: Internal Hook v2.0</span>
-                </div>
-                <div class="log-entry">
-                    <span class="log-time">[14:30:00]</span>
-                    <span class="log-msg">Dashboard initialized</span>
+                    <span class="log-time">[--:--:--]</span>
+                    <span class="log-msg">Esperando datos...</span>
                 </div>
             </div>
+            <div class="data-source">📁 exporter_debug.log</div>
         </div>
     </div>
 
     <script>
+        // === API CONFIGURATION ===
+        // Dashboard Server runs on port 9999
+        const API_BASE = 'http://localhost:9999';
+
+        // === KNOWN EXTENSIONS ===
+        const KNOWN_EXTENSIONS = [
+            { name: 'AntiGravity Internal Hook', id: 'AntiGravity_Internal_Hook' },
+            { name: 'AntiGravity Chat Exporter', id: 'AntiGravity_Chat_Exporter' },
+            { name: 'AntiGravity Supervisor', id: 'AntiGravity_Supervisor' }
+        ];
+
+        let isConnected = false;
+
+        // === DATA LOADING VIA HTTP API ===
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_BASE}/api/stats`);
+                if (response.ok) {
+                    const data = await response.json();
+                    updateStatsUI(data);
+                    isConnected = true;
+                    return true;
+                }
+            } catch (e) {
+                console.log('Stats API Error:', e.message);
+                isConnected = false;
+                // Fallback to localStorage cache
+                const cached = localStorage.getItem('ghost_stats');
+                if (cached) {
+                    updateStatsUI(JSON.parse(cached));
+                }
+            }
+            return false;
+        }
+
+        async function loadAllowlist() {
+            try {
+                const response = await fetch(`${API_BASE}/api/allowlist`);
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('allowlist-count').textContent = data.count || 0;
+                    document.getElementById('allowlist-source').textContent = `📁 ${data.count} entradas`;
+                    return true;
+                }
+            } catch (e) {
+                console.log('Allowlist API Error:', e.message);
+            }
+            return false;
+        }
+
+        function updateStatsUI(data) {
+            document.getElementById('accepts-executed').textContent =
+                data.autoAccepts?.executed?.toLocaleString() || '0';
+            document.getElementById('accepts-successful').textContent =
+                data.autoAccepts?.successful?.toLocaleString() || '0';
+            document.getElementById('accepts-failed').textContent =
+                data.autoAccepts?.failed?.toLocaleString() || '0';
+
+            if (data.allowlistEntries) {
+                document.getElementById('allowlist-count').textContent = data.allowlistEntries;
+            }
+
+            localStorage.setItem('ghost_stats', JSON.stringify(data));
+        }
+
+        async function loadHeartbeat() {
+            try {
+                const response = await fetch(`${API_BASE}/api/heartbeat`);
+                if (response.ok) {
+                    const data = await response.json();
+                    updateExtensionsUI(data.extensions || {});
+                    isConnected = true;
+                    return true;
+                }
+            } catch (e) {
+                console.log('Heartbeat API Error:', e.message);
+                isConnected = false;
+                updateExtensionsUI({});
+            }
+            return false;
+        }
+
+        function updateExtensionsUI(extensions) {
+            const container = document.getElementById('extension-list');
+            const now = new Date();
+            let activeCount = 0;
+
+            container.innerHTML = KNOWN_EXTENSIONS.map(ext => {
+                const status = extensions[ext.id];
+                const isActive = status && status.active &&
+                    status.lastSeen && (now - new Date(status.lastSeen)) < 120000; // Active if seen in last 2 min
+
+                if (isActive) activeCount++;
+
+                return `
+                    <div class="extension-item">
+                        <span class="extension-name">${ext.name}</span>
+                        <span class="extension-status ${isActive ? 'active' : 'inactive'}">
+                            ${isActive ? '✓ Activo' : '○ Inactivo'}
+                        </span>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('extensions-count').textContent = activeCount;
+            document.getElementById('extensions-detail').textContent =
+                `de ${KNOWN_EXTENSIONS.length} conocidas`;
+
+            // Update status dot
+            const statusDot = document.getElementById('status-dot');
+            const statusText = document.getElementById('status-text');
+
+            if (isConnected) {
+                statusDot.classList.remove('inactive');
+                statusText.textContent = activeCount > 0 ? 'Sistema Activo' : 'Conectado (sin extensiones)';
+            } else {
+                statusDot.classList.add('inactive');
+                statusText.textContent = 'Sin conexión al servidor';
+            }
+        }
+
+        function updateLastRefresh() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString();
+            document.getElementById('last-refresh').textContent = `(${timeStr})`;
+        }
+
+        async function refreshData() {
+            updateLastRefresh();
+            const statsOk = await loadStats();
+            const heartbeatOk = await loadHeartbeat();
+            await loadAllowlist();
+
+            if (statsOk || heartbeatOk) {
+                addLog('✓ Datos actualizados desde API');
+            } else {
+                addLog('⚠ No se pudo conectar al servidor');
+            }
+        }
+
+        function addLog(msg) {
+            const container = document.getElementById('logs-container');
+            const time = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `<span class="log-time">[${time}]</span> <span class="log-msg">${msg}</span>`;
+            container.insertBefore(entry, container.firstChild);
+
+            // Keep only last 10 entries
+            while (container.children.length > 10) {
+                container.removeChild(container.lastChild);
+            }
+        }
+
+        // === ACTIONS ===
         function openGenesis() {
-            window.open('http://localhost:8888/', '_blank');
+            window.open(`${API_BASE}/genesis`, '_blank');
+            addLog('Opened Genesis Studio');
         }
 
         function exportChat() {
-            alert('Ejecuta: Ctrl+Shift+P → "AntiGravity: Export Structured JSON"');
+            alert('Ejecuta en Antigravity:\nCtrl+Shift+P → "AntiGravity: Export Structured JSON"');
+            addLog('Export Chat instruction shown');
         }
 
         function checkAPIs() {
-            alert('Ejecuta: node tools/api-manager/manager.js status');
-        }
-
-        function openLogs() {
-            alert('Logs en: C:\\AntiGravityExt\\AntiGravity_Ghost_Agent\\');
+            alert('Ejecuta en terminal:\nnode tools/api-manager/manager.js status');
+            addLog('Check APIs instruction shown');
         }
 
         function openTool(tool) {
             const paths = {
-                'genesis': 'http://localhost:8888/',
+                'genesis': `${API_BASE}/genesis`,
                 'api-manager': 'file:///C:/AntiGravityExt/AntiGravity_Ghost_Agent/tools/api-manager/',
                 'deep-forensics': 'file:///C:/AntiGravityExt/AntiGravity_Ghost_Agent/tools/Deep_Forensics/',
                 'omnigod': 'file:///C:/AntiGravityExt/AntiGravity_Ghost_Agent/tools/Bots/OmniGod/',
@@ -386,15 +547,36 @@
 
             if (paths[tool]) {
                 window.open(paths[tool], '_blank');
+                addLog(`Opened ${tool}`);
             }
         }
 
-        // Simulate live counter
-        let count = 847;
-        setInterval(() => {
-            count += Math.floor(Math.random() * 3);
-            document.getElementById('accepts-count').textContent = count;
-        }, 5000);
+        // === INITIALIZATION ===
+        document.addEventListener('DOMContentLoaded', () => {
+            addLog('Dashboard initialized');
+            addLog(`Connecting to ${API_BASE}...`);
+            refreshData();
+
+            // Auto-refresh every 10 seconds
+            setInterval(refreshData, 10000);
+        });
+
+        // === INSTRUCTIONS FOR USER ===
+        console.log(`
+╔════════════════════════════════════════════════════════════╗
+║         GHOST AGENT DASHBOARD v2.0                         ║
+╠════════════════════════════════════════════════════════════╣
+║                                                            ║
+║  This dashboard connects to the API server at:             ║
+║  ${API_BASE}                                               ║
+║                                                            ║
+║  To start the server, run:                                 ║
+║  node tools/dashboard_server.js                            ║
+║                                                            ║
+║  Then open: ${API_BASE}/                                   ║
+║                                                            ║
+╚════════════════════════════════════════════════════════════╝
+        `);
     </script>
 </body>
 
