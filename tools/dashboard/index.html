@@ -309,6 +309,16 @@
             </div>
         </div>
 
+        <!-- OmniGod Status -->
+        <div class="card">
+            <h3>🤖 OmniGod Status</h3>
+            <div class="stat" id="omnigod-status" style="font-size: 1.5rem;">--</div>
+            <div class="stat-detail" id="omnigod-details">
+                Log: <span id="omnigod-log-size">--</span>
+            </div>
+            <div class="data-source">📁 /api/omnigod</div>
+        </div>
+
         <!-- Quick Actions -->
         <div class="card">
             <h3>⚡ Acciones Rápidas</h3>
@@ -317,6 +327,8 @@
                 <button class="action-btn secondary" onclick="exportChat()">📤 Export Chat</button>
                 <button class="action-btn secondary" onclick="checkAPIs()">🔑 Check APIs</button>
                 <button class="action-btn secondary" onclick="refreshData()">🔄 Refresh</button>
+                <button class="action-btn secondary" onclick="checkPythonAPI()">🐍 Python API</button>
+                <button class="action-btn secondary" onclick="startOmniGod()">🤖 Start OmniGod</button>
             </div>
         </div>
 
@@ -492,11 +504,50 @@
             document.getElementById('last-refresh').textContent = `(${timeStr})`;
         }
 
+        // === OMNIGOD STATUS ===
+        async function loadOmniGod() {
+            try {
+                const response = await fetch(`${API_BASE}/api/omnigod`);
+                if (response.ok) {
+                    const data = await response.json();
+                    updateOmniGodUI(data);
+                    return true;
+                }
+            } catch (e) {
+                console.log('OmniGod API Error:', e.message);
+            }
+            return false;
+        }
+
+        function updateOmniGodUI(data) {
+            const statusEl = document.getElementById('omnigod-status');
+            const logSizeEl = document.getElementById('omnigod-log-size');
+
+            if (data.running) {
+                statusEl.textContent = '🟢 ACTIVO';
+                statusEl.style.color = 'var(--success)';
+            } else {
+                statusEl.textContent = '⚪ Inactivo';
+                statusEl.style.color = 'var(--text-dim)';
+            }
+
+            // Format log size
+            const bytes = data.logSize || 0;
+            let sizeStr = bytes + ' B';
+            if (bytes > 1024 * 1024) {
+                sizeStr = (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+            } else if (bytes > 1024) {
+                sizeStr = (bytes / 1024).toFixed(1) + ' KB';
+            }
+            logSizeEl.textContent = sizeStr;
+        }
+
         async function refreshData() {
             updateLastRefresh();
             const statsOk = await loadStats();
             const heartbeatOk = await loadHeartbeat();
             await loadAllowlist();
+            await loadOmniGod();
 
             if (statsOk || heartbeatOk) {
                 addLog('✓ Datos actualizados desde API');
@@ -533,6 +584,32 @@
         function checkAPIs() {
             alert('Ejecuta en terminal:\nnode tools/api-manager/manager.js status');
             addLog('Check APIs instruction shown');
+        }
+
+        async function checkPythonAPI() {
+            try {
+                addLog('Checking Python API at http://localhost:5000...');
+                const response = await fetch('http://localhost:5000/status', {
+                    mode: 'cors',
+                    signal: AbortSignal.timeout(3000)
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    alert(`✅ Python API is running!\n\nStatus: ${data.status}\nAuto-Accepts: ${data.stats?.autoAccepts?.executed || 0}\nExtensions: ${data.extensions?.active || 0} active`);
+                    addLog('✓ Python API: OK');
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (e) {
+                alert(`❌ Python API not reachable\n\nTo start it:\npython core/ghost_api.py --port 5000`);
+                addLog('⚠ Python API: Offline');
+            }
+        }
+
+        function startOmniGod() {
+            const path = 'C:\\\\AntiGravityExt\\\\AntiGravity_Ghost_Agent\\\\tools\\\\Bots\\\\OmniGod\\\\OmniGod.ahk';
+            alert(`Para iniciar OmniGod:\n\n1. Abre el archivo:\n${path}\n\n2. O usa el atajo F8 si ya está corriendo`);
+            addLog('OmniGod start instruction shown');
         }
 
         function openTool(tool) {
