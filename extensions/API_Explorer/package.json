@@ -1,0 +1,33 @@
+{
+    "name": "antigravity-api-explorer",
+    "displayName": "Antigravity API Explorer",
+    "description": "Explores and documents available APIs in Antigravity IDE",
+    "version": "0.1.0",
+    "publisher": "antigravity-research",
+    "engines": {
+        "vscode": "^1.80.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "*"
+    ],
+    "main": "./extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "apiExplorer.exploreAPIs",
+                "title": "API Explorer: Discover Available APIs"
+            },
+            {
+                "command": "apiExplorer.testChatAPI",
+                "title": "API Explorer: Test Chat API"
+            },
+            {
+                "command": "apiExplorer.exportReport",
+                "title": "API Explorer: Export API Report"
+            }
+        ]
+    }
+}
