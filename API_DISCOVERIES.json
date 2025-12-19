@@ -1,0 +1,45 @@
+{
+  "lastUpdated": "2025-12-19T03:24:50.261Z",
+  "findings": {
+    "cascade": {
+      "available": true,
+      "methods": [
+        "setCascadeBarState",
+        "onDidRequestNextHunk",
+        "onDidRequestPreviousHunk",
+        "onDidRequestAcceptAllInFile",
+        "onDidRequestRejectAllInFile",
+        "openPanel",
+        "closePanel",
+        "togglePanel",
+        "getFocusState",
+        "getCascadeStarterPrompts"
+      ],
+      "properties": [],
+      "focusState": {
+        "isVisible": true,
+        "isFocused": false
+      },
+      "starterPrompts": ""
+    },
+    "stateSync": {
+      "available": true,
+      "methods": [
+        "subscribe",
+        "initIPCSubscription",
+        "onDidUpdateTopicIPC",
+        "pushSerializedUpdateIPC",
+        "pushUpdate"
+      ]
+    },
+    "chatAccess": {
+      "interactive": {
+        "available": true,
+        "methods": [
+          "transferActiveChat"
+        ]
+      }
+    },
+    "events": []
+  }
+}
