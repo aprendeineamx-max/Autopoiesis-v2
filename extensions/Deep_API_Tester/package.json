@@ -10,6 +10,9 @@
     "categories": [
         "Other"
     ],
+    "enabledApiProposals": [
+        "interactive"
+    ],
     "activationEvents": [
         "*"
     ],
