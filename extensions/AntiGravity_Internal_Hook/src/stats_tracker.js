@@ -259,9 +259,27 @@ async function activate(context) {
     console.log('[StatsTracker v2.0] Server available:', serverAvailable ? 'YES' : 'Checking...');
 }
 
+/**
+ * Track permission grant (from permission_listener)
+ */
+function trackPermissionGrant(permissionData) {
+    stats.autoAccepts.executed++;
+    stats.autoAccepts.successful++;
+    stats.lastUpdate = new Date().toISOString();
+
+    console.log('[StatsTracker] Permission grant tracked:', permissionData.source);
+
+    // Guardar y sincronizar inmediatamente
+    saveStats();
+    sendHttpStats().catch(() => {
+        console.log('[StatsTracker] HTTP sync failed for permission grant');
+    });
+}
+
 module.exports = {
     activate,
     trackCommand,
+    trackPermissionGrant,
     getStats,
     saveStats
 };

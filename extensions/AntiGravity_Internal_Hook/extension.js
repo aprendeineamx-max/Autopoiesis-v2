@@ -10,10 +10,8 @@
 const ghostCore = require('./src/ghost_core');
 const browserBridge = require('./src/browser_bridge');
 const sessionManager = require('./src/session_manager');
+const permissionListener = require('./src/permission_listener');
 const vscode = require('vscode');
-const path = require('path');
-const cp = require('child_process');
-const fs = require('fs');
 
 let ghostAgentEnabled = true;
 let statusBarItem = null;
@@ -25,6 +23,7 @@ function activate(context) {
     ghostCore.activate(context);
     browserBridge.activate(context);
     sessionManager.activate(context);
+    permissionListener.activate(context);  // ← NUEVO: Listener de permisos
 
     // 2. Python Ghost Clicker
     spawnGhostClicker();
