@@ -613,7 +613,7 @@ async function deepCascadeTesting() {
 
     } catch (e) {
         log(`❌ Panel Control Error: ${e.message}`);
-        deepFindings.panel Control.error = e.message;
+        deepFindings.panelControl.error = e.message;
     }
 
     findings.deepCascade = deepFindings;
