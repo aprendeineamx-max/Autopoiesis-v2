@@ -54,13 +54,29 @@ function activate(context) {
         })
     );
 
+    // Command 7: Test getCascadeStarterPrompts
+    context.subscriptions.push(
+        vscode.commands.registerCommand('deepApiTester.testStarterPrompts', async () => {
+            await testStarterPrompts();
+        })
+    );
+
+    // Command 8: Test transferActiveChat deep
+    context.subscriptions.push(
+        vscode.commands.registerCommand('deepApiTester.testTransferChat', async () => {
+            await testTransferActiveChat();
+        })
+    );
+
     log('Commands registered:');
     log('  • Tester: Run ALL Deep Tests');
     log('  • Tester: Start Event Monitoring');
     log('  • Tester: Stop Event Monitoring');
     log('  • Tester: Show Event Log');
     log('  • Tester: Export Findings');
-    log('  • Tester: Introspect Cascade\n');
+    log('  • Tester: Introspect Cascade');
+    log('  • Tester: Test Starter Prompts ⭐');
+    log('  • Tester: Test Transfer Chat ⭐\n');
 }
 
 async function runBasicTests() {
@@ -99,6 +115,82 @@ async function runBasicTests() {
     log('✅ BASIC TESTS COMPLETE\n');
 }
 
+async function testStarterPrompts() {
+    log('\n================================================');
+    log('   TESTING getCascadeStarterPrompts()');
+    log('================================================\n');
+
+    if (!vscode.Cascade?.getCascadeStarterPrompts) {
+        log('❌ getCascadeStarterPrompts not available\n');
+        return;
+    }
+
+    try {
+        log('🔍 Calling getCascadeStarterPrompts()...\n');
+        const prompts = await vscode.Cascade.getCascadeStarterPrompts();
+
+        log(`✅ Result type: ${typeof prompts}`);
+        log(`✅ Is array: ${Array.isArray(prompts)}`);
+
+        if (prompts) {
+            log(`✅ Length: ${prompts.length || 'N/A'}`);
+            log(`\nFull result:\n${JSON.stringify(prompts, null, 2)}\n`);
+        } else {
+            log('⚠️  Returned null/undefined\n');
+        }
+
+    } catch (e) {
+        log(`❌ Error: ${e.message}`);
+        log(`Stack: ${e.stack}\n`);
+    }
+}
+
+async function testTransferActiveChat() {
+    log('\n================================================');
+    log('   DEEP TEST: transferActiveChat()');
+    log('================================================\n');
+
+    if (!vscode.interactive?.transferActiveChat) {
+        log('❌ transferActiveChat not available\n');
+        return;
+    }
+
+    const fn = vscode.interactive.transferActiveChat;
+
+    log('📋 Function Analysis:');
+    log(`   Name: ${fn.name}`);
+    log(`   Params: ${fn.length}`);
+    log(`   Constructor: ${fn.constructor.name}`);
+    log(`   String: ${fn.toString().substring(0, 200)}...\n`);
+
+    // Test cases
+    const testCases = [
+        { name: 'null', value: null },
+        { name: 'undefined', value: undefined },
+        { name: 'empty object', value: {} },
+        { name: 'panel object', value: { panel: 'cascade' } },
+        { name: 'uri object', value: { uri: vscode.window.activeTextEditor?.document.uri } },
+    ];
+
+    log('🧪 Running parameter tests...\n');
+
+    for (const test of testCases) {
+        log(`--- Test: ${test.name} ---`);
+        try {
+            const result = await fn(test.value);
+            log(`✅ Success! Result type: ${typeof result}`);
+            if (result) {
+                log(`Result: ${JSON.stringify(result, null, 2)}`);
+            }
+        } catch (e) {
+            log(`❌ Error: ${e.message}`);
+        }
+        log('');
+    }
+
+    log('✅ TRANSFER CHAT TESTS COMPLETE\n');
+}
+
 async function startEventMonitoring() {
     if (isMonitoring) {
         log('⚠️  Monitoring already active\n');
@@ -117,36 +209,27 @@ async function startEventMonitoring() {
     isMonitoring = true;
     eventLog = [];
 
-    log('🎯 Registering event listeners...\n');
+    log('🎯 Registering ALL event listeners...\n');
 
-    // Listener 1: onDidRequestAcceptAllInFile
-    if (vscode.Cascade.onDidRequestAcceptAllInFile) {
-        const listener1 = vscode.Cascade.onDidRequestAcceptAllInFile((data) => {
-            logEvent('onDidRequestAcceptAllInFile', data);
-        });
-        eventListeners.push(listener1);
-        log('✅ Listener: onDidRequestAcceptAllInFile');
-    }
+    // Register ALL discovered events
+    const events = [
+        'onDidRequestNextHunk',
+        'onDidRequestPreviousHunk',
+        'onDidRequestAcceptAllInFile',
+        'onDidRequestRejectAllInFile'
+    ];
 
-    // Listener 2: onDidExpandSuggestionPanel
-    if (vscode.Cascade.onDidExpandSuggestionPanel) {
-        const listener2 = vscode.Cascade.onDidExpandSuggestionPanel((data) => {
-            logEvent('onDidExpandSuggestionPanel', data);
-        });
-        eventListeners.push(listener2);
-        log('✅ Listener: onDidExpandSuggestionPanel');
-    }
+    events.forEach(eventName => {
+        if (vscode.Cascade[eventName]) {
+            const listener = vscode.Cascade[eventName]((data) => {
+                logEvent(eventName, data);
+            });
+            eventListeners.push(listener);
+            log(`✅ Listener: ${eventName}`);
+        }
+    });
 
-    // Listener 3: onDidStopStreaming
-    if (vscode.Cascade.onDidStopStreaming) {
-        const listener3 = vscode.Cascade.onDidStopStreaming((data) => {
-            logEvent('onDidStopStreaming', data);
-        });
-        eventListeners.push(listener3);
-        log('✅ Listener: onDidStopStreaming');
-    }
-
-    // Listener 4: State change polling
+    // State change polling
     const statePoller = setInterval(async () => {
         if (!isMonitoring) {
             clearInterval(statePoller);
@@ -157,7 +240,6 @@ async function startEventMonitoring() {
             const state = await vscode.Cascade.getFocusState();
             const timestamp = new Date().toISOString();
 
-            // Only log if state changed
             const lastState = eventLog.length > 0 ? eventLog[eventLog.length - 1].data : null;
             if (!lastState ||
                 lastState.isVisible !== state.isVisible ||
@@ -179,7 +261,7 @@ async function startEventMonitoring() {
 
     log(`\n🎧 MONITORING ACTIVE`);
     log(`📊 Events captured: ${eventLog.length}`);
-    log(`\n⚡ Now use the chat and watch for events!\n`);
+    log(`\n⚡ Now use the chat and accept code suggestions!\n`);
 }
 
 function stopEventMonitoring() {
@@ -192,7 +274,6 @@ function stopEventMonitoring() {
     log('   STOPPING EVENT MONITORING');
     log('================================================\n');
 
-    // Dispose all listeners
     eventListeners.forEach(listener => listener.dispose());
     eventListeners = [];
     isMonitoring = false;
@@ -273,7 +354,6 @@ function introspectCascade() {
 
     log('🔍 Discovering all properties and methods...\n');
 
-    // Get all own properties
     const ownProps = Object.getOwnPropertyNames(vscode.Cascade);
     log(`=== Own Properties (${ownProps.length}) ===`);
     ownProps.forEach(prop => {
@@ -283,7 +363,6 @@ function introspectCascade() {
     });
     log('');
 
-    // Get prototype properties
     const proto = Object.getPrototypeOf(vscode.Cascade);
     if (proto) {
         const protoProps = Object.getOwnPropertyNames(proto);
@@ -300,7 +379,6 @@ function introspectCascade() {
         log('');
     }
 
-    // Get all keys
     const allKeys = Object.keys(vscode.Cascade);
     log(`=== Enumerable Keys (${allKeys.length}) ===`);
     allKeys.forEach(key => {
@@ -310,7 +388,6 @@ function introspectCascade() {
     });
     log('');
 
-    // Check for event properties specifically
     log('=== Event Listeners (onDid*) ===');
     const allProps = [...new Set([...ownProps, ...Object.keys(vscode.Cascade)])];
     const eventProps = allProps.filter(prop => prop.startsWith('onDid'));
@@ -325,7 +402,6 @@ function introspectCascade() {
     }
     log('');
 
-    // Check for methods
     log('=== Methods ===');
     const methods = allProps.filter(prop => typeof vscode.Cascade[prop] === 'function');
     methods.forEach(method => {

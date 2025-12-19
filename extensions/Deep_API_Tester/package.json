@@ -67,6 +67,14 @@
             {
                 "command": "deepApiTester.introspectCascade",
                 "title": "Tester: Introspect Cascade"
+            },
+            {
+                "command": "deepApiTester.testStarterPrompts",
+                "title": "Tester: Test Starter Prompts"
+            },
+            {
+                "command": "deepApiTester.testTransferChat",
+                "title": "Tester: Test Transfer Chat"
             }
         ]
     }
