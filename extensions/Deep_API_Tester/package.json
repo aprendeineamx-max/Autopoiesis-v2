@@ -78,6 +78,10 @@
             {
                 "command": "deepApiTester.testTransferChat",
                 "title": "Tester: Test Transfer Chat"
+            },
+            {
+                "command": "deepApiTester.introspectInteractive",
+                "title": "Tester: Introspect Interactive Namespace"
             }
         ]
     }

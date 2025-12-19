@@ -68,6 +68,13 @@ function activate(context) {
         })
     );
 
+    // Command 9: Introspect vscode.interactive namespace
+    context.subscriptions.push(
+        vscode.commands.registerCommand('deepApiTester.introspectInteractive', () => {
+            introspectInteractiveNamespace();
+        })
+    );
+
     log('Commands registered:');
     log('  • Tester: Run ALL Deep Tests');
     log('  • Tester: Start Event Monitoring');
@@ -76,7 +83,8 @@ function activate(context) {
     log('  • Tester: Export Findings');
     log('  • Tester: Introspect Cascade');
     log('  • Tester: Test Starter Prompts ⭐');
-    log('  • Tester: Test Transfer Chat ⭐\n');
+    log('  • Tester: Test Transfer Chat ⭐');
+    log('  • Tester: Introspect Interactive Namespace ⭐⭐\n');
 }
 
 async function runBasicTests() {
@@ -410,6 +418,113 @@ function introspectCascade() {
     log('');
 
     log('✅ INTROSPECTION COMPLETE\n');
+}
+
+function introspectInteractiveNamespace() {
+    log('\n================================================');
+    log('   VSCODE.INTERACTIVE INTROSPECTION');
+    log('================================================\n');
+
+    if (!vscode.interactive) {
+        log('❌ vscode.interactive not available\n');
+        return;
+    }
+
+    log('🔍 Discovering ALL properties and methods...\n');
+
+    // Get all own properties
+    const ownProps = Object.getOwnPropertyNames(vscode.interactive);
+    log(`=== Own Properties (${ownProps.length}) ===`);
+    ownProps.forEach(prop => {
+        try {
+            const value = vscode.interactive[prop];
+            const type = typeof value;
+            log(`  • ${prop}: ${type}`);
+        } catch (e) {
+            log(`  • ${prop}: [error: ${e.message}]`);
+        }
+    });
+    log('');
+
+    // Get prototype properties
+    const proto = Object.getPrototypeOf(vscode.interactive);
+    if (proto) {
+        const protoProps = Object.getOwnPropertyNames(proto);
+        log(`=== Prototype Properties (${protoProps.length}) ===`);
+        protoProps.forEach(prop => {
+            try {
+                const value = proto[prop];
+                const type = typeof value;
+                log(`  • ${prop}: ${type}`);
+            } catch (e) {
+                log(`  • ${prop}: [error accessing]`);
+            }
+        });
+        log('');
+    }
+
+    // Get enumerable keys
+    const allKeys = Object.keys(vscode.interactive);
+    log(`=== Enumerable Keys (${allKeys.length}) ===`);
+    allKeys.forEach(key => {
+        try {
+            const value = vscode.interactive[key];
+            const type = typeof value;
+            log(`  • ${key}: ${type}`);
+        } catch (e) {
+            log(`  • ${key}: [error: ${e.message}]`);
+        }
+    });
+    log('');
+
+    // Try to call each function with minimal params
+    log('=== Function Call Tests ===');
+    const allProps = [...new Set([...ownProps, ...allKeys])];
+    const functions = allProps.filter(prop => {
+        try {
+            return typeof vscode.interactive[prop] === 'function';
+        } catch {
+            return false;
+        }
+    });
+
+    functions.forEach(fnName => {
+        log(`\n--- Testing: ${fnName}() ---`);
+
+        if (fnName === 'transferActiveChat') {
+            log('⚠️  Skipping (requires API proposal)');
+            return;
+        }
+
+        try {
+            const fn = vscode.interactive[fnName];
+            log(`Params: ${fn.length}`);
+
+            // Only test if no params required
+            if (fn.length === 0) {
+                const result = fn();
+                log(`✅ Called successfully`);
+                log(`Result type: ${typeof result}`);
+
+                if (result && typeof result.then === 'function') {
+                    log('⏳ Returns Promise...');
+                    result.then(r => {
+                        log(`Promise resolved: ${JSON.stringify(r)}`);
+                    }).catch(e => {
+                        log(`Promise rejected: ${e.message}`);
+                    });
+                } else if (result) {
+                    log(`Result: ${JSON.stringify(result, null, 2)}`);
+                }
+            } else {
+                log('⚠️  Requires parameters, skipping call');
+            }
+        } catch (e) {
+            log(`❌ Error: ${e.message}`);
+        }
+    });
+
+    log('\n✅ INTERACTIVE INTROSPECTION COMPLETE\n');
 }
 
 function log(message) {
