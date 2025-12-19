@@ -110,7 +110,7 @@ function registerDevModeCommands(context) {
 async function exhaustiveTransferTest() {
     log('\n================================================');
     log('   EXHAUSTIVE transferActiveChat TEST');
-    log('   (130+ Parameter Variations - Chat Focused)');
+    log('   (330 Test Cases - MAXIMUM COVERAGE)');
     log('================================================\n');
 
     if (!vscode.interactive?.transferActiveChat) {
@@ -1398,11 +1398,24 @@ async function exhaustiveTransferTest() {
         },
     );
 
+    // ============================================
+    // IMPORT PART 2 TESTS (Categories 51-70)
+    // ============================================
+    try {
+        const getAdditionalTests = require('./extension_tests_part2');
+        const part2Tests = getAdditionalTests(vscode);
+        testCases.push(...part2Tests);
+        log(`✅ Loaded ${part2Tests.length} additional tests from Part 2 (Categories 51-70)\n`);
+    } catch (error) {
+        log(`⚠️ Could not load Part 2 tests: ${error.message}\n`);
+    }
 
     // ============================================
     // EXECUTE ALL TESTS
     // ============================================
-    log(`\n🧪 Executing ${testCases.length} test cases...\n`);
+    log(`\n🧪 Total test cases to execute: ${testCases.length}\n`);
+    log(`   • Part 1 (Categories 1-50): 230 tests`);
+    log(`   • Part 2 (Categories 51-70): ${testCases.length - 230} tests\n`);
 
     let successCount = 0;
     let errorCount = 0;
