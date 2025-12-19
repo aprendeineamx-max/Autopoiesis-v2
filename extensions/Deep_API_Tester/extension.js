@@ -23,7 +23,20 @@ function activate(context) {
     outputChannel = vscode.window.createOutputChannel('Deep API Tester');
     outputChannel.show();
 
+    // Initialize log files
+    const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
+    if (workspaceFolder) {
+        logFilePath = path.join(workspaceFolder.uri.fsPath, 'API_DISCOVERIES.json');
+        eventLogFilePath = path.join(workspaceFolder.uri.fsPath, 'API_EVENTS_LOG.json');
+
+        // Write initial state
+        writeDiscoveriesToFile();
+        writeEventsToFile();
+    }
+
     log('Deep API Tester activated');
+    log(`Logging discoveries to: ${logFilePath}`);
+    log(`Logging events to: ${eventLogFilePath}`);
     log('Target APIs: Cascade, UnifiedStateSync, Chat\n');
 
     // Comandos
@@ -95,6 +108,7 @@ async function testCascadeAPIs() {
             vscode.Cascade.onDidRequestNextHunk((data) => {
                 log(`  [EVENT] onDidRequestNextHunk: ${JSON.stringify(data)}`);
                 findings.events.push({ event: 'onDidRequestNextHunk', data: data, timestamp: new Date() });
+                writeEventsToFile(); // Write immediately
             });
             log('  ✓ Listener registered: onDidRequestNextHunk');
         }
@@ -103,6 +117,7 @@ async function testCascadeAPIs() {
             vscode.Cascade.onDidRequestAcceptAllInFile((data) => {
                 log(`  [EVENT] onDidRequestAcceptAllInFile: ${JSON.stringify(data)}`);
                 findings.events.push({ event: 'onDidRequestAcceptAllInFile', data: data, timestamp: new Date() });
+                writeEventsToFile(); // Write immediately
             });
             log('  ✓ Listener registered: onDidRequestAcceptAllInFile');
         }
@@ -321,6 +336,10 @@ function showSummary() {
     log('Keep extension running to capture events');
     log('Use chat normally and watch for updates');
     log('========================================\n');
+
+    // Write final state to files
+    writeDiscoveriesToFile();
+    writeEventsToFile();
 }
 
 async function exportFindings() {
@@ -408,6 +427,41 @@ function generateDetailedReport() {
     return md;
 }
 
+function writeDiscoveriesToFile() {
+    if (!logFilePath) return;
+
+    try {
+        const data = {
+            lastUpdated: new Date().toISOString(),
+            findings: findings
+        };
+        fs.writeFileSync(logFilePath, JSON.stringify(data, null, 2));
+        console.log('[Deep Tester] Discoveries written to file');
+    } catch (e) {
+        console.error('[Deep Tester] Failed to write discoveries:', e.message);
+    }
+}
+
+function writeEventsToFile() {
+    if (!eventLogFilePath) return;
+
+    try {
+        const data = {
+            lastUpdated: new Date().toISOString(),
+            totalEvents: findings.events.length,
+            events: findings.events.map(evt => ({
+                event: evt.event,
+                timestamp: evt.timestamp,
+                data: evt.data
+            }))
+        };
+        fs.writeFileSync(eventLogFilePath, JSON.stringify(data, null, 2));
+        console.log(`[Deep Tester] ${findings.events.length} events written to file`);
+    } catch (e) {
+        console.error('[Deep Tester] Failed to write events:', e.message);
+    }
+}
+
 function log(message) {
     outputChannel.appendLine(message);
     console.log(`[Deep Tester] ${message}`);
@@ -415,6 +469,10 @@ function log(message) {
 
 function deactivate() {
     log('Deep API Tester deactivated');
+
+    // Final export
+    writeDiscoveriesToFile();
+    writeEventsToFile();
 }
 
 module.exports = {
