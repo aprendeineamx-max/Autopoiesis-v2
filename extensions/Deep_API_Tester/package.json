@@ -63,6 +63,10 @@
             {
                 "command": "deepApiTester.exportFindings",
                 "title": "Tester: Export Findings"
+            },
+            {
+                "command": "deepApiTester.introspectCascade",
+                "title": "Tester: Introspect Cascade"
             }
         ]
     }

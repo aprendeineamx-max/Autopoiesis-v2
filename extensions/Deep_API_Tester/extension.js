@@ -47,12 +47,20 @@ function activate(context) {
         })
     );
 
+    // Command 6: Introspect Cascade
+    context.subscriptions.push(
+        vscode.commands.registerCommand('deepApiTester.introspectCascade', () => {
+            introspectCascade();
+        })
+    );
+
     log('Commands registered:');
     log('  • Tester: Run ALL Deep Tests');
     log('  • Tester: Start Event Monitoring');
     log('  • Tester: Stop Event Monitoring');
     log('  • Tester: Show Event Log');
-    log('  • Tester: Export Findings\n');
+    log('  • Tester: Export Findings');
+    log('  • Tester: Introspect Cascade\n');
 }
 
 async function runBasicTests() {
@@ -251,6 +259,81 @@ function logEvent(eventName, data) {
 
     log(`\n🔔 [${timestamp}] ${eventName}`);
     log(`Data: ${JSON.stringify(data, null, 2)}\n`);
+}
+
+function introspectCascade() {
+    log('\n================================================');
+    log('   CASCADE API INTROSPECTION');
+    log('================================================\n');
+
+    if (!vscode.Cascade) {
+        log('❌ Cascade API not available\n');
+        return;
+    }
+
+    log('🔍 Discovering all properties and methods...\n');
+
+    // Get all own properties
+    const ownProps = Object.getOwnPropertyNames(vscode.Cascade);
+    log(`=== Own Properties (${ownProps.length}) ===`);
+    ownProps.forEach(prop => {
+        const value = vscode.Cascade[prop];
+        const type = typeof value;
+        log(`  • ${prop}: ${type}`);
+    });
+    log('');
+
+    // Get prototype properties
+    const proto = Object.getPrototypeOf(vscode.Cascade);
+    if (proto) {
+        const protoProps = Object.getOwnPropertyNames(proto);
+        log(`=== Prototype Properties (${protoProps.length}) ===`);
+        protoProps.forEach(prop => {
+            try {
+                const value = proto[prop];
+                const type = typeof value;
+                log(`  • ${prop}: ${type}`);
+            } catch (e) {
+                log(`  • ${prop}: [error accessing]`);
+            }
+        });
+        log('');
+    }
+
+    // Get all keys
+    const allKeys = Object.keys(vscode.Cascade);
+    log(`=== Enumerable Keys (${allKeys.length}) ===`);
+    allKeys.forEach(key => {
+        const value = vscode.Cascade[key];
+        const type = typeof value;
+        log(`  • ${key}: ${type}`);
+    });
+    log('');
+
+    // Check for event properties specifically
+    log('=== Event Listeners (onDid*) ===');
+    const allProps = [...new Set([...ownProps, ...Object.keys(vscode.Cascade)])];
+    const eventProps = allProps.filter(prop => prop.startsWith('onDid'));
+
+    if (eventProps.length === 0) {
+        log('  ❌ No onDid* event properties found');
+    } else {
+        eventProps.forEach(prop => {
+            const exists = typeof vscode.Cascade[prop] === 'function';
+            log(`  ${exists ? '✅' : '❌'} ${prop}`);
+        });
+    }
+    log('');
+
+    // Check for methods
+    log('=== Methods ===');
+    const methods = allProps.filter(prop => typeof vscode.Cascade[prop] === 'function');
+    methods.forEach(method => {
+        log(`  ✅ ${method}()`);
+    });
+    log('');
+
+    log('✅ INTROSPECTION COMPLETE\n');
 }
 
 function log(message) {
