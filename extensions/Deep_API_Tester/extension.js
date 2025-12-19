@@ -10,12 +10,29 @@ const fs = require('fs');
 const path = require('path');
 
 let outputChannel = null;
+let logFilePath = null;
+let eventLogFilePath = null;
+
 const findings = {
     cascade: {},
     stateSync: {},
     chatAccess: {},
-    events: []
+    events: [],
+    startTime: new Date().toISOString()
 };
+
+// Import deep testing module
+const deepTests = require('./deep_tests');
+
+// Initialize deep tests with context after module loads
+function initializeDeepTests() {
+    deepTests.setContext({
+        vscode,
+        log,
+        findings,
+        writeDiscoveriesToFile
+    });
+}
 
 function activate(context) {
     console.log('[Deep Tester] Activating...');
@@ -39,16 +56,47 @@ function activate(context) {
     log(`Logging events to: ${eventLogFilePath}`);
     log('Target APIs: Cascade, UnifiedStateSync, Chat\n');
 
-    // Comandos
+    // Initialize deep testing module with context
+    initializeDeepTests();
+
+    // Comandos existentes
     context.subscriptions.push(
-        vscode.commands.registerCommand('deepTester.testCascade', () => testCascadeAPIs()),
-        vscode.commands.registerCommand('deepTester.testStateSync', () => testStateSyncAPIs()),
-        vscode.commands.registerCommand('deepTester.testChatAccess', () => testChatAccessAPIs()),
-        vscode.commands.registerCommand('deepTester.exportFindings', () => exportFindings())
+        vscode.commands.registerCommand('deepApiTester.testCascade', testCascadeAPIs)
     );
 
-    // Auto-start comprehensive test
-    setTimeout(() => runComprehensiveTests(), 2000);
+    context.subscriptions.push(
+        vscode.commands.registerCommand('deepApiTester.testStateSync', testStateSyncAPIs)
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('deepApiTester.testChatAccess', testChatMessageAccess)
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('deepApiTester.exportFindings', exportFindings)
+    );
+
+    // NUEVOS COMANDOS - FASE 1B/1C
+    context.subscriptions.push(
+        vscode.commands.registerCommand('deepApiTester.deepCascadeTest', () => deepTests.deepCascadeTesting())
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('deepApiTester.testTransferActiveChat', () => deepTests.testTransferActiveChat())
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('deepApiTester.testWebViewAccess', () => deepTests.testWebViewAccess())
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('deepApiTester.runAllDeepTests', () => deepTests.runAllDeepTests())
+    );
+
+    // Run comprehensive tests on activation
+    setTimeout(async () => {
+        await runComprehensiveTests();
+    }, 1000);
 }
 
 async function runComprehensiveTests() {

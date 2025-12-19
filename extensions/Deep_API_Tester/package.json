@@ -17,20 +17,36 @@
     "contributes": {
         "commands": [
             {
-                "command": "deepTester.testCascade",
-                "title": "Deep Tester: Test Cascade APIs"
+                "command": "deepApiTester.testCascade",
+                "title": "Tester: Test Cascade APIs"
             },
             {
-                "command": "deepTester.testStateSync",
-                "title": "Deep Tester: Test UnifiedStateSync"
+                "command": "deepApiTester.testStateSync",
+                "title": "Tester: Test UnifiedStateSync"
             },
             {
-                "command": "deepTester.testChatAccess",
-                "title": "Deep Tester: Test Chat Message Access"
+                "command": "deepApiTester.testChatAccess",
+                "title": "Tester: Test Chat Message Access"
             },
             {
-                "command": "deepTester.exportFindings",
-                "title": "Deep Tester: Export All Findings"
+                "command": "deepApiTester.exportFindings",
+                "title": "Tester: Export All Findings"
+            },
+            {
+                "command": "deepApiTester.deepCascadeTest",
+                "title": "Tester: Deep Cascade Testing (Phase 1B)"
+            },
+            {
+                "command": "deepApiTester.testTransferActiveChat",
+                "title": "Tester: Test transferActiveChat (Phase 1C)"
+            },
+            {
+                "command": "deepApiTester.testWebViewAccess",
+                "title": "Tester: Test WebView Access"
+            },
+            {
+                "command": "deepApiTester.runAllDeepTests",
+                "title": "Tester: Run ALL Deep Tests (1B + 1C)"
             }
         ]
     }
