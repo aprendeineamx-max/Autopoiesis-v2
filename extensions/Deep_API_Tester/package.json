@@ -1,0 +1,37 @@
+{
+    "name": "antigravity-deep-api-tester",
+    "displayName": "Antigravity Deep API Tester",
+    "description": "Deep investigation of Antigravity custom APIs",
+    "version": "0.2.0",
+    "publisher": "antigravity-research",
+    "engines": {
+        "vscode": "^1.80.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "*"
+    ],
+    "main": "./extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "deepTester.testCascade",
+                "title": "Deep Tester: Test Cascade APIs"
+            },
+            {
+                "command": "deepTester.testStateSync",
+                "title": "Deep Tester: Test UnifiedStateSync"
+            },
+            {
+                "command": "deepTester.testChatAccess",
+                "title": "Deep Tester: Test Chat Message Access"
+            },
+            {
+                "command": "deepTester.exportFindings",
+                "title": "Deep Tester: Export All Findings"
+            }
+        ]
+    }
+}
