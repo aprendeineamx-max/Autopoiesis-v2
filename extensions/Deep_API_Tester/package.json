@@ -82,6 +82,18 @@
             {
                 "command": "deepApiTester.introspectInteractive",
                 "title": "Tester: Introspect Interactive Namespace"
+            },
+            {
+                "command": "deepApiTester.exhaustiveTransferTest",
+                "title": "Tester: Exhaustive Transfer Test"
+            },
+            {
+                "command": "deepApiTester.exploreAllVscode",
+                "title": "Tester: Explore All Vscode APIs"
+            },
+            {
+                "command": "deepApiTester.testWithActiveChat",
+                "title": "Tester: Test With Active Chat"
             }
         ]
     }
