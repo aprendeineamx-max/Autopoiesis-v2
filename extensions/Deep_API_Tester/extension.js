@@ -206,6 +206,75 @@ async function testStateSyncAPIs() {
         log(`  initIPCSubscription error: ${e.message}`);
     }
 
+    // NUEVO: Investigar topics válidos
+    log('\n--- Discovering Valid StateSync Topics ---');
+    const possibleTopics = [
+        // Chat relacionados
+        'chat', 'cascade', 'messages', 'conversation', 'assistant',
+        'ai', 'copilot', 'gemini', 'aiAgent', 'chatSession',
+
+        // Editor relacionados
+        'editor', 'document', 'workspace', 'file', 'selection',
+        'cursor', 'diagnostics', 'problems', 'errors',
+
+        // UI relacionados
+        'ui', 'panel', 'sidebar', 'statusbar', 'layout',
+        'theme', 'settings', 'config', 'preferences',
+
+        // Extensiones
+        'extension', 'extensions', 'plugin', 'plugins',
+
+        // Sistema
+        'system', 'state', 'sync', 'ipc', 'events',
+        'notifications', 'commands', 'tasks',
+
+        // Antigravity específicos
+        'antigravity', 'antigravitySettings', 'antigravityState',
+        'auth', 'user', 'session'
+    ];
+
+    findings.stateSync.validTopics = [];
+    findings.stateSync.invalidTopics = [];
+
+    log(`Testing ${possibleTopics.length} possible topics...`);
+
+    for (const topic of possibleTopics) {
+        try {
+            let received = false;
+
+            vscode.antigravityUnifiedStateSync.subscribe(topic, (update) => {
+                if (!received) {
+                    log(`  🎯 VALID TOPIC: '${topic}' - Update received!`);
+                    log(`     Data preview: ${JSON.stringify(update).substring(0, 100)}...`);
+
+                    findings.stateSync.validTopics.push({
+                        topic: topic,
+                        firstUpdate: update,
+                        timestamp: new Date()
+                    });
+
+                    received = true;
+                    writeDiscoveriesToFile();
+                }
+            });
+
+            log(`  ✓ Subscribed to: '${topic}'`);
+
+        } catch (e) {
+            log(`  ✗ Invalid topic: '${topic}' - ${e.message}`);
+            findings.stateSync.invalidTopics.push({
+                topic: topic,
+                error: e.message
+            });
+        }
+    }
+
+    log(`\n  Valid topics found: ${findings.stateSync.validTopics.length}`);
+    log(`  Invalid topics: ${findings.stateSync.invalidTopics.length}`);
+    log('  Waiting for updates on valid topics...\n');
+
+    writeDiscoveriesToFile();
+
     log('');
 }
 
