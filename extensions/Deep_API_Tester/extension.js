@@ -21,17 +21,9 @@ const findings = {
     startTime: new Date().toISOString()
 };
 
-// Import deep testing module
-const deepTests = require('./deep_tests');
-
-// Initialize deep tests with context after module loads
-function initializeDeepTests() {
-    deepTests.setContext({
-        vscode,
-        log,
-        findings,
-        writeDiscoveriesToFile
-    });
+// Helper function
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function activate(context) {
@@ -56,9 +48,6 @@ function activate(context) {
     log(`Logging events to: ${eventLogFilePath}`);
     log('Target APIs: Cascade, UnifiedStateSync, Chat\n');
 
-    // Initialize deep testing module with context
-    initializeDeepTests();
-
     // Comandos existentes
     context.subscriptions.push(
         vscode.commands.registerCommand('deepApiTester.testCascade', testCascadeAPIs)
@@ -76,21 +65,21 @@ function activate(context) {
         vscode.commands.registerCommand('deepApiTester.exportFindings', exportFindings)
     );
 
-    // NUEVOS COMANDOS - FASE 1B/1C
+    // NUEVOS COMANDOS - FASE 1B/1C (funciones inline)
     context.subscriptions.push(
-        vscode.commands.registerCommand('deepApiTester.deepCascadeTest', () => deepTests.deepCascadeTesting())
+        vscode.commands.registerCommand('deepApiTester.deepCascadeTest', deepCascadeTesting)
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('deepApiTester.testTransferActiveChat', () => deepTests.testTransferActiveChat())
+        vscode.commands.registerCommand('deepApiTester.testTransferActiveChat', testTransferActiveChat)
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('deepApiTester.testWebViewAccess', () => deepTests.testWebViewAccess())
+        vscode.commands.registerCommand('deepApiTester.testWebViewAccess', testWebViewAccess)
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('deepApiTester.runAllDeepTests', () => deepTests.runAllDeepTests())
+        vscode.commands.registerCommand('deepApiTester.runAllDeepTests', runAllDeepTests)
     );
 
     // Run comprehensive tests on activation
@@ -579,9 +568,132 @@ function writeEventsToFile() {
     }
 }
 
+
 function log(message) {
     outputChannel.appendLine(message);
     console.log(`[Deep Tester] ${message}`);
+}
+
+// ============================================
+// FASE 1B: DEEP CASCADE TESTING
+// ============================================
+
+async function deepCascadeTesting() {
+    log('\n========================================');
+    log('FASE 1B: DEEP CASCADE TESTING');
+    log('========================================\n');
+
+    if (!vscode.Cascade) {
+        log('❌ CASCADE NOT AVAILABLE');
+        return;
+    }
+
+    const deepFindings = {
+        panelControl: {},
+        hiddenProperties: {},
+        setCascadeBarState: {}
+    };
+
+    try {
+        log('--- Test 1: Panel Control ---');
+        const initialState = await vscode.Cascade.getFocusState();
+        log(`Initial: ${JSON.stringify(initialState)}`);
+
+        await vscode.Cascade.closePanel();
+        await sleep(500);
+        const closedState = await vscode.Cascade.getFocusState();
+        deepFindings.panelControl.canClose = closedState.isVisible === false;
+
+        await vscode.Cascade.openPanel();
+        await sleep(500);
+        const openedState = await vscode.Cascade.getFocusState();
+        deepFindings.panelControl.canOpen = openedState.isVisible === true;
+
+        log(`✅ Panel Control WORKS - Open: ${deepFindings.panelControl.canOpen}, Close: ${deepFindings.panelControl.canClose}`);
+
+    } catch (e) {
+        log(`❌ Panel Control Error: ${e.message}`);
+        deepFindings.panel Control.error = e.message;
+    }
+
+    findings.deepCascade = deepFindings;
+    writeDiscoveriesToFile();
+
+    log('\n✅ DEEP CASCADE TESTING COMPLETE\n');
+}
+
+// ============================================
+// FASE 1C: TRANSFER ACTIVE CHAT INVESTIGATION
+// ============================================
+
+async function testTransferActiveChat() {
+    log('\n========================================');
+    log('FASE 1C: TRANSFERACTIVECHAT INVESTIGATION');
+    log('========================================\n');
+
+    if (!vscode.interactive || !vscode.interactive.transferActiveChat) {
+        log('❌ transferActiveChat NOT AVAILABLE');
+        return;
+    }
+
+    const transferFindings = {};
+
+    try {
+        const fn = vscode.interactive.transferActiveChat;
+        transferFindings.name = fn.name;
+        transferFindings.paramCount = fn.length;
+        transferFindings.isAsync = fn.constructor.name === 'AsyncFunction';
+
+        log(`✅ Function found: ${fn.name}`);
+        log(`   Parameters: ${fn.length}`);
+        log(`   Async: ${transferFindings.isAsync}`);
+
+    } catch (e) {
+        log(`❌ Error: ${e.message}`);
+    }
+
+    findings.transferActiveChat = transferFindings;
+    writeDiscoveriesToFile();
+
+    log('\n✅ TRANSFERACTIVECHAT INVESTIGATION COMPLETE\n');
+}
+
+// ============================================
+// WEBVIEW ACCESS TESTING
+// ============================================
+
+async function testWebViewAccess() {
+    log('\n========================================');
+    log('WEBVIEW/DOM ACCESS INVESTIGATION');
+    log('========================================\n');
+
+    log('⚠️  LIMITATION: Extensions cannot access core webviews');
+
+    findings.webviewAccess = {
+        limitation: 'Cannot access webviews from core VS Code'
+    };
+
+    writeDiscoveriesToFile();
+    log('\n✅ WEBVIEW INVESTIGATION COMPLETE\n');
+}
+
+// ============================================
+// RUN ALL DEEP TESTS
+// ============================================
+
+async function runAllDeepTests() {
+    log('\n================================================');
+    log('   RUNNING ALL DEEP TESTS (PHASE 1B + 1C)');
+    log('================================================\n');
+
+    await deepCascadeTesting();
+    await testTransferActiveChat();
+    await testWebViewAccess();
+
+    log('\n================================================');
+    log('   ALL DEEP TESTS COMPLETE');
+    log('================================================\n');
+    log('Check API_DISCOVERIES.json for findings\n');
 }
 
 function deactivate() {
