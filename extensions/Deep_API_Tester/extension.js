@@ -578,6 +578,826 @@ async function exhaustiveTransferTest() {
         { category: 'Advanced', name: 'Object.seal()', value: Object.seal({ session: 'test' }) },
     );
 
+    // ============================================
+    // CATEGORY 31: Antigravity Chat Commands 🔥🔥🔥
+    // ============================================
+    log('Category 31: Antigravity Chat Commands (ULTRA PRIORITY)');
+
+    testCases.push(
+        {
+            category: 'AG Commands', name: 'chat command object', value: {
+                command: 'antigravity.prioritized.chat.open',
+                context: activeEditor
+            }
+        },
+        {
+            category: 'AG Commands', name: 'conversation picker', value: {
+                command: 'antigravity.openConversationPicker',
+                sessionId: 'active'
+            }
+        },
+        {
+            category: 'AG Commands', name: 'export chat command', value: {
+                command: 'antigravity.exportChatNow',
+                includeHistory: true
+            }
+        },
+        {
+            category: 'AG Commands', name: 'terminal to chat', value: {
+                command: 'antigravity.sendTerminalToChat',
+                terminal: vscode.window.activeTerminal
+            }
+        },
+        {
+            category: 'AG Commands', name: 'chat open new window', value: {
+                command: 'antigravity.prioritized.chat.openNewWindow',
+                type: 'interactive'
+            }
+        },
+    );
+
+    // ============================================
+    // CATEGORY 32: Agent Step Commands 🔥🔥🔥
+    // ============================================
+    log('Category 32: Agent Step Commands (ULTRA PRIORITY)');
+
+    testCases.push(
+        {
+            category: 'AG Agent', name: 'accept agent step', value: {
+                command: 'antigravity.agent.acceptAgentStep',
+                step: 'current',
+                context: activeEditor
+            }
+        },
+        {
+            category: 'AG Agent', name: 'trigger agent', value: {
+                command: 'antigravity.triggerAgent',
+                editor: activeEditor,
+                selection: activeEditor?.selection
+            }
+        },
+        {
+            category: 'AG Agent', name: 'open agent', value: {
+                command: 'antigravity.openAgent',
+                panel: 'cascade'
+            }
+        },
+        {
+            category: 'AG Agent', name: 'agent alwaysAllow', value: {
+                command: 'antigravity.agent.alwaysAllow',
+                session: 'active'
+            }
+        },
+        {
+            category: 'AG Agent', name: 'agent acceptAll', value: {
+                command: 'antigravity.agent.acceptAll',
+                includeContext: true
+            }
+        },
+    );
+
+    // ============================================
+    // CATEGORY 33: Exporter Commands 🔥🔥
+    // ============================================
+    log('Category 33: Chat Exporter Commands (HIGH PRIORITY)');
+
+    testCases.push(
+        {
+            category: 'AG Exporter', name: 'autoCopyChat', value: {
+                command: 'antigravity.exporter.autoCopyChat',
+                format: 'json'
+            }
+        },
+        {
+            category: 'AG Exporter', name: 'exportJSON', value: {
+                command: 'antigravity.exporter.exportJSON',
+                sessionId: 'current'
+            }
+        },
+        {
+            category: 'AG Exporter', name: 'exportMarkdown', value: {
+                command: 'antigravity.exporter.exportMarkdown',
+                includeMetadata: true
+            }
+        },
+        {
+            category: 'AG Exporter', name: 'validateExport', value: {
+                command: 'antigravity.exporter.validateExport',
+                check: 'integrity'
+            }
+        },
+        {
+            category: 'AG Exporter', name: 'importFromClipboard', value: {
+                command: 'antigravity.importFromClipboard',
+                parse: true
+            }
+        },
+    );
+
+    // ============================================
+    // CATEGORY 34: Artifacts Commands 🔥
+    // ============================================
+    log('Category 34: Artifacts Commands');
+
+    testCases.push(
+        {
+            category: 'AG Artifacts', name: 'startComment', value: {
+                command: 'antigravity.artifacts.startComment',
+                position: activeEditor?.selection?.active
+            }
+        },
+        {
+            category: 'AG Artifacts', name: 'command accept', value: {
+                command: 'antigravity.command.accept',
+                commandId: 'test'
+            }
+        },
+        {
+            category: 'AG Artifacts', name: 'command reject', value: {
+                command: 'antigravity.command.reject',
+                reason: 'user-cancelled'
+            }
+        },
+    );
+
+    // ============================================
+    // CATEGORY 35: Command Execution Context 🔥🔥
+    // ============================================
+    log('Category 35: Command Execution Contexts');
+
+    testCases.push(
+        {
+            category: 'CMD Context', name: 'executeCommand result', value: {
+                type: 'commandResult',
+                command: 'antigravity.prioritized.chat.open',
+                timestamp: Date.now()
+            }
+        },
+        {
+            category: 'CMD Context', name: 'command with args', value: {
+                command: {
+                    id: 'antigravity.exportChatNow',
+                    args: [{ format: 'json' }]
+                },
+                context: 'interactive'
+            }
+        },
+        {
+            category: 'CMD Context', name: 'multi-command batch', value: {
+                commands: [
+                    'antigravity.prioritized.chat.open',
+                    'antigravity.exportChatNow'
+                ],
+                executeSequentially: true
+            }
+        },
+    );
+
+    // ============================================
+    // CATEGORY 36: State Sync Topics 🔥🔥🔥
+    // ============================================
+    log('Category 36: State Sync Topics (ULTRA PRIORITY)');
+
+    if (vscode.antigravityUnifiedStateSync) {
+        testCases.push(
+            {
+                category: 'StateSync Topics', name: 'chat topic', value: {
+                    topic: 'chat',
+                    stateSync: vscode.antigravityUnifiedStateSync
+                }
+            },
+            {
+                category: 'StateSync Topics', name: 'conversation topic', value: {
+                    topic: 'conversation',
+                    stateSync: vscode.antigravityUnifiedStateSync
+                }
+            },
+            {
+                category: 'StateSync Topics', name: 'messages topic', value: {
+                    topic: 'messages',
+                    stateSync: vscode.antigravityUnifiedStateSync
+                }
+            },
+            {
+                category: 'StateSync Topics', name: 'interactive topic', value: {
+                    topic: 'interactive',
+                    stateSync: vscode.antigravityUnifiedStateSync
+                }
+            },
+            {
+                category: 'StateSync Topics', name: 'agent topic', value: {
+                    topic: 'agent',
+                    stateSync: vscode.antigravityUnifiedStateSync
+                }
+            },
+        );
+    }
+
+    // ============================================
+    // CATEGORY 37: Terminal Command Integration 🔥
+    // ============================================
+    log('Category 37: Terminal Command Integration');
+
+    testCases.push(
+        {
+            category: 'Terminal CMD', name: 'terminalCommand.accept', value: {
+                command: 'antigravity.terminalCommand.accept',
+                terminal: vscode.window.activeTerminal,
+                chatContext: true
+            }
+        },
+        {
+            category: 'Terminal CMD', name: 'terminalCommand.run', value: {
+                command: 'antigravity.terminalCommand.run',
+                script: 'test',
+                sendToChat: true
+            }
+        },
+        {
+            category: 'Terminal CMD', name: 'sendTerminalToChat full', value: {
+                command: 'antigravity.sendTerminalToChat',
+                terminal: vscode.window.activeTerminal,
+                output: 'last 100 lines',
+                includeInput: true
+            }
+        },
+    );
+
+    // ============================================
+    // CATEGORY 38: Focus & Navigation 🔥
+    // ============================================
+    log('Category 38: Focus & Navigation Commands');
+
+    testCases.push(
+        {
+            category: 'Focus Nav', name: 'agentFocusNextFile', value: {
+                command: 'antigravity.prioritized.agentFocusNextFile',
+                wrapAround: true
+            }
+        },
+        {
+            category: 'Focus Nav', name: 'agentFocusNextHunk', value: {
+                command: 'antigravity.prioritized.agentFocusNextHunk',
+                editor: activeEditor
+            }
+        },
+        {
+            category: 'Focus Nav', name: 'agentAcceptFocusedHunk', value: {
+                command: 'antigravity.prioritized.agentAcceptFocusedHunk',
+                hunk: 'current'
+            }
+        },
+    );
+
+    // ============================================
+    // CATEGORY 39: Supercomplete & Suggestions 🔥
+    // ============================================
+    log('Category 39: Supercomplete & Suggestions');
+
+    testCases.push(
+        {
+            category: 'Supercomplete', name: 'prioritized.supercomplete', value: {
+                command: 'antigravity.prioritized.supercomplete',
+                position: activeEditor?.selection?.active,
+                context: activeDoc
+            }
+        },
+        {
+            category: 'Supercomplete', name: 'explainProblem', value: {
+                command: 'antigravity.prioritized.explainProblem',
+                editor: activeEditor,
+                selection: activeEditor?.selection
+            }
+        },
+        {
+            category: 'Supercomplete', name: 'inline suggest trigger', value: {
+                command: 'editor.action.inlineSuggest.trigger',
+                antigravityContext: true,
+                chatEnabled: true
+            }
+        },
+    );
+
+    // ============================================
+    // CATEGORY 40: Launchpad & Settings 🔥
+    // ============================================
+    log('Category 40: Launchpad & Settings');
+
+    testCases.push(
+        {
+            category: 'Launchpad', name: 'showLaunchpad', value: {
+                command: 'workbench.antigravity.showLaunchpad',
+                context: 'chat'
+            }
+        },
+        {
+            category: 'Launchpad', name: 'openAntigravitySettings', value: {
+                command: 'workbench.action.openAntigravitySettings',
+                section: 'chat'
+            }
+        },
+        {
+            category: 'Launchpad', name: 'toggleManagerDevTools', value: {
+                command: 'antigravity.toggleManagerDevTools',
+                inspectChat: true
+            }
+        },
+        {
+            category: 'Launchpad', name: 'enableTracing', value: {
+                command: 'antigravity.enableTracing',
+                component: 'chat',
+                level: 'verbose'
+            }
+        },
+    );
+
+    // ============================================
+    // CATEGORY 41: Workbench Chat Actions 🔥🔥🔥
+    // ============================================
+    log('Category 41: Workbench Chat Actions (ULTRA PRIORITY)');
+
+    testCases.push(
+        {
+            category: 'Workbench Chat', name: 'chat.submit', value: {
+                command: 'workbench.action.chat.submit',
+                text: 'test',
+                context: 'panel'
+            }
+        },
+        {
+            category: 'Workbench Chat', name: 'chat.attachContext', value: {
+                command: 'workbench.action.chat.attachContext',
+                editor: activeEditor,
+                inChatInput: true
+            }
+        },
+        {
+            category: 'Workbench Chat', name: 'chat.runInTerminal', value: {
+                command: 'workbench.action.chat.runInTerminal',
+                code: 'test',
+                inChat: true
+            }
+        },
+        {
+            category: 'Workbench Chat', name: 'chat.submitWithCodebase', value: {
+                command: 'workbench.action.chat.submitWithCodebase',
+                prompt: 'test',
+                includeWorkspace: true
+            }
+        },
+        {
+            category: 'Workbench Chat', name: 'chat.openModePicker', value: {
+                command: 'workbench.action.chat.openModePicker',
+                inChatInput: true,
+                chatLocation: 'panel'
+            }
+        },
+    );
+
+    // ============================================
+    // CATEGORY 42: Chat Editing Actions 🔥🔥🔥
+    // ============================================
+    log('Category 42: Chat Editing Actions (ULTRA PRIORITY)');
+
+    testCases.push(
+        {
+            category: 'Chat Editing', name: 'chatEditing.acceptAllFiles', value: {
+                command: 'chatEditing.acceptAllFiles',
+                hasUndecidedChatEditingResource: true,
+                inChatInput: true
+            }
+        },
+        {
+            category: 'Chat Editing', name: 'chatEditing.discardAllFiles', value: {
+                command: 'chatEditing.discardAllFiles',
+                inChatInput: true
+            }
+        },
+        {
+            category: 'Chat Editing', name: 'chatEditor.action.navigateNext', value: {
+                command: 'chatEditor.action.navigateNext',
+                chatEdits: { hasEditorModifications: true }
+            }
+        },
+        {
+            category: 'Chat Editing', name: 'chatEditor.action.toggleDiff', value: {
+                command: 'chatEditor.action.toggleDiff',
+                chatEdits: { hasEditorModifications: true }
+            }
+        },
+        {
+            category: 'Chat Editing', name: 'edit.chat.cancel', value: {
+                command: 'workbench.edit.chat.cancel',
+                chatSessionCurrentlyEditing: true,
+                inChatInput: true
+            }
+        },
+    );
+
+    // ============================================
+    // CATEGORY 43: Chat Context Conditions 🔥🔥
+    // ============================================
+    log('Category 43: Chat Context Conditions');
+
+    testCases.push(
+        {
+            category: 'Chat Context', name: 'inChatInput context', value: {
+                inChatInput: true,
+                chatInputHasText: true,
+                sessionRequestInProgress: false
+            }
+        },
+        {
+            category: 'Chat Context', name: 'chatLocation panel', value: {
+                chatLocation: 'panel',
+                chatEnabled: true,
+                inChat: true
+            }
+        },
+        {
+            category: 'Chat Context', name: 'chatCursorAtTop', value: {
+                chatCursorAtTop: true,
+                inChatInput: true
+            }
+        },
+        {
+            category: 'Chat Context', name: 'chatSessionCurrentlyEditing', value: {
+                chatSessionCurrentlyEditing: true,
+                chatSessionCurrentlyEditingInput: true
+            }
+        },
+        {
+            category: 'Chat Context', name: 'chatAttachmentResource', value: {
+                chatAttachmentResource: true,
+                chatEnabled: true
+            }
+        },
+    );
+
+    // ============================================
+    // CATEGORY 44: Chat Focus Actions 🔥
+    // ============================================
+    log('Category 44: Chat Focus & Navigation');
+
+    testCases.push(
+        {
+            category: 'Chat Focus', name: 'chat.action.focus', value: {
+                command: 'chat.action.focus',
+                chatCursorAtTop: true,
+                inChatInput: true
+            }
+        },
+        {
+            category: 'Chat Focus', name: 'focusLastFocused', value: {
+                command: 'workbench.chat.action.focusLastFocused',
+                chatCursorAtTop: true
+            }
+        },
+        {
+            category: 'Chat Focus', name: 'chat with quickChatHasFocus', value: {
+                inChatInput: true,
+                quickChatHasFocus: true
+            }
+        },
+    );
+
+    // ============================================
+    // CATEGORY 45: InlineChat Actions 🔥🔥
+    // ============================================
+    log('Category 45: InlineChat Actions');
+
+    testCases.push(
+        {
+            category: 'InlineChat', name: 'inlineChat.focus', value: {
+                command: 'inlineChat.focus',
+                inlineChatVisible: true,
+                editorTextFocus: true
+            }
+        },
+        {
+            category: 'InlineChat', name: 'inlineChat.close', value: {
+                command: 'inlineChat.close',
+                inlineChatVisible: true,
+                inlineChatHasProvider: true
+            }
+        },
+        {
+            category: 'InlineChat', name: 'inlineChat.arrowOutDown', value: {
+                command: 'inlineChat.arrowOutDown',
+                inlineChatFocused: true,
+                inlineChatInnerCursorLast: true
+            }
+        },
+        {
+            category: 'InlineChat', name: 'inlineChat.discard HunkChange', value: {
+                command: 'inlineChat.discardHunkChange',
+                inlineChatResponseType: 'messagesAndEdits'
+            }
+        },
+    );
+
+    // ============================================
+    // CATEGORY 46: Chat Models & Search 🔥
+    // ============================================
+    log('Category 46: Chat Models & Search');
+
+    testCases.push(
+        {
+            category: 'Chat Models', name: 'chat.models.action.clearSearchResults', value: {
+                command: 'chat.models.action.clearSearchResults',
+                inModelsEditor: true,
+                inModelsSearch: true
+            }
+        },
+        {
+            category: 'Chat Models', name: 'chat agent context', value: {
+                chatAgentKind: 'ask',
+                chatInputHasText: true,
+                chatPromptFileAttached: true
+            }
+        },
+    );
+
+    // ============================================
+    // CATEGORY 47: Chat Session & History 🔥🔥
+    // ============================================
+    log('Category 47: Chat Session & History');
+
+    testCases.push(
+        {
+            category: 'Session History', name: 'session with history', value: {
+                sessionId: 'current',
+                history: [],
+                currentRequest: null,
+                requestInProgress: false
+            }
+        },
+        {
+            category: 'Session History', name: 'session request object', value: {
+                type: 'chatRequest',
+                sessionId: 'active',
+                prompt: 'test',
+                timestamp: Date.now()
+            }
+        },
+        {
+            category: 'Session History', name: 'session state object', value: {
+                session: {
+                    id: 'test',
+                    state: 'active',
+                    currentlyEditing: false,
+                    hasHistory: true
+                }
+            }
+        },
+    );
+
+    // ============================================
+    // CATEGORY 48: Chat Input & Submission 🔥🔥🔥
+    // ============================================
+    log('Category 48: Chat Input & Submission (ULTRA PRIORITY)');
+
+    testCases.push(
+        {
+            category: 'Chat Input', name: 'input with text', value: {
+                chatInputHasText: true,
+                inChatInput: true,
+                text: 'test message'
+            }
+        },
+        {
+            category: 'Chat Input', name: 'submission context', value: {
+                command: 'workbench.action.chat.submit',
+                chatInputHasText: true,
+                inChatInput: true,
+                chatSessionRequestInProgress: false,
+                withinEditSessionDiff: false
+            }
+        },
+        {
+            category: 'Chat Input', name: 'delegateToEditSession', value: {
+                command: 'workbench.action.chat.delegateToEditSession',
+                inChatInput: true,
+                withinEditSessionDiff: true
+            }
+        },
+        {
+            category: 'Chat Input', name: 'submitWithoutDispatching', value: {
+                command: 'workbench.action.chat.submitWithoutDispatching',
+                chatInputHasText: true,
+                chatAgentKind: 'ask'
+            }
+        },
+    );
+
+    // ============================================
+    // CATEGORY 49: Combined Workbench+Interactive 🔥🔥🔥
+    // ============================================
+    log('Category 49: Combined Workbench+Interactive (ULTRA PRIORITY)');
+
+    testCases.push(
+        {
+            category: 'Combined', name: 'workbench.chat + vscode.chat', value: {
+                workbench: {
+                    command: 'workbench.action.chat.submit',
+                    location: 'panel'
+                },
+                vscode: {
+                    chat: vscode.chat,
+                    interactive: vscode.interactive
+                },
+                context: activeEditor
+            }
+        },
+        {
+            category: 'Combined', name: 'chatEditing + cascade', value: {
+                chatEditing: {
+                    hasResource: true,
+                    acceptAll: true
+                },
+                cascade: vscode.Cascade,
+                interactive: vscode.interactive
+            }
+        },
+        {
+            category: 'Combined', name: 'full chat environment', value: {
+                workbench: {
+                    chatEnabled: true,
+                    chatLocation: 'panel',
+                    inChatInput: true
+                },
+                vscode: {
+                    chat: vscode.chat,
+                    lm: vscode.lm,
+                    interactive: vscode.interactive,
+                    cascade: vscode.Cascade
+                },
+                editor: {
+                    active: activeEditor,
+                    document: activeDoc,
+                    selection: activeEditor?.selection
+                },
+                session: {
+                    id: 'combined-' + Date.now(),
+                    active: true,
+                    editing: false
+                }
+            }
+        },
+    );
+
+    // ============================================
+    // CATEGORY 50: Ultimate Mega-Combinations 🔥🔥🔥
+    // ============================================
+    log('Category 50: Ultimate Mega-Combinations (FINAL BOSS)');
+
+    testCases.push(
+        {
+            category: 'Ultimate', name: 'THE EVERYTHING OBJECT', value: {
+                antigravityCommands: {
+                    chatOpen: 'antigravity.prioritized.chat.open',
+                    exportChat: 'antigravity.exportChatNow',
+                    conversationPicker: 'antigravity.openConversationPicker',
+                    sendTerminalToChat: 'antigravity.sendTerminalToChat'
+                },
+                workbenchChatActions: {
+                    submit: 'workbench.action.chat.submit',
+                    attachContext: 'workbench.action.chat.attachContext',
+                    runInTerminal: 'workbench.action.chat.runInTerminal',
+                    submitWithCodebase: 'workbench.action.chat.submitWithCodebase'
+                },
+                vscodeAPIs: {
+                    chat: vscode.chat,
+                    lm: vscode.lm,
+                    interactive: vscode.interactive,
+                    cascade: vscode.Cascade,
+                    window: vscode.window,
+                    workspace: vscode.workspace
+                },
+                contextConditions: {
+                    chatEnabled: true,
+                    inChatInput: true,
+                    chatInputHasText: true,
+                    chatLocation: 'panel',
+                    chatCursorAtTop: true,
+                    inChat: true
+                },
+                editorContext: {
+                    activeEditor: activeEditor,
+                    activeDoc: activeDoc,
+                    uri: activeUri,
+                    selection: activeEditor?.selection,
+                    language: activeDoc?.languageId
+                },
+                chatSession: {
+                    id: 'ultimate-' + Date.now(),
+                    type: 'chat',
+                    state: 'active',
+                    panel: 'cascade',
+                    location: 'panel',
+                    messages: [],
+                    history: [],
+                    participants: ['user', 'assistant'],
+                    currentlyEditing: false,
+                    hasUndecidedResources: false,
+                    requestInProgress: false
+                },
+                stateSync: {
+                    topic: 'chat',
+                    sync: vscode.antigravityUnifiedStateSync
+                },
+                metadata: {
+                    timestamp: Date.now(),
+                    version: vscode.version,
+                    appName: vscode.env.appName,
+                    sessionId: vscode.env.sessionId,
+                    machineId: vscode.env.machineId
+                },
+                transferRequest: {
+                    action: 'transferActiveChat',
+                    source: 'extension',
+                    target: 'cascade',
+                    includeHistory: true,
+                    includeContext: true,
+                    includeEdits: true,
+                    includeAttachments: true
+                }
+            }
+        },
+        {
+            category: 'Ultimate', name: 'Complete pipeline object', value: {
+                pipeline: [
+                    { command: 'antigravity.prioritized.chat.open', context: activeEditor },
+                    { command: 'workbench.action.chat.submit', text: 'test' },
+                    { command: 'antigravity.exportChatNow', format: 'json' }
+                ],
+                cascade: vscode.Cascade,
+                interactive: vscode.interactive,
+                executeSequentially: true
+            }
+        },
+        {
+            category: 'Ultimate', name: 'Reverse engineered structure', value: {
+                __typename: 'ChatTransferRequest',
+                _internal: {
+                    vscode: {
+                        chat: vscode.chat,
+                        interactive: vscode.interactive
+                    },
+                    cascade: vscode.Cascade
+                },
+                editor: activeEditor,
+                session: {
+                    id: 'reverse-' + Date.now(),
+                    active: true,
+                    panel: vscode.Cascade
+                },
+                transfer: {
+                    from: 'cascade',
+                    to: 'extension',
+                    type: 'full'
+                }
+            }
+        },
+        {
+            category: 'Ultimate', name: 'Protocol simulation', value: {
+                protocol: {
+                    version: '2.0',
+                    method: 'chat.transfer'
+                },
+                params: {
+                    sessionId: 'active',
+                    includeHistory: true,
+                    chatLocation: 'panel',
+                    vscodeAPIs: {
+                        chat: vscode.chat,
+                        interactive: vscode.interactive,
+                        cascade: vscode.Cascade
+                    }
+                },
+                context: {
+                    editor: activeEditor,
+                    workspace: vscode.workspace,
+                    commands: {
+                        submit: 'workbench.action.chat.submit',
+                        export: 'antigravity.exportChatNow'
+                    }
+                }
+            }
+        },
+        {
+            category: 'Ultimate', name: 'Type hint object', value: {
+                _hint: 'ChatSession',
+                _type: 'Interactive',
+                _expectedBy: 'transferActiveChat',
+                cascade: vscode.Cascade,
+                interactive: vscode.interactive,
+                chat: vscode.chat,
+                session: { id: 'hint-' + Date.now(), active: true }
+            }
+        },
+    );
+
 
     // ============================================
     // EXECUTE ALL TESTS
