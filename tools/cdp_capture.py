@@ -50,10 +50,14 @@ class AntigravityCDPCapture:
             
             # Usar primer tab
             self.tab = tabs[0]
-            self.log(f"✅ Conectado a tab: {self.tab.get('title', 'Unknown')}")
+            tab_title = self.tab.get('title') if hasattr(self.tab, 'get') else 'Unknown'
+            self.log(f"✅ Conectado a tab: {tab_title}")
             
-            # Iniciar tab
-            self.tab.start()
+            # Iniciar tab (llamar como función)
+            if callable(self.tab.start):
+                self.tab.start()
+            else:
+                self.browser.new_tab()
             
             # Habilitar Network domain
             self.tab.Network.enable()
