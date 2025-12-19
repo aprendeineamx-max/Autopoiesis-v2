@@ -1,71 +1,43 @@
 @echo off
 echo ================================================
-echo   WebSocket Monitor - Instalador Automatico
+echo   WebSocket Monitor - Instalacion CORRECTA
+echo   (En carpeta de Antigravity, no VS Code)
 echo ================================================
 echo.
 
-REM Verificar que la carpeta de origen existe
-if not exist "C:\AntiGravityExt\AntiGravity_Ghost_Agent\extensions\WebSocket_Monitor" (
-    echo ERROR: No se encontro la carpeta WebSocket_Monitor
-    pause
-    exit /b 1
-)
+set "SOURCE=C:\AntiGravityExt\AntiGravity_Ghost_Agent\extensions\WebSocket_Monitor"
+set "TARGET=C:\AntiGravityExt\AntiGravity_Ghost_Agent\extensions"
 
-echo [1/4] Verificando archivos...
-if not exist "C:\AntiGravityExt\AntiGravity_Ghost_Agent\extensions\WebSocket_Monitor\package.json" (
-    echo ERROR: package.json no encontrado
-    pause
-    exit /b 1
-)
-if not exist "C:\AntiGravityExt\AntiGravity_Ghost_Agent\extensions\WebSocket_Monitor\extension.js" (
-    echo ERROR: extension.js no encontrado
+echo [1/2] Verificando archivos fuente...
+if not exist "%SOURCE%\package.json" (
+    echo ERROR: No se encontro package.json
     pause
     exit /b 1
 )
 echo OK - Archivos encontrados
 echo.
 
-echo [2/4] Buscando carpeta de extensiones de Antigravity...
-set "EXTENSIONS_DIR=%USERPROFILE%\.vscode\extensions"
-if not exist "%EXTENSIONS_DIR%" (
-    set "EXTENSIONS_DIR=%APPDATA%\Code\User\extensions"
-)
-if not exist "%EXTENSIONS_DIR%" (
-    echo ERROR: No se encontro la carpeta de extensiones
-    echo Intentando crear en: %USERPROFILE%\.antigravity\extensions
-    set "EXTENSIONS_DIR=%USERPROFILE%\.antigravity\extensions"
-    mkdir "%EXTENSIONS_DIR%" 2>nul
-)
-echo Carpeta de extensiones: %EXTENSIONS_DIR%
+echo [2/2] La extension ya esta en la ubicacion correcta:
+echo %TARGET%\WebSocket_Monitor\
 echo.
-
-echo [3/4] Copiando extension...
-set "TARGET_DIR=%EXTENSIONS_DIR%\antigravity-research.websocket-monitor-1.0.0"
-if exist "%TARGET_DIR%" (
-    echo Eliminando version anterior...
-    rmdir /s /q "%TARGET_DIR%"
-)
-
-xcopy "C:\AntiGravityExt\AntiGravity_Ghost_Agent\extensions\WebSocket_Monitor\*.*" "%TARGET_DIR%\" /E /I /Y
-if errorlevel 1 (
-    echo ERROR: Fallo al copiar archivos
-    pause
-    exit /b 1
-)
-echo OK - Extension copiada
-echo.
-
-echo [4/4] Extension instalada en:
-echo %TARGET_DIR%
+echo No es necesario copiar nada.
 echo.
 echo ================================================
-echo   INSTALACION COMPLETADA
+echo   EXTENSION YA ESTA INSTALADA
 echo ================================================
 echo.
-echo SIGUIENTE PASO:
-echo   1. Cierra Antigravity COMPLETAMENTE
-echo   2. Abre Antigravity de nuevo
-echo   3. Ctrl+Shift+P -^> "Output: Show Output Channels"
-echo   4. Deberas ver "WebSocket Monitor" en la lista
+echo La extension WebSocket_Monitor ya esta en:
+echo   C:\AntiGravityExt\AntiGravity_Ghost_Agent\extensions\WebSocket_Monitor\
+echo.
+echo PARA ACTIVARLA:
+echo   Opcion 1 - Modo F5 (Desarrollo):
+echo     1. File -^> Open Folder -^> Selecciona WebSocket_Monitor
+echo     2. Presiona F5
+echo     3. En Extension Development Host, usa el chat
+echo     4. Ve logs en Debug Console (ventana original)
+echo.
+echo   Opcion 2 - Carga automatica:
+echo     La extension se cargara automaticamente si esta
+echo     en la carpeta extensions/ y reinicias Antigravity
 echo.
 pause
