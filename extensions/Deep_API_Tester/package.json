@@ -47,6 +47,22 @@
             {
                 "command": "deepApiTester.runAllDeepTests",
                 "title": "Tester: Run ALL Deep Tests (1B + 1C)"
+            },
+            {
+                "command": "deepApiTester.startMonitoring",
+                "title": "Tester: Start Event Monitoring"
+            },
+            {
+                "command": "deepApiTester.stopMonitoring",
+                "title": "Tester: Stop Event Monitoring"
+            },
+            {
+                "command": "deepApiTester.showEventLog",
+                "title": "Tester: Show Event Log"
+            },
+            {
+                "command": "deepApiTester.exportFindings",
+                "title": "Tester: Export Findings"
             }
         ]
     }
