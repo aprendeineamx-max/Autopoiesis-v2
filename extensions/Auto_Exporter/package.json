@@ -1,0 +1,44 @@
+{
+    "name": "antigravity-auto-exporter",
+    "displayName": "Antigravity Auto Exporter",
+    "description": "Exporta automáticamente conversaciones de Antigravity",
+    "version": "1.0.0",
+    "publisher": "antigravity-research",
+    "engines": {
+        "vscode": "^1.80.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "*"
+    ],
+    "main": "./extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "antigravity-auto-exporter.triggerExport",
+                "title": "Trigger Automatic Export"
+            },
+            {
+                "command": "antigravity-auto-exporter.toggleAutoExport",
+                "title": "Toggle Auto Export"
+            }
+        ],
+        "configuration": {
+            "title": "Auto Exporter",
+            "properties": {
+                "autoExporter.enabled": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable automatic export after messages"
+                },
+                "autoExporter.debounceTime": {
+                    "type": "number",
+                    "default": 2000,
+                    "description": "Wait time (ms) after last message before exporting"
+                }
+            }
+        }
+    }
+}
