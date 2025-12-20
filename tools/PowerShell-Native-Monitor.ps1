@@ -19,7 +19,8 @@ function Log {
 function Get-ClipboardContent {
     try {
         return Get-Clipboard -ErrorAction SilentlyContinue
-    } catch {
+    }
+    catch {
         return $null
     }
 }
@@ -56,7 +57,7 @@ function Find-AntigravityWindow {
                 if ($title -match "Antigravity") {
                     $script:windows += @{
                         Handle = $hwnd
-                        Title = $title
+                        Title  = $title
                     }
                 }
             }
@@ -64,7 +65,8 @@ function Find-AntigravityWindow {
         }
         
         [WindowHelper]::EnumWindows($callback, [IntPtr]::Zero)
-    } catch {
+    }
+    catch {
         Log "Error enumerando ventanas: $_"
     }
     
@@ -93,8 +95,8 @@ function Parse-ChatMessages {
                 $messages += $currentMsg
             }
             $currentMsg = @{
-                role = "user"
-                text = $line
+                role      = "user"
+                text      = $line
                 timestamp = (Get-Date).ToString("o")
             }
         }
@@ -103,8 +105,8 @@ function Parse-ChatMessages {
                 $messages += $currentMsg
             }
             $currentMsg = @{
-                role = "assistant"
-                text = $line
+                role      = "assistant"
+                text      = $line
                 timestamp = (Get-Date).ToString("o")
             }
         }
@@ -112,7 +114,8 @@ function Parse-ChatMessages {
             # Continuar mensaje actual
             if ($currentMsg.text) {
                 $currentMsg.text += "`n$line"
-            } elseif ($line.Length -gt 10) {
+            }
+            elseif ($line.Length -gt 10) {
                 $currentMsg.text = $line
                 $currentMsg.timestamp = (Get-Date).ToString("o")
             }
@@ -130,10 +133,10 @@ function Save-Data {
     param([array]$Messages)
     
     $data = @{
-        timestamp = (Get-Date).ToString("o")
+        timestamp      = (Get-Date).ToString("o")
         total_messages = $Messages.Count
-        source = "PowerShell Native Monitor"
-        messages = $Messages | Select-Object -Last 100
+        source         = "PowerShell Native Monitor"
+        messages       = $Messages | Select-Object -Last 100
     }
     
     $data | ConvertTo-Json -Depth 10 | Set-Content -Path $OutputFile -Encoding UTF8
@@ -168,7 +171,10 @@ try {
         $clipContent = Get-ClipboardContent
         
         if ($clipContent) {
-            $currentHash = ($clipContent | Get-FileHash -Algorithm MD5 -InputStream ([System.IO.MemoryStream]::new([System.Text.Encoding]::UTF8.GetBytes($clipContent)))).Hash
+            # Calcular hash simple
+            $bytes = [System.Text.Encoding]::UTF8.GetBytes($clipContent)
+            $md5 = New-Object System.Security.Cryptography.MD5CryptoServiceProvider
+            $currentHash = [System.BitConverter]::ToString($md5.ComputeHash($bytes)) -replace '-', ''
             
             if ($currentHash -ne $lastClipboardHash) {
                 Log "  ✨ Nuevo contenido en clipboard"
@@ -181,13 +187,16 @@ try {
                     $allMessages += $newMessages
                     Save-Data -Messages $allMessages
                     $lastClipboardHash = $currentHash
-                } else {
+                }
+                else {
                     Log "  ℹ️ Clipboard sin mensajes detectables"
                 }
-            } else {
+            }
+            else {
                 Log "  ℹ️ Clipboard sin cambios"
             }
-        } else {
+        }
+        else {
             Log "  ⚠️ Clipboard vacío"
         }
         
