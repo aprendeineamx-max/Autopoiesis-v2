@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../../../Users/Administrator/.antigravity"
+		},
+		{
+			"path": "../../../websocket_captures"
+		},
+		{
+			"path": "../../../chat_captures"
+		}
+	],
+	"settings": {}
+}
