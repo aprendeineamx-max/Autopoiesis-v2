@@ -153,10 +153,15 @@ $btnAllow.Add_Click({
     })
 
 $btnUninstall.Add_Click({
-        if ([System.Windows.Forms.MessageBox]::Show("¿Eliminar extension?", "Confirmar", "YesNo") -eq "Yes") {
-            Remove-Item "$ExtPath" -Recurse -Force -ErrorAction SilentlyContinue
-            [System.Windows.Forms.MessageBox]::Show("Extension eliminada.")
-            Update-Status
+        if ([System.Windows.Forms.MessageBox]::Show("¿Desactivar extension de forma segura?", "Confirmar", "YesNo") -eq "Yes") {
+            if (Test-Path "$ScriptDir\UNINSTALL.bat") {
+                Start-Process -FilePath "$ScriptDir\UNINSTALL.bat" -Wait
+                [System.Windows.Forms.MessageBox]::Show("Extension desactivada. Reinicia el IDE.")
+                Update-Status
+            }
+            else {
+                [System.Windows.Forms.MessageBox]::Show("Error: No se encuentra UNINSTALL.bat")
+            }
         }
     })
 

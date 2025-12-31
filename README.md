@@ -14,3 +14,9 @@ Esta version RESTAURADA incluye todas las caracteristicas de producción:
 
 ## Allowlist
 El `INSTALL.bat` genera automáticamente una lista que permite TODO el tráfico para evitar bloqueos del navegador.
+
+## Desinstalación Segura
+El nuevo sistema de desinstalación **NO BORRA NADA**.
+- Mueve la extensión activa a una carpeta de respaldo en:
+  `C:\AntiGravityExt\_DISABLED_EXTENSIONS\`
+- Esto permite recuperar tu configuración si cambias de opinión.
