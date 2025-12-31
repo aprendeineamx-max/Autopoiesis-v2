@@ -1,0 +1,11 @@
+SOLUCION DE PROBLEMAS
+
+Si la extension no carga:
+1. Ejecuta DIAGNOSTIC.bat
+2. Ejecuta FIX_FOLDERS.bat
+3. Reinicia el IDE
+
+Si el navegador bloquea sitios:
+1. Abre GHOST_CONTROL_PANEL.ps1
+2. Clic en "APLICAR ALLOWLIST"
+3. Reinicia el IDE

@@ -1,0 +1,22 @@
+{
+    "name": "antigravity-internal-hook",
+    "displayName": "AntiGravity Internal Hook",
+    "description": "Restored Ghost Agent Hook v7.1",
+    "version": "7.1.0",
+    "publisher": "antigravity-research",
+    "engines": {
+        "vscode": "^1.60.0"
+    },
+    "activationEvents": [
+        "*"
+    ],
+    "main": "./extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "ghostAgent.toggle",
+                "title": "Ghost Agent: Toggle Pause/Resume"
+            }
+        ]
+    }
+}
