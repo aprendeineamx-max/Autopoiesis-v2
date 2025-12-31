@@ -1,0 +1,22 @@
+{
+    "system": {
+        "statusFile": "GHOST_STATUS.txt",
+        "commandFile": "GHOST_CMD.txt",
+        "aliveFile": "HOOK_ALIVE.txt"
+    },
+    "timeouts": {
+        "allow": 500,
+        "accept": 1000,
+        "acceptAll": 2000,
+        "typingPause": 1000
+    },
+    "ui": {
+        "statusBar": {
+            "activeColor": "#af00db",
+            "pausedColor": "#ff0000",
+            "textColor": "#ffffff",
+            "textActive": "[GHOST] Auto-Accept: ACTIVE",
+            "textPaused": "[GHOST] PAUSED"
+        }
+    }
+}

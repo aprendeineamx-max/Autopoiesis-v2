@@ -4,7 +4,7 @@ color 0A
 
 echo.
 echo ===================================================
-echo   GHOST AGENT v7.0 - PRODUCTION INSTALLER
+echo   GHOST AGENT v7.1 - MODULAR INSTALLER
 echo ===================================================
 echo.
 
@@ -18,13 +18,16 @@ if not exist "C:\AntiGravityExt" (
 
 :: 2. Instalar Extension
 echo.
-echo [1/3] Instalando Extension...
+echo [1/3] Instalando Extension Modular...
 set "EXT_DIR=%USERPROFILE%\AppData\Local\Programs\AntiGravity\resources\app\extensions\antigravity-internal-hook"
 
 if not exist "%EXT_DIR%" mkdir "%EXT_DIR%" 2>NUL
+if not exist "%EXT_DIR%\src" mkdir "%EXT_DIR%\src" 2>NUL
 
 copy /Y "extension\extension.js" "%EXT_DIR%\" >NUL
 copy /Y "extension\package.json" "%EXT_DIR%\" >NUL
+copy /Y "extension\ghost_config.json" "C:\AntiGravityExt\" >NUL
+xcopy "extension\src" "%EXT_DIR%\src" /E /I /Y >NUL
 
 if exist "%EXT_DIR%\extension.js" (
     echo    [OK] Extension copiada exitosamente.
@@ -72,26 +75,18 @@ if exist "%ALLOW_FILE%" (
     echo    [X] ERROR generando allowlist.
 )
 
-:: 4. Copiar Herramientas a C:\AntiGravityExt (si ejecutamos desde otro lado)
+:: 4. Finalizar
 echo.
 echo [3/3] Finalizando configuracion...
-if /I not "%CD%"=="C:\AntiGravityExt" (
-    copy /Y "GHOST_CONTROL_PANEL.ps1" "C:\AntiGravityExt\" >NUL
-    copy /Y "START_GUI.bat" "C:\AntiGravityExt\" >NUL
-    copy /Y "FIX_FOLDERS.bat" "C:\AntiGravityExt\" >NUL
-    copy /Y "DIAGNOSTIC.bat" "C:\AntiGravityExt\" >NUL
-    copy /Y "README.md" "C:\AntiGravityExt\" >NUL
-    copy /Y "TROUBLESHOOTING.txt" "C:\AntiGravityExt\" >NUL
-)
+echo    [i] Configuracion JSON instalada en raiz.
 
 echo.
 echo ===================================================
-echo   INSTALACION COMPLETADA
+echo   INSTALACION MODULAR COMPLETADA
 echo ===================================================
 echo.
 echo [!] PASOS SIGUIENTES:
 echo   1. Reinicia Antigravity IDE.
-echo   2. Verifica que la barra inferior sea MORADA.
-echo   3. Ejecuta START_GUI.bat para controlar el agente.
+echo   2. Verifica que el archivo C:\AntiGravityExt\ghost_config.json existe.
 echo.
 pause
