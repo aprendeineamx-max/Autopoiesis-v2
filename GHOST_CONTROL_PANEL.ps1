@@ -56,58 +56,76 @@ $lblTitle.AutoSize = $true
 $form.Controls.Add($lblTitle)
 
 # Status Section
-$grpStatus = New-Object System.Windows.Forms.GroupBox
-$grpStatus.Text = "ESTADO DEL SISTEMA"
-$grpStatus.Location = New-Object System.Drawing.Point(20, 60)
-$grpStatus.Size = New-Object System.Drawing.Size(440, 100)
-$form.Controls.Add($grpStatus)
+# --- GUI TABS ---
+$tabControl = New-Object System.Windows.Forms.TabControl
+$tabControl.Location = New-Object System.Drawing.Point(20, 60)
+$tabControl.Size = New-Object System.Drawing.Size(440, 280)
+$form.Controls.Add($tabControl)
 
-$lblStatusExt = New-Object System.Windows.Forms.Label
-$lblStatusExt.Location = New-Object System.Drawing.Point(20, 30)
-$lblStatusExt.AutoSize = $true
-$lblStatusExt.Font = New-Object System.Drawing.Font("Consolas", 10)
-$grpStatus.Controls.Add($lblStatusExt)
+# TAB 1: GHOST AGENT (Controles Originales)
+$tabAgent = New-Object System.Windows.Forms.TabPage
+$tabAgent.Text = "Ghost Agent"
+$tabAgent.BackColor = [System.Drawing.Color]::WhiteSmoke
+$tabControl.Controls.Add($tabAgent)
 
-$lblStatusAllow = New-Object System.Windows.Forms.Label
-$lblStatusAllow.Location = New-Object System.Drawing.Point(20, 60)
-$lblStatusAllow.AutoSize = $true
-$lblStatusAllow.Font = New-Object System.Drawing.Font("Consolas", 10)
-$grpStatus.Controls.Add($lblStatusAllow)
+# Mover controles originales a Tab 1
+$grpStatus.Location = New-Object System.Drawing.Point(10, 10)
+$tabAgent.Controls.Add($grpStatus)
 
-# Actions Section
-$grpActions = New-Object System.Windows.Forms.GroupBox
-$grpActions.Text = "ACCIONES"
-$grpActions.Location = New-Object System.Drawing.Point(20, 180)
-$grpActions.Size = New-Object System.Drawing.Size(440, 150)
-$form.Controls.Add($grpActions)
+$grpActions.Location = New-Object System.Drawing.Point(10, 130)
+$tabAgent.Controls.Add($grpActions)
 
-$btnInstall = New-Object System.Windows.Forms.Button
-$btnInstall.Text = "REINSTALAR TODO"
-$btnInstall.Location = New-Object System.Drawing.Point(20, 30)
-$btnInstall.Size = New-Object System.Drawing.Size(190, 40)
-$btnInstall.BackColor = [System.Drawing.Color]::LightGreen
-$grpActions.Controls.Add($btnInstall)
+# TAB 2: TOOLS ARSENAL (Nueva Integración)
+$tabTools = New-Object System.Windows.Forms.TabPage
+$tabTools.Text = "Tools Arsenal"
+$tabTools.BackColor = [System.Drawing.Color]::WhiteSmoke
+$tabControl.Controls.Add($tabTools)
 
-$btnToggle = New-Object System.Windows.Forms.Button
-$btnToggle.Text = "PAUSAR / REANUDAR"
-$btnToggle.Location = New-Object System.Drawing.Point(230, 30)
-$btnToggle.Size = New-Object System.Drawing.Size(190, 40)
-$btnToggle.BackColor = [System.Drawing.Color]::LightYellow
-$grpActions.Controls.Add($btnToggle)
+$lblToolsInfo = New-Object System.Windows.Forms.Label
+$lblToolsInfo.Text = "Herramientas detectadas en /tools:"
+$lblToolsInfo.Location = New-Object System.Drawing.Point(10, 10)
+$lblToolsInfo.AutoSize = $true
+$tabTools.Controls.Add($lblToolsInfo)
 
-$btnAllow = New-Object System.Windows.Forms.Button
-$btnAllow.Text = "APLICAR ALLOWLIST"
-$btnAllow.Location = New-Object System.Drawing.Point(20, 90)
-$btnAllow.Size = New-Object System.Drawing.Size(190, 40)
-$btnAllow.BackColor = [System.Drawing.Color]::LightBlue
-$grpActions.Controls.Add($btnAllow)
+$lstTools = New-Object System.Windows.Forms.ListBox
+$lstTools.Location = New-Object System.Drawing.Point(10, 30)
+$lstTools.Size = New-Object System.Drawing.Size(410, 180)
+$tabTools.Controls.Add($lstTools)
 
-$btnUninstall = New-Object System.Windows.Forms.Button
-$btnUninstall.Text = "DESINSTALAR"
-$btnUninstall.Location = New-Object System.Drawing.Point(230, 90)
-$btnUninstall.Size = New-Object System.Drawing.Size(190, 40)
-$btnUninstall.BackColor = [System.Drawing.Color]::Salmon
-$grpActions.Controls.Add($btnUninstall)
+$btnRunTool = New-Object System.Windows.Forms.Button
+$btnRunTool.Text = "EJECUTAR HERRAMIENTA"
+$btnRunTool.Location = New-Object System.Drawing.Point(10, 220)
+$btnRunTool.Size = New-Object System.Drawing.Size(410, 30)
+$btnRunTool.BackColor = [System.Drawing.Color]::LightBlue
+$tabTools.Controls.Add($btnRunTool)
+
+# --- TOOLS LOGIC ---
+$toolsPath = Join-Path $ScriptDir "tools"
+if (Test-Path $toolsPath) {
+    # Listar carpetas como "Categorías" o scripts .bat/.py principales
+    Get-ChildItem -Path $toolsPath -Directory | ForEach-Object {
+        $lstTools.Items.Add($_.Name)
+    }
+    # Tambien scripts sueltos útiles
+    Get-ChildItem -Path $toolsPath -Filter "*.bat" | ForEach-Object {
+        $lstTools.Items.Add($_.Name)
+    }
+}
+
+$btnRunTool.Add_Click({
+        $selected = $lstTools.SelectedItem
+        if ($selected) {
+            $targetPath = Join-Path $toolsPath $selected
+            if (Test-Path $targetPath -PathType Container) {
+                # Si es carpeta, abrirla
+                Invoke-Item $targetPath
+            }
+            else {
+                # Si es archivo, ejecutarlo
+                Start-Process $targetPath
+            }
+        }
+    })
 
 # Footer
 $lblFooter = New-Object System.Windows.Forms.Label
