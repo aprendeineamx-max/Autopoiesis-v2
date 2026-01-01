@@ -428,7 +428,7 @@ $statusGroup.Controls.Add($statusPythonLabel)
 $actionsGroup = New-Object System.Windows.Forms.GroupBox
 $actionsGroup.Text = "Acciones Rapidas"
 $actionsGroup.Location = New-Object System.Drawing.Point(410, 15)
-$actionsGroup.Size = New-Object System.Drawing.Size(390, 200)
+$actionsGroup.Size = New-Object System.Drawing.Size(390, 290) # Aumentado altura
 $actionsGroup.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
 $actionsGroup.ForeColor = $Colors.Dark
 $tabDashboard.Controls.Add($actionsGroup)
@@ -463,33 +463,68 @@ function New-StyledButton {
     return $btn
 }
 
-$btnPlay = New-StyledButton "ACTIVAR" 20 35 110 55 $Colors.Success "Habilita la extension Ghost Agent"
+$btnPlay = New-StyledButton "ACTIVAR" 20 30 110 45 $Colors.Success "Habilita la extension Ghost Agent"
 $actionsGroup.Controls.Add($btnPlay)
 
-$btnPause = New-StyledButton "PAUSAR" 140 35 110 55 $Colors.Warning "Pausa temporalmente la extension"
+$btnPause = New-StyledButton "PAUSAR" 140 30 110 45 $Colors.Warning "Pausa temporalmente la extension"
 $actionsGroup.Controls.Add($btnPause)
 
-$btnEdit = New-StyledButton "EDITAR" 260 35 110 55 $Colors.Primary "Abre extension.js en editor"
+$btnEdit = New-StyledButton "EDITAR" 260 30 110 45 $Colors.Primary "Abre extension.js en editor"
 $actionsGroup.Controls.Add($btnEdit)
 
-$btnRestart = New-StyledButton "REINICIAR IDE" 20 100 165 55 $Colors.Purple "Cierra y reabre Antigravity"
+$btnRestart = New-StyledButton "REINICIAR IDE" 20 85 165 45 $Colors.Purple "Cierra y reabre Antigravity"
 $actionsGroup.Controls.Add($btnRestart)
 
-$btnUpdate = New-StyledButton "ACTUALIZAR" 195 100 165 55 $Colors.Info "Actualiza la extension"
+$btnUpdate = New-StyledButton "ACTUALIZAR" 195 85 175 45 $Colors.Info "Actualiza la extension"
 $actionsGroup.Controls.Add($btnUpdate)
+
+# --- NUEVAS FUNCIONES REQUESTED ---
+
+$btnEmergency = New-StyledButton "PARADA EMERGENCIA" 20 140 350 45 $Colors.Danger "KILL SWITCH: Detiene el agente inmediatamente"
+$actionsGroup.Controls.Add($btnEmergency)
+
+# Tools Quick Launch
+$lblTools = New-Object System.Windows.Forms.Label
+$lblTools.Text = "Tools Arsenal:"
+$lblTools.Location = New-Object System.Drawing.Point(20, 200)
+$lblTools.AutoSize = $true
+$lblTools.Font = New-Object System.Drawing.Font("Segoe UI", 9)
+$actionsGroup.Controls.Add($lblTools)
+
+$cmbTools = New-Object System.Windows.Forms.ComboBox
+$cmbTools.Location = New-Object System.Drawing.Point(20, 220)
+$cmbTools.Size = New-Object System.Drawing.Size(240, 30)
+$cmbTools.Font = New-Object System.Drawing.Font("Segoe UI", 9)
+$cmbTools.DropDownStyle = "DropDownList"
+$actionsGroup.Controls.Add($cmbTools)
+
+# Popular Tools
+$toolsPath = Join-Path $ScriptDir "tools"
+if (Test-Path $toolsPath) {
+    Get-ChildItem -Path $toolsPath -Directory | ForEach-Object { $cmbTools.Items.Add($_.Name) }
+    Get-ChildItem -Path $toolsPath -Filter "*.bat" | ForEach-Object { $cmbTools.Items.Add($_.Name) }
+    if ($cmbTools.Items.Count -gt 0) { $cmbTools.SelectedIndex = 0 }
+}
+
+$btnRunTool = New-StyledButton "EJECUTAR" 270 215 100 35 $Colors.Dark "Ejecuta la herramienta seleccionada"
+$actionsGroup.Controls.Add($btnRunTool)
+
+$btnUninstallSafe = New-StyledButton "Desinstalar Seguro" 20 255 350 30 [System.Drawing.Color]::Gray "Mueve a _DISABLED sin borrar datos"
+$actionsGroup.Controls.Add($btnUninstallSafe)
+
 
 # Log Panel
 $logGroup = New-Object System.Windows.Forms.GroupBox
 $logGroup.Text = "Log de Actividad en Tiempo Real"
-$logGroup.Location = New-Object System.Drawing.Point(15, 225)
-$logGroup.Size = New-Object System.Drawing.Size(790, 250)
+$logGroup.Location = New-Object System.Drawing.Point(15, 315) # Bajado de 225 a 315
+$logGroup.Size = New-Object System.Drawing.Size(790, 160) # Ajustada altura
 $logGroup.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
 $logGroup.ForeColor = $Colors.Dark
 $tabDashboard.Controls.Add($logGroup)
 
 $logBox = New-Object System.Windows.Forms.TextBox
 $logBox.Location = New-Object System.Drawing.Point(15, 30)
-$logBox.Size = New-Object System.Drawing.Size(760, 205)
+$logBox.Size = New-Object System.Drawing.Size(760, 115) # Ajustada altura interna
 $logBox.Multiline = $true
 $logBox.ScrollBars = "Vertical"
 $logBox.ReadOnly = $true
@@ -804,6 +839,50 @@ $btnUpdate.Add_Click({
             Install-GhostAgent -Config $cfg
             Update-Status
             Show-Notification "Actualizacion Completada" "Extension actualizada. Reinicia IDE para aplicar." "Success"
+        }
+    })
+
+$btnEmergency.Add_Click({
+        if (Show-Confirmation "PARADA DE EMERGENCIA" "ESTO DETENDRA AL AGENTE INMEDIATAMENTE.\n\n¿Continuar?") {
+            Write-Log "EJECUTANDO PARADA DE EMERGENCIA..." "WARNING"
+            if (Test-Path "$ScriptDir\EMERGENCY_STOP.bat") {
+                Start-Process -FilePath "$ScriptDir\EMERGENCY_STOP.bat" -Wait
+                Write-Log "AGENTE NEUTRALIZADO." "SUCCESS"
+                Show-Notification "Emergency Stop" "Agente detenido correctamente." "Warning"
+                Update-Status
+            }
+            else {
+                Write-Log "Error: No se encuentra EMERGENCY_STOP.bat" "ERROR"
+            }
+        }
+    })
+
+$btnRunTool.Add_Click({
+        $selected = $cmbTools.SelectedItem
+        if ($selected) {
+            $targetPath = Join-Path $toolsPath $selected
+            Write-Log "Ejecutando herramienta: $selected" "INFO"
+        
+            if (Test-Path $targetPath -PathType Container) {
+                Invoke-Item $targetPath
+            }
+            else {
+                Start-Process $targetPath
+            }
+        }
+    })
+
+$btnUninstallSafe.Add_Click({
+        if (Show-Confirmation "Desinstalacion Segura" "¿Mover extension a cuarentena (_DISABLED)?\nNo se borraran tus archivos.") {
+            Write-Log "Iniciando desinstalacion segura..." "INFO"
+            if (Test-Path "$ScriptDir\UNINSTALL.bat") {
+                Start-Process -FilePath "$ScriptDir\UNINSTALL.bat" -Wait
+                Write-Log "Extension movida a _DISABLED" "SUCCESS"
+                Update-Status
+            }
+            else {
+                Write-Log "Error: No se encuentra UNINSTALL.bat" "ERROR"
+            }
         }
     })
 
