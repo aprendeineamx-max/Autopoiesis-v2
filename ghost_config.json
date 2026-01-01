@@ -5,7 +5,9 @@
         "aliveFile": "HOOK_ALIVE.txt"
     },
     "timeouts": {
-        "allow": 500,
+        "allow": 500000
+        
+        0,
         "accept": 1000,
         "acceptAll": 2000,
         "typingPause": 1000

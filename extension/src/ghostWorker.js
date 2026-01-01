@@ -55,11 +55,43 @@ class GhostWorker {
             vscode.commands.executeCommand('antigravity.accept');
         }, this.config.timeouts.accept);
 
-        // Auto-Accept All
+        // Auto-Accept All (ORIGINAL)
         setInterval(() => {
             if (this.isPaused || this.isTyping()) return;
             vscode.commands.executeCommand('antigravity.acceptAll');
         }, this.config.timeouts.acceptAll);
+
+        // 1. Notebook & Cell Execution Triggers
+        setInterval(() => {
+            if (this.isPaused || this.isTyping()) return;
+
+            // --- BATERIA DE ACEPTACION MASIVA (ANTIGRAVITY SPECIFIC) ---
+            // Intenta aceptar cualquier variante de "Interactive Editor" o "Inline Chat"
+            vscode.commands.executeCommand('interactiveEditor.accept');
+            vscode.commands.executeCommand('inlineChat.accept');
+            vscode.commands.executeCommand('editor.action.inlineSuggest.commit');
+
+            // Notebooks y Celdas
+            vscode.commands.executeCommand('notebook.cell.execute');
+            vscode.commands.executeCommand('notebook.cell.executeAndSelectBelow');
+
+            // Refactor y Quick Fixes
+            vscode.commands.executeCommand('refactor.perform');
+            vscode.commands.executeCommand('editor.action.quickFix');
+            vscode.commands.executeCommand('workbench.action.acceptSelectedQuickOpenItem');
+
+            // Notificaciones y Diálogos Modales
+            vscode.commands.executeCommand('notifications.acceptAction');
+            vscode.commands.executeCommand('workbench.action.keepAlive'); // Evita idle
+        }, 500); // Acelerado a 500ms para reacción instantánea
+
+        // 2. Terminal & Task Triggers
+        setInterval(() => {
+            if (this.isPaused || this.isTyping()) return;
+            // Intenta confirmar tareas de terminal pendientes
+            vscode.commands.executeCommand('workbench.action.terminal.sendSequence', { "text": "\r" }); // Enter en terminal
+            vscode.commands.executeCommand('workbench.action.tasks.runTask');
+        }, 2500);
 
         // External Command Watcher
         setInterval(() => {
