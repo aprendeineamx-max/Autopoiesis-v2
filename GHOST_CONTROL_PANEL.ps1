@@ -509,7 +509,8 @@ if (Test-Path $toolsPath) {
 $btnRunTool = New-StyledButton "EJECUTAR" 270 215 100 35 $Colors.Dark "Ejecuta la herramienta seleccionada"
 $actionsGroup.Controls.Add($btnRunTool)
 
-$btnUninstallSafe = New-StyledButton "Desinstalar Seguro" 20 255 350 30 [System.Drawing.Color]::Gray "Mueve a _DISABLED sin borrar datos"
+$grayColor = [System.Drawing.Color]::Gray
+$btnUninstallSafe = New-StyledButton "Desinstalar Seguro" 20 255 350 30 $grayColor "Mueve a _DISABLED sin borrar datos"
 $actionsGroup.Controls.Add($btnUninstallSafe)
 
 
@@ -555,6 +556,9 @@ $tabConfig.Controls.Add($configGroup)
 
 $config = Load-Config
 
+# Asegurar que config no tenga nulos
+if (-not $config) { $config = @{} }
+
 function New-StyledCheckbox {
     param(
         [string]$Text,
@@ -579,19 +583,20 @@ function New-StyledCheckbox {
     return $cb
 }
 
-$cbAutoAccept = New-StyledCheckbox "[OK] Auto-Accept Buttons (Allow, Accept, Accept All, Blue Buttons)" 40 $config.AutoAcceptButtons "Acepta automaticamente botones de permisos"
+# Casteo explicito [bool] para evitar errores de tipo
+$cbAutoAccept = New-StyledCheckbox "[OK] Auto-Accept Buttons (Allow, Accept, Accept All, Blue Buttons)" 40 ([bool]$config.AutoAcceptButtons) "Acepta automaticamente botones de permisos"
 $configGroup.Controls.Add($cbAutoAccept)
 
-$cbBrowserList = New-StyledCheckbox "[WEB] MEGA BrowserAllowlist (permite TODOS los sitios web)" 80 $config.BrowserAllowlist "Crea allowlist universal con wildcards"
+$cbBrowserList = New-StyledCheckbox "[WEB] MEGA BrowserAllowlist (permite TODOS los sitios web)" 80 ([bool]$config.BrowserAllowlist) "Crea allowlist universal con wildcards"
 $configGroup.Controls.Add($cbBrowserList)
 
-$cbPythonCore = New-StyledCheckbox "[PY] Python Core (automation avanzada con PyAutoGUI)" 120 $config.PythonCore "Instala ghost_agent.py para macros personalizados"
+$cbPythonCore = New-StyledCheckbox "[PY] Python Core (automation avanzada con PyAutoGUI)" 120 ([bool]$config.PythonCore) "Instala ghost_agent.py para macros personalizados"
 $configGroup.Controls.Add($cbPythonCore)
 
-$cbAutoUpdate = New-StyledCheckbox "[AUTO] Auto-actualizar al inicio" 160 $config.AutoUpdate "Busca actualizaciones automaticamente"
+$cbAutoUpdate = New-StyledCheckbox "[AUTO] Auto-actualizar al inicio" 160 ([bool]$config.AutoUpdate) "Busca actualizaciones automaticamente"
 $configGroup.Controls.Add($cbAutoUpdate)
 
-$cbShowNotifications = New-StyledCheckbox "[BELL] Mostrar notificaciones" 200 $config.ShowNotifications "Muestra popups de confirmacion"
+$cbShowNotifications = New-StyledCheckbox "[BELL] Mostrar notificaciones" 200 ([bool]$config.ShowNotifications) "Muestra popups de confirmacion"
 $configGroup.Controls.Add($cbShowNotifications)
 
 # Botones de configuración
@@ -872,13 +877,65 @@ $btnRunTool.Add_Click({
         }
     })
 
+function Cleanup-GhostSettings {
+    Write-Log "Limpiando rastro de colores morados..." "INFO"
+    
+    # Lista de posibles rutas de configuración (AntiGravity y VS Code estándar)
+    $paths = @(
+        "$env:APPDATA\AntiGravity\User\settings.json",
+        "$env:APPDATA\Code\User\settings.json",
+        "$env:APPDATA\VSCodium\User\settings.json"
+    )
+
+    foreach ($path in $paths) {
+        if (Test-Path $path) {
+            try {
+                $rawJson = Get-Content $path -Raw
+                # Verificacion rapida de string antes de parsear para velocidad
+                if ($rawJson -match "#af00db") {
+                    $json = $rawJson | ConvertFrom-Json
+                    
+                    if ($json.PSObject.Properties['workbench.colorCustomizations']) {
+                        $colors = $json.'workbench.colorCustomizations'
+                        
+                        # Eliminar llaves especificas de Ghost Agent
+                        $keysToRemove = @("statusBar.background", "statusBar.noFolderBackground", "statusBar.debuggingBackground", "statusBar.foreground")
+                        $modified = $false
+                        
+                        foreach ($key in $keysToRemove) {
+                            if ($colors.PSObject.Properties[$key] -eq "#af00db" -or $colors.PSObject.Properties[$key] -eq "#ffffff") {
+                                $colors.PSObject.Properties.Remove($key)
+                                $modified = $true
+                            }
+                        }
+                        
+                        if ($modified) {
+                            $json | ConvertTo-Json -Depth 10 | Out-File $path -Encoding UTF8
+                            Write-Log "Limpieza exitosa en: $path" "SUCCESS"
+                        }
+                    }
+                }
+            }
+            catch {
+                Write-Log "No se pudo limpiar $path : $($_.Exception.Message)" "WARNING"
+            }
+        }
+    }
+}
+
 $btnUninstallSafe.Add_Click({
-        if (Show-Confirmation "Desinstalacion Segura" "¿Mover extension a cuarentena (_DISABLED)?\nNo se borraran tus archivos.") {
+        if (Show-Confirmation "Desinstalacion Segura" "¿Mover extension a cuarentena (_DISABLED)?`n`nTAMBIEN SE LIMPIARAN LOS COLORES DEL IDE.") {
             Write-Log "Iniciando desinstalacion segura..." "INFO"
+        
+            # 1. Limpieza de Config (Colores)
+            Cleanup-GhostSettings
+        
+            # 2. Desinstalacion de Archivos
             if (Test-Path "$ScriptDir\UNINSTALL.bat") {
                 Start-Process -FilePath "$ScriptDir\UNINSTALL.bat" -Wait
                 Write-Log "Extension movida a _DISABLED" "SUCCESS"
                 Update-Status
+                Show-Notification "Limpieza Completada" "Extension desactivada y colores restaurados.`nReinicia el IDE." "Success"
             }
             else {
                 Write-Log "Error: No se encuentra UNINSTALL.bat" "ERROR"
